@@ -8,7 +8,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="868.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Contollers.MainAppointmentController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="868.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Contollers.MainAppointmentController">
    <children>
       <Text fill="#e38b29" layoutX="14.0" layoutY="48.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Viewing Appointments">
          <font>
@@ -23,14 +23,14 @@
         <columns>
           <TableColumn fx:id="appIDColumn" prefWidth="54.0" text="App ID" />
           <TableColumn fx:id="titleColumn" prefWidth="74.0" text="Title" />
-            <TableColumn fx:id="typeColumn" prefWidth="74.0" text="Type" />
-            <TableColumn fx:id="locationColumn" prefWidth="94.0" text="Location" />
-            <TableColumn fx:id="startDateTimeColumn" prefWidth="124.0" text="Start Date/Time" />
-            <TableColumn fx:id="endDateTimeColumn" prefWidth="94.0" text="End Date/Time" />
-            <TableColumn fx:id="contactIDColumn" prefWidth="71.0" text="Contact ID" />
-            <TableColumn fx:id="customerIDColumn" prefWidth="77.0" text="Customer ID" />
-            <TableColumn fx:id="descriptionColumn" minWidth="0.0" prefWidth="112.0" text="Description" />
-            <TableColumn fx:id="userIDColumn" minWidth="0.0" prefWidth="62.0" text="User ID" />
+            <TableColumn fx:id="typeColumn" prefWidth="97.0" text="Type" />
+            <TableColumn fx:id="locationColumn" prefWidth="71.0" text="Location" />
+            <TableColumn fx:id="startDateTimeColumn" prefWidth="147.0" text="Start Date/Time" />
+            <TableColumn fx:id="endDateTimeColumn" prefWidth="137.0" text="End Date/Time" />
+            <TableColumn fx:id="contactIDColumn" prefWidth="53.0" text="Contact" />
+            <TableColumn fx:id="customerIDColumn" prefWidth="61.0" text="Customer" />
+            <TableColumn fx:id="descriptionColumn" minWidth="0.0" prefWidth="102.0" text="Description" />
+            <TableColumn fx:id="userIDColumn" minWidth="0.0" prefWidth="40.0" text="User" />
         </columns>
       </TableView>
       <RadioButton fx:id="viewAllAppointmentsRadioBtn" layoutX="433.0" layoutY="23.0" mnemonicParsing="false" onAction="#onActionViewAllRadioBtn" text="View All Appointments" />
