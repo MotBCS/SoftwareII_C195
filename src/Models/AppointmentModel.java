@@ -49,6 +49,7 @@ public class AppointmentModel {
             LocalDateTime appStart,
             LocalDateTime appEnd,
             int appCustomerId,
+            int appUserId,
             String appLocation,
             String appointmentContactName
     ){
@@ -60,6 +61,7 @@ public class AppointmentModel {
         this.appStart = appStart;
         this.appEnd = appEnd;
         this.appCustomerId = appCustomerId;
+        this.appUserId = appUserId;
         this.appLocation = appLocation;
         this.appointmentContactName = appointmentContactName;
     }
