@@ -1,6 +1,7 @@
 package Contollers;
 
 import Models.CountryModel;
+import Models.CustomerModel;
 import Models.StateProvinceModel;
 import Queries.CountryQuery;
 import Queries.StateProvinceQuery;
@@ -20,20 +21,20 @@ import java.sql.SQLException;
 import java.util.ResourceBundle;
 
 public class ModifyCustomerController implements Initializable {
-    public TextField addCustomerPhoneNoText;
-    public ComboBox<CountryModel>addCustomerCountryComboBox;
-    public ComboBox<StateProvinceModel>addCustomerStateProvinceComboBox;
-    public TextField addCustomerIDText;
-    public TextField addCustomerNameText;
-    public TextField addCustomerAddressText;
-    public TextField addCustomerPostalCodeText;
-    public Button addCustomerCancelBtn;
+    public TextField modifyCustomerPhoneNoText;
+    public ComboBox<CountryModel> modifyCustomerCountryComboBox;
+    public ComboBox<StateProvinceModel> modifyCustomerStateProvinceComboBox;
+    public TextField modifyCustomerIDText;
+    public TextField modifyCustomerNameText;
+    public TextField modifyCustomerAddressText;
+    public TextField modifyCustomerPostalCodeText;
+    public Button modifyCustomerCancelBtn;
     public Button saveBtn;
 
     public void filterByCountry(ActionEvent actionEvent) {
-        CountryModel countryModel = addCustomerCountryComboBox.getValue();
+        CountryModel countryModel = modifyCustomerCountryComboBox.getValue();
         try {
-            addCustomerStateProvinceComboBox.setItems(StateProvinceQuery.obtainDivisionByCountryId(countryModel.getCountryId()));
+            modifyCustomerStateProvinceComboBox.setItems(StateProvinceQuery.obtainDivisionByCountryId(countryModel.getCountryId()));
         } catch (SQLException exception) {
             System.out.println("Unable to filter state/province by country Id");
         }
@@ -41,11 +42,26 @@ public class ModifyCustomerController implements Initializable {
 
     public void toCustomerMenu(ActionEvent actionEvent) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("/Views/CustomerMenuScreen.fxml"));
-        Stage stage = (Stage) addCustomerCancelBtn.getScene().getWindow();
+        Stage stage = (Stage) modifyCustomerCancelBtn.getScene().getWindow();
         Scene scene = new Scene(root,1019.0,720.0);
         stage.setScene(scene);
         stage.centerOnScreen();
         stage.show();
+    }
+    public void obtainData(CustomerModel customerModel) throws SQLException{
+        modifyCustomerIDText.setText(Integer.toString(customerModel.getCustomerId()));
+        modifyCustomerNameText.setText(customerModel.getCustomer_Name());
+        modifyCustomerAddressText.setText(customerModel.getCustomer_Address());
+        modifyCustomerPhoneNoText.setText(customerModel.getCustomer_PhoneNumber());
+        modifyCustomerPostalCodeText.setText(customerModel.getCustomer_PostalCode());
+
+        StateProvinceModel stateProvinceModel = StateProvinceQuery.stateProvinceById(customerModel.getCustomer_StateProvinceId());
+        modifyCustomerStateProvinceComboBox.setValue(stateProvinceModel);
+
+        CountryModel countryModel = CountryQuery.countryById(customerModel.getCustomer_Country_Id());
+        modifyCustomerCountryComboBox.setValue(countryModel);
+        CountryModel countryModel1 = modifyCustomerCountryComboBox.getValue();
+        modifyCustomerStateProvinceComboBox.setItems(StateProvinceQuery.obtainDivisionByCountryId(countryModel1.getCountryId()));
     }
 
     public void saveAddCustomer(ActionEvent actionEvent) {
@@ -53,6 +69,6 @@ public class ModifyCustomerController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        addCustomerCountryComboBox.setItems(CountryQuery.obtainAllCountries());
+        modifyCustomerCountryComboBox.setItems(CountryQuery.obtainAllCountries());
     }
 }

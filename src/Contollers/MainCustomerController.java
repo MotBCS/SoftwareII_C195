@@ -17,6 +17,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -56,12 +57,16 @@ public class MainCustomerController implements Initializable {
         stage.show();
     }
 
-    public void modifyExistingCustomer(ActionEvent actionEvent) throws IOException {
+    public void modifyExistingCustomer(ActionEvent actionEvent) throws IOException, SQLException {
         if (customerTable.getSelectionModel().getSelectedItem() != null){
-            Parent root = FXMLLoader.load(getClass().getResource("/Views/ModifyExistingCustomerScreen.fxml"));
+            FXMLLoader fxmlLoader = new FXMLLoader();
+            fxmlLoader.setLocation(getClass().getResource("/Views/ModifyExistingCustomerScreen.fxml"));
+            fxmlLoader.load();
+            ModifyCustomerController modifyCustomerController = fxmlLoader.getController();
+            modifyCustomerController.obtainData(customerTable.getSelectionModel().getSelectedItem());
             Stage stage = (Stage) modifyCustomerBtn.getScene().getWindow();
-            Scene scene = new Scene(root,600.0,505.0);
-            stage.setScene(scene);
+            Parent scene = fxmlLoader.getRoot();
+            stage.setScene(new Scene(scene));
             stage.centerOnScreen();
             stage.show();
         }

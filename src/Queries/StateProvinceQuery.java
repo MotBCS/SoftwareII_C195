@@ -45,7 +45,7 @@ public class StateProvinceQuery {
     public static StateProvinceModel stateProvinceById(int stateProvinceId){
         try {
             JavaDatabaseConnection.openConnection();
-            String SQL = "";
+            String SQL = "SELECT Division_ID, Division FROM first_level_divisions WHERE Division_ID = ?";
             PreparedStatement preparedStatement = JavaDatabaseConnection.connection.prepareStatement(SQL);
             preparedStatement.setInt(1, stateProvinceId);
             preparedStatement.execute();
