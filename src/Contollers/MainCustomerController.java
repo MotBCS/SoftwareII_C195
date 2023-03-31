@@ -1,6 +1,9 @@
 package Contollers;
 
+import Helper.JavaDatabaseConnection;
+import Models.AppointmentModel;
 import Models.CustomerModel;
+import Queries.AppointmentQuery;
 import Queries.CustomerQuery;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -8,14 +11,13 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class MainCustomerController implements Initializable {
@@ -31,6 +33,8 @@ public class MainCustomerController implements Initializable {
     public Button modifyCustomerBtn;
     public Button addNewCustomerBtn;
     public Button backBtn;
+
+    private CustomerModel obtainCustomer;
 
     ObservableList<CustomerModel> allCustomersList = CustomerQuery.obtainAllCustomers();
 
@@ -62,6 +66,13 @@ public class MainCustomerController implements Initializable {
     }
 
     public void deleteCustomer(ActionEvent actionEvent) {
+        obtainCustomer = customerTable.getSelectionModel().getSelectedItem();
+        if (obtainCustomer instanceof CustomerModel){
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setHeaderText("Delete Customer?");
+            alert.setContentText("Delete selected customer");
+            Optional<ButtonType> choice = alert.showAndWait();
+        }
     }
 
     @Override

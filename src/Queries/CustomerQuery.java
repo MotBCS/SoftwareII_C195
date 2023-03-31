@@ -55,7 +55,7 @@ public class CustomerQuery {
     public static void createNewCustomer(String customer_Name, String customer_Address, String customer_PostalCode, String customer_PhoneNumber, int customer_StateProvinceId) throws SQLException{
         try {
             JavaDatabaseConnection.openConnection();
-            String SQL = "";
+            String SQL = "INSERT INTO customers (Customer_Name, Address, Postal_Code, Phone, Division_ID) VALUES (?, ?, ?, ?, ?)";
             PreparedStatement preparedStatement = JavaDatabaseConnection.connection.prepareStatement(SQL);
             preparedStatement.setString(1, customer_Name);
             preparedStatement.setString(2, customer_Address);
@@ -112,7 +112,7 @@ public class CustomerQuery {
     /** - GET CUSTOMER BY ID -------------------------------------------------------------------------------------*/
 
     public static CustomerModel customerById(int customerId) throws SQLException{
-        String SQL = "";
+        String SQL = "SELECT * FROM customers WHERE Customer_ID = ?";
         PreparedStatement preparedStatement = JavaDatabaseConnection.connection.prepareStatement(SQL);
         preparedStatement.setInt(1, customerId);
         preparedStatement.execute();
