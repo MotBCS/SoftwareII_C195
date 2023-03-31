@@ -9,16 +9,14 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
 import java.sql.Timestamp;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class MainAppointmentController implements Initializable {
@@ -62,15 +60,52 @@ public class MainAppointmentController implements Initializable {
     }
 
     public void toModifyAppointment(ActionEvent actionEvent) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("/Views/ModifyExistingAppointmentScreen.fxml"));
-        Stage stage = (Stage) modifyAppointmentBtn.getScene().getWindow();
-        Scene scene = new Scene(root,600.0,505.0);
-        stage.setScene(scene);
-        stage.centerOnScreen();
-        stage.show();
+        if (appointmentTable.getSelectionModel().getSelectedItem() != null){
+            FXMLLoader fxmlLoader = new FXMLLoader();
+            fxmlLoader.setLocation(getClass().getResource("/Views/AppointmentMenuScreen.fxml"));
+            fxmlLoader.load();
+            ModifyAppointmentController modifyAppointmentController = fxmlLoader.getController();
+            modifyAppointmentController.sendAppData(appointmentTable.getSelectionModel().getSelectedItem());
+            Stage stage = (Stage) modifyAppointmentBtn.getScene().getWindow();
+            Parent scene = fxmlLoader.getRoot();
+            stage.setScene(new Scene(scene));
+            stage.centerOnScreen();
+            stage.show();
+        }
+        else {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setHeaderText("No Appointment Selected");
+            alert.setContentText("Select an existing appointment from the table to modify");
+        }
     }
 
     public void deleteAppointment(ActionEvent actionEvent) {
+        AppointmentModel obtainApp = appointmentTable.getSelectionModel().getSelectedItem();
+        if (obtainApp == null){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setHeaderText("No Appointment Selected");
+            alert.setContentText("Select an existing appointment from the table to delete");
+            alert.showAndWait();
+        }
+        else {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setHeaderText("Delete Selected Appointment?");
+            alert.setContentText("Delete selected appointment " + obtainApp.getAppId() + ", from appointment table?");
+            alert.showAndWait();
+            Optional<ButtonType> choice = alert.showAndWait();
+            if (choice.get() == ButtonType.OK){
+                Alert alert2 = new Alert(Alert.AlertType.CONFIRMATION);
+                alert2.setHeaderText("Appointment has been successfully deleted");
+                alert2.setContentText("Appointment" + appointmentTable.getSelectionModel().getSelectedItem().getAppId() + " has been deleted");
+                AppointmentQuery.deleteExistingAppointment(appointmentTable.getSelectionModel().getSelectedItem().getAppId());
+                allAppList = AppointmentQuery.obtainAllAppointments();
+                appointmentTable.setItems(allAppList);
+                appointmentTable.refresh();
+            }
+            else if (choice.get() == ButtonType.CANCEL){
+                alert.close();
+            }
+        }
     }
 
     public void onActionViewAllRadioBtn(ActionEvent actionEvent) {
