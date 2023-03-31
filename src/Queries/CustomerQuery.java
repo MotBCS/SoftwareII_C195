@@ -17,7 +17,7 @@ public class CustomerQuery {
         ObservableList<CustomerModel> allCustomerList = FXCollections.observableArrayList();
         try {
             JavaDatabaseConnection.openConnection();
-            String SQL = "";
+            String SQL = "SELECT * FROM customers INNER JOIN first_level_divisions ON customers.Division_ID = first_level_divisions.Division_ID INNER JOIN countries ON countries.Country_ID = first_level_divisions.COUNTRY_ID ORDER BY Customer_ID ASC;";
             PreparedStatement preparedStatement = JavaDatabaseConnection.connection.prepareStatement(SQL);
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()){
@@ -76,7 +76,7 @@ public class CustomerQuery {
     public static void modifyExistingCustomer(int customerId, String customer_Name, String customer_Address, String customer_PostalCode, String customer_PhoneNumber, int customer_StateProvinceId) throws SQLException{
         try {
             JavaDatabaseConnection.openConnection();
-            String SQL = "";
+            String SQL = "UPDATE customers SET Customer_Name = ?, Address = ?, Postal_Code = ?, Phone = ?, Division_ID = ?, WHERE Customer_ID = ?";
             PreparedStatement preparedStatement = JavaDatabaseConnection.connection.prepareStatement(SQL);
             preparedStatement.setString(1, customer_Name);
             preparedStatement.setString(2, customer_Address);
@@ -98,7 +98,7 @@ public class CustomerQuery {
     public static void deleteExistingCustomer(int customerId){
         try {
             JavaDatabaseConnection.openConnection();
-            String SQL = "";
+            String SQL = "DELETE * FROM customers WHERE Customer_ID = ?";
             PreparedStatement preparedStatement = JavaDatabaseConnection.connection.prepareStatement(SQL);
             preparedStatement.setInt(1, customerId);
             preparedStatement.execute();
