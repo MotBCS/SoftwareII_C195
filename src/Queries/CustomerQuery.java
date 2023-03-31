@@ -76,7 +76,7 @@ public class CustomerQuery {
     public static void modifyExistingCustomer(String customer_Name, String customer_Address, String customer_PostalCode, String customer_PhoneNumber, int customer_StateProvinceId, int customerId, int customer_Country_Id) throws SQLException{
         try {
             JavaDatabaseConnection.openConnection();
-            String SQL = "UPDATE customers SET Customer_Name =?, Address =?, Postal_Code =?, Phone =?, Division_ID =?, WHERE Customer_ID =?;";
+            String SQL = "UPDATE customers SET Customer_Name=?, Address=?, Postal_Code=?, Phone=?, Division_ID=? WHERE Customer_ID=?;";
             PreparedStatement preparedStatement = JavaDatabaseConnection.connection.prepareStatement(SQL);
             preparedStatement.setString(1, customer_Name);
             preparedStatement.setString(2, customer_Address);
@@ -85,7 +85,7 @@ public class CustomerQuery {
             preparedStatement.setInt(5, customer_StateProvinceId);
             preparedStatement.setInt(6, customerId);
             preparedStatement.execute();
-
+            //   preparedStatement.setString(7, consumerID);
         } catch (Exception e) {
             System.out.println("Unable to modify existing customer (SQL Error)");
         }finally {
