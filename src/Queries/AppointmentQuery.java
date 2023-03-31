@@ -4,6 +4,7 @@ import Helper.JavaDatabaseConnection;
 import Models.AppointmentModel;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.control.Alert;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -293,5 +294,42 @@ public class AppointmentQuery {
             System.out.println("Unable to obtain appointment by current month");
         }
         return appByContactIdList;
+    }
+
+    /** - Clashing Appointments -------------------------------------------------------------------------------------*/
+
+    public static boolean clashingAppointments(int customerId, LocalDateTime appStart, LocalDateTime appEnd){
+        ObservableList<AppointmentModel> clashingAppsList = AppointmentQuery.obtainAllAppointments();
+        LocalDateTime ldtAppStart; //Check app start
+        LocalDateTime ldtAppEnd; //Check app end
+        for (AppointmentModel appointmentModel : clashingAppsList){
+            ldtAppStart = appointmentModel.getAppStart();
+            ldtAppEnd = appointmentModel.getAppEnd();
+            if (customerId != appointmentModel.getAppCustomerId()){
+                continue;
+            }
+            else if (ldtAppStart.isEqual(appStart) || ldtAppEnd.isEqual(appEnd)){
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setHeaderText("");
+                alert.setContentText("");
+                alert.showAndWait();
+                return true;
+            }
+            else if (appStart.isAfter(ldtAppStart) && appStart.isBefore(appEnd)){
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setHeaderText("");
+                alert.setContentText("");
+                alert.showAndWait();
+                return true;
+            }
+            else if (appEnd.isAfter(ldtAppStart) && appEnd.isBefore(ldtAppEnd)){
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setHeaderText("");
+                alert.setContentText("");
+                alert.showAndWait();
+                return true;
+            }
+        }
+        return false;
     }
 }
