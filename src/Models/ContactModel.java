@@ -15,6 +15,14 @@ public class ContactModel {
         this.contactEmail = contactEmail;
     }
 
+    public ContactModel(
+            int contactId,
+            String contactName
+    ){
+        this.contactId = contactId;
+        this.contactName = contactName;
+    }
+
     public int getContactId() {
         return contactId;
     }

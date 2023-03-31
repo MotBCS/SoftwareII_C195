@@ -8,6 +8,7 @@ import javafx.collections.ObservableList;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 public class AppointmentQuery {
@@ -18,6 +19,7 @@ public class AppointmentQuery {
     public static ObservableList<AppointmentModel> obtainAllAppointments(){
         ObservableList<AppointmentModel> allAppList = FXCollections.observableArrayList();
         try {
+            JavaDatabaseConnection.openConnection();
             String SQL = "SELECT * FROM appointments";
             PreparedStatement preparedStatement = JavaDatabaseConnection.connection.prepareStatement(SQL);
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -51,11 +53,234 @@ public class AppointmentQuery {
             }
         } catch (SQLException exception) {
             System.out.println("Unable to obtain all appointments from database (SQL Error)");
+        }finally {
+            JavaDatabaseConnection.closeConnection();
         }
         return allAppList;
     }
 
     /** - CREATE APPOINTMENT -------------------------------------------------------------------------------------*/
 
-    public static void createNewAppointment(String appTitle, String appDescription, int appContact, String appType, LocalDateTime appStart, LocalDateTime appEnd, int appCustomerId, int appUserId, String appLocation, ){}
+    public static void createNewAppointment(String appTitle, String appDescription, int appContact, String appType, LocalDateTime appStart, LocalDateTime appEnd, int appCustomerId, int appUserId, String appLocation) throws SQLException{
+        try {
+            JavaDatabaseConnection.openConnection();
+            String SQL = "";
+            PreparedStatement preparedStatement = JavaDatabaseConnection.connection.prepareStatement(SQL);
+            preparedStatement.setString(1, appTitle);
+            preparedStatement.setString(2, appDescription);
+            preparedStatement.setInt(3, appContact);
+            preparedStatement.setString(4, appType);
+            preparedStatement.setTimestamp(5, Timestamp.valueOf(appStart));
+            preparedStatement.setTimestamp(6, Timestamp.valueOf(appEnd));
+            preparedStatement.setInt(7, appCustomerId);
+            preparedStatement.setInt(8, appUserId);
+            preparedStatement.setString(9, appLocation);
+            preparedStatement.executeUpdate();
+        } catch (SQLException exception) {
+            System.out.println("Unable to create appointment (SQL Error)");
+        }finally {
+            JavaDatabaseConnection.closeConnection();
+        }
+    }
+    /** - MODIFY APPOINTMENT -------------------------------------------------------------------------------------*/
+
+    public static void modifyExistingAppointment(int appId, String appTitle, String appDescription, int appContact, String appType, LocalDateTime appStart, LocalDateTime appEnd, int appCustomerId, int appUserId, String appLocation ){
+        try {
+            JavaDatabaseConnection.openConnection();
+            String SQL = "";
+            PreparedStatement preparedStatement = JavaDatabaseConnection.connection.prepareStatement(SQL);
+            preparedStatement.setString(1, appTitle);
+            preparedStatement.setString(2, appDescription);
+            preparedStatement.setInt(3, appContact);
+            preparedStatement.setString(4, appType);
+            preparedStatement.setTimestamp(5, Timestamp.valueOf(appStart));
+            preparedStatement.setTimestamp(6, Timestamp.valueOf(appEnd));
+            preparedStatement.setInt(7, appCustomerId);
+            preparedStatement.setInt(8, appUserId);
+            preparedStatement.setString(9, appLocation);
+            preparedStatement.setInt(10, appId);
+            preparedStatement.executeUpdate();
+        } catch (SQLException exception) {
+            System.out.println("Unable to modify existing appointment (SQL Error)");
+        }finally {
+            JavaDatabaseConnection.closeConnection();
+        }
+    }
+
+    /** - DELETE APPOINTMENT -------------------------------------------------------------------------------------*/
+
+    public static void deleteExistingAppointment(int appId){
+        try {
+            JavaDatabaseConnection.openConnection();
+            String SQL = "";
+            PreparedStatement preparedStatement = JavaDatabaseConnection.connection.prepareStatement(SQL);
+            preparedStatement.setInt(1, appId);
+            preparedStatement.execute();
+        } catch (SQLException exception) {
+            System.out.println("Unable to delete existing appointment (SQL Error)");
+        }
+    }
+    /** - GET APPOINTMENT BY MONTH -------------------------------------------------------------------------------------*/
+    public static ObservableList<AppointmentModel>appByCurrentMonth(){
+        ObservableList<AppointmentModel> appMonthList = FXCollections.observableArrayList();
+        try {
+            JavaDatabaseConnection.openConnection();
+            String SQL = "";
+            PreparedStatement preparedStatement = JavaDatabaseConnection.connection.prepareStatement(SQL);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()){
+                int appId = resultSet.getInt("Appointment_ID");
+                String appTitle = resultSet.getString("Title");
+                String appDescription = resultSet.getString("Description");
+                int appContact = resultSet.getInt("Contact_ID");
+                String appType = resultSet.getString("Type");
+                LocalDateTime appStart = resultSet.getTimestamp("Start").toLocalDateTime();
+                LocalDateTime appEnd = resultSet.getTimestamp("End").toLocalDateTime();
+                int appCustomerId = resultSet.getInt("Customer_ID");
+                int appUserId = resultSet.getInt("User_ID");
+                String appLocation = resultSet.getString("Location");
+                String appointmentContactName = resultSet.getString("Contact_Name");
+                AppointmentModel appointmentModel = new AppointmentModel(
+                        appId,
+                        appTitle,
+                        appDescription,
+                        appContact,
+                        appType,
+                        appStart,
+                        appEnd,
+                        appCustomerId,
+                        appUserId,
+                        appLocation,
+                        appointmentContactName
+                );
+                appMonthList.add(appointmentModel);
+            }
+        } catch (SQLException exception) {
+            System.out.println("Unable to obtain appointment by current month");
+        }
+        return appMonthList;
+    }
+
+    /** - GET APPOINTMENT BY WEEK -------------------------------------------------------------------------------------*/
+
+    public static ObservableList<AppointmentModel>appByCurrentWeek(){
+        ObservableList<AppointmentModel> appWeekList = FXCollections.observableArrayList();
+        try {
+            JavaDatabaseConnection.openConnection();
+            String SQL = "";
+            PreparedStatement preparedStatement = JavaDatabaseConnection.connection.prepareStatement(SQL);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()){
+                int appId = resultSet.getInt("Appointment_ID");
+                String appTitle = resultSet.getString("Title");
+                String appDescription = resultSet.getString("Description");
+                int appContact = resultSet.getInt("Contact_ID");
+                String appType = resultSet.getString("Type");
+                LocalDateTime appStart = resultSet.getTimestamp("Start").toLocalDateTime();
+                LocalDateTime appEnd = resultSet.getTimestamp("End").toLocalDateTime();
+                int appCustomerId = resultSet.getInt("Customer_ID");
+                int appUserId = resultSet.getInt("User_ID");
+                String appLocation = resultSet.getString("Location");
+                String appointmentContactName = resultSet.getString("Contact_Name");
+                AppointmentModel appointmentModel = new AppointmentModel(
+                        appId,
+                        appTitle,
+                        appDescription,
+                        appContact,
+                        appType,
+                        appStart,
+                        appEnd,
+                        appCustomerId,
+                        appUserId,
+                        appLocation,
+                        appointmentContactName
+                );
+                appWeekList.add(appointmentModel);
+            }
+        } catch (SQLException exception) {
+            System.out.println("Unable to obtain appointment by current month");
+        }
+        return appWeekList;
+    }
+
+    /** - GET USER APPOINTMENT (BY -> userId )-------------------------------------------------------------------------------------*/
+
+    public static ObservableList<AppointmentModel>appByUserID(int userId){
+        ObservableList<AppointmentModel> appByUserIdList = FXCollections.observableArrayList();
+        try {
+            JavaDatabaseConnection.openConnection();
+            String SQL = "";
+            PreparedStatement preparedStatement = JavaDatabaseConnection.connection.prepareStatement(SQL);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()){
+                int appId = resultSet.getInt("Appointment_ID");
+                String appTitle = resultSet.getString("Title");
+                String appDescription = resultSet.getString("Description");
+                int appContact = resultSet.getInt("Contact_ID");
+                String appType = resultSet.getString("Type");
+                LocalDateTime appStart = resultSet.getTimestamp("Start").toLocalDateTime();
+                LocalDateTime appEnd = resultSet.getTimestamp("End").toLocalDateTime();
+                int appCustomerId = resultSet.getInt("Customer_ID");
+                int appUserId = resultSet.getInt("User_ID");
+                String appLocation = resultSet.getString("Location");
+                AppointmentModel appointmentModel = new AppointmentModel(
+                        appId,
+                        appTitle,
+                        appDescription,
+                        appContact,
+                        appType,
+                        appStart,
+                        appEnd,
+                        appCustomerId,
+                        appUserId,
+                        appLocation
+                );
+                appByUserIdList.add(appointmentModel);
+            }
+        } catch (SQLException exception) {
+            System.out.println("Unable to obtain appointment by current month");
+        }
+        return appByUserIdList;
+    }
+    /** - GET CONTACT APPOINTMENT (BY -> contactId )-------------------------------------------------------------------------------------*/
+
+    public static ObservableList<AppointmentModel>appByContactId(int contactId){
+        ObservableList<AppointmentModel> appByContactIdList = FXCollections.observableArrayList();
+        try {
+            JavaDatabaseConnection.openConnection();
+            String SQL = "";
+            PreparedStatement preparedStatement = JavaDatabaseConnection.connection.prepareStatement(SQL);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()){
+                int appId = resultSet.getInt("Appointment_ID");
+                String appTitle = resultSet.getString("Title");
+                String appDescription = resultSet.getString("Description");
+                int appContact = resultSet.getInt("Contact_ID");
+                String appType = resultSet.getString("Type");
+                LocalDateTime appStart = resultSet.getTimestamp("Start").toLocalDateTime();
+                LocalDateTime appEnd = resultSet.getTimestamp("End").toLocalDateTime();
+                int appCustomerId = resultSet.getInt("Customer_ID");
+                int appUserId = resultSet.getInt("User_ID");
+                String appLocation = resultSet.getString("Location");
+                String appointmentContactName = resultSet.getString("Contact_Name");
+                AppointmentModel appointmentModel = new AppointmentModel(
+                        appId,
+                        appTitle,
+                        appDescription,
+                        appContact,
+                        appType,
+                        appStart,
+                        appEnd,
+                        appCustomerId,
+                        appUserId,
+                        appLocation,
+                        appointmentContactName
+                );
+                appByContactIdList.add(appointmentModel);
+            }
+        } catch (SQLException exception) {
+            System.out.println("Unable to obtain appointment by current month");
+        }
+        return appByContactIdList;
+    }
 }
