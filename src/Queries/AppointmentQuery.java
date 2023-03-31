@@ -20,7 +20,7 @@ public class AppointmentQuery {
         ObservableList<AppointmentModel> allAppList = FXCollections.observableArrayList();
         try {
             JavaDatabaseConnection.openConnection();
-            String SQL = "SELECT * FROM appointments";
+            String SQL = "SELECT * FROM appointments ORDER BY Appointment_ID ASC";
             PreparedStatement preparedStatement = JavaDatabaseConnection.connection.prepareStatement(SQL);
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()){
@@ -64,7 +64,7 @@ public class AppointmentQuery {
     public static void createNewAppointment(String appTitle, String appDescription, int appContact, String appType, LocalDateTime appStart, LocalDateTime appEnd, int appCustomerId, int appUserId, String appLocation) throws SQLException{
         try {
             JavaDatabaseConnection.openConnection();
-            String SQL = "";
+            String SQL = "INSERT INTO appointments (Title, Description, Contact_ID, Type, Start, End, Customer_ID, User_ID, Location) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)";
             PreparedStatement preparedStatement = JavaDatabaseConnection.connection.prepareStatement(SQL);
             preparedStatement.setString(1, appTitle);
             preparedStatement.setString(2, appDescription);
@@ -87,7 +87,16 @@ public class AppointmentQuery {
     public static void modifyExistingAppointment(int appId, String appTitle, String appDescription, int appContact, String appType, LocalDateTime appStart, LocalDateTime appEnd, int appCustomerId, int appUserId, String appLocation ){
         try {
             JavaDatabaseConnection.openConnection();
-            String SQL = "";
+            String SQL = "UPDATE appointments SET Title = ?," +
+                    "Description = ?," +
+                    "Contact_ID = ?," +
+                    "Type = ?," +
+                    "Start = ?," +
+                    "End = ?," +
+                    "Customer_ID = ?," +
+                    "User_ID = ?," +
+                    "Location = ?" +
+                    "WHERE Appointment_ID = ?";
             PreparedStatement preparedStatement = JavaDatabaseConnection.connection.prepareStatement(SQL);
             preparedStatement.setString(1, appTitle);
             preparedStatement.setString(2, appDescription);
@@ -112,7 +121,7 @@ public class AppointmentQuery {
     public static void deleteExistingAppointment(int appId){
         try {
             JavaDatabaseConnection.openConnection();
-            String SQL = "";
+            String SQL = "DELETE FROM appointments WHERE Appointment_ID=?;";
             PreparedStatement preparedStatement = JavaDatabaseConnection.connection.prepareStatement(SQL);
             preparedStatement.setInt(1, appId);
             preparedStatement.execute();
@@ -125,7 +134,7 @@ public class AppointmentQuery {
         ObservableList<AppointmentModel> appMonthList = FXCollections.observableArrayList();
         try {
             JavaDatabaseConnection.openConnection();
-            String SQL = "";
+            String SQL = "SELECT Appointment_ID, Customer_ID, Title, Description, Location, Type, User_ID, Contact_ID, Contact_Name, Start, End FROM appointments WHERE MONTH(Start)=MONTH(NOW())";
             PreparedStatement preparedStatement = JavaDatabaseConnection.connection.prepareStatement(SQL);
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()){
@@ -167,7 +176,7 @@ public class AppointmentQuery {
         ObservableList<AppointmentModel> appWeekList = FXCollections.observableArrayList();
         try {
             JavaDatabaseConnection.openConnection();
-            String SQL = "";
+            String SQL = "SELECT Appointment_ID, Customer_ID, Title, Description, Location, Type, User_ID, Contact_ID, Contact_Name, Start, End FROM appointments WHERE Start BETWEEN NOW() AND DATE_ADD(NOW(), INTERVAL 7 DAY);";
             PreparedStatement preparedStatement = JavaDatabaseConnection.connection.prepareStatement(SQL);
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()){
@@ -209,7 +218,7 @@ public class AppointmentQuery {
         ObservableList<AppointmentModel> appByUserIdList = FXCollections.observableArrayList();
         try {
             JavaDatabaseConnection.openConnection();
-            String SQL = "";
+            String SQL = "SELECT * FROM appointments WHERE User_ID = '" + userId + "'";
             PreparedStatement preparedStatement = JavaDatabaseConnection.connection.prepareStatement(SQL);
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()){
@@ -248,7 +257,9 @@ public class AppointmentQuery {
         ObservableList<AppointmentModel> appByContactIdList = FXCollections.observableArrayList();
         try {
             JavaDatabaseConnection.openConnection();
-            String SQL = "";
+            String SQL = "SELECT * FROM appointments" +
+                    "JOIN contacts ON appointments.Contact_ID = contacts.Contact_ID WHERE" +
+                    "appointments.Contact_ID = '" + contactId+ "'";
             PreparedStatement preparedStatement = JavaDatabaseConnection.connection.prepareStatement(SQL);
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()){
