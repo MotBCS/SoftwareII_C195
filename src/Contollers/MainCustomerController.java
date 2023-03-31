@@ -57,12 +57,20 @@ public class MainCustomerController implements Initializable {
     }
 
     public void modifyExistingCustomer(ActionEvent actionEvent) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("/Views/ModifyExistingCustomerScreen.fxml"));
-        Stage stage = (Stage) modifyCustomerBtn.getScene().getWindow();
-        Scene scene = new Scene(root,600.0,505.0);
-        stage.setScene(scene);
-        stage.centerOnScreen();
-        stage.show();
+        if (customerTable.getSelectionModel().getSelectedItem() != null){
+            Parent root = FXMLLoader.load(getClass().getResource("/Views/ModifyExistingCustomerScreen.fxml"));
+            Stage stage = (Stage) modifyCustomerBtn.getScene().getWindow();
+            Scene scene = new Scene(root,600.0,505.0);
+            stage.setScene(scene);
+            stage.centerOnScreen();
+            stage.show();
+        }
+        else {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setHeaderText("No customer Selected");
+            alert.setContentText("Select an existing customer to modify");
+            alert.showAndWait();
+        }
     }
 
     public void deleteCustomer(ActionEvent actionEvent) throws IOException {
