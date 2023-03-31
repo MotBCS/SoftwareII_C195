@@ -310,22 +310,22 @@ public class AppointmentQuery {
             }
             else if (ldtAppStart.isEqual(appStart) || ldtAppEnd.isEqual(appEnd)){
                 Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setHeaderText("");
-                alert.setContentText("");
+                alert.setHeaderText("Clashing Time Conflict");
+                alert.setContentText("Appointment has same start and/or end as an already existing appointment");
                 alert.showAndWait();
                 return true;
             }
             else if (appStart.isAfter(ldtAppStart) && appStart.isBefore(appEnd)){
                 Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setHeaderText("");
-                alert.setContentText("");
+                alert.setHeaderText("Clashing Time Conflict");
+                alert.setContentText("Appointment start during already existing appointment");
                 alert.showAndWait();
                 return true;
             }
             else if (appEnd.isAfter(ldtAppStart) && appEnd.isBefore(ldtAppEnd)){
                 Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setHeaderText("");
-                alert.setContentText("");
+                alert.setHeaderText("Clashing Time Conflict");
+                alert.setContentText("Appointment ends during already existing appointment");
                 alert.showAndWait();
                 return true;
             }
