@@ -71,7 +71,7 @@ public class StateProvinceQuery {
         ObservableList<StateProvinceModel> stateProvinceByCountry = FXCollections.observableArrayList();
         try {
             JavaDatabaseConnection.openConnection();
-            String SQL = "";
+            String SQL = "SELECT * FROM first_level_divisions WHERE Country_ID = " + countryId;
             PreparedStatement preparedStatement = JavaDatabaseConnection.connection.prepareStatement(SQL);
             preparedStatement.execute();
             ResultSet resultSet = preparedStatement.getResultSet();
