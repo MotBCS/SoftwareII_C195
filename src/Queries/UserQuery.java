@@ -73,7 +73,7 @@ public class UserQuery {
     public static UserModel obtainUsernameById(int userId){
         try {
             JavaDatabaseConnection.openConnection();
-            String SQL = "";
+            String SQL = "SELECT User_ID, User_Name FROM users WHERE User_ID = ?";
             PreparedStatement preparedStatement = JavaDatabaseConnection.connection.prepareStatement(SQL);
             preparedStatement.setInt(1, userId);
             preparedStatement.execute();

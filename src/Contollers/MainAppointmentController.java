@@ -15,6 +15,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -59,10 +60,10 @@ public class MainAppointmentController implements Initializable {
         stage.show();
     }
 
-    public void toModifyAppointment(ActionEvent actionEvent) throws IOException {
+    public void toModifyAppointment(ActionEvent actionEvent) throws IOException, SQLException {
         if (appointmentTable.getSelectionModel().getSelectedItem() != null){
             FXMLLoader fxmlLoader = new FXMLLoader();
-            fxmlLoader.setLocation(getClass().getResource("/Views/AppointmentMenuScreen.fxml"));
+            fxmlLoader.setLocation(getClass().getResource("/Views/ModifyExistingAppointmentScreen.fxml"));
             fxmlLoader.load();
             ModifyAppointmentController modifyAppointmentController = fxmlLoader.getController();
             modifyAppointmentController.sendAppData(appointmentTable.getSelectionModel().getSelectedItem());
