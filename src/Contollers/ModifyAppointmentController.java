@@ -7,15 +7,13 @@ import Models.UserModel;
 import Queries.ContactQuery;
 import Queries.CustomerQuery;
 import Queries.UserQuery;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -49,7 +47,17 @@ public class ModifyAppointmentController implements Initializable {
         stage.show();
     }
 
-    public void saveAddAppointment(ActionEvent actionEvent) {
+    public void saveAddAppointment(ActionEvent actionEvent) throws IOException{
+        int appId = Integer.parseInt(modifyAppointmentIDTextField.getText());
+        String appTitle = modifyAppointmentTitleTextField.getText();
+        String appDescription = modifyAppointmentDescriptionTextField.getText();
+        String appType = ModifyAppointmentTypeTextField.getText();
+        String appLocation = ModifyLocationTextField.getText();
+
+        ContactModel contactModel = modifyAppointmentContactComboBox.getValue();
+        if (contactModel == null){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+        }
     }
 
     public void sendAppData(AppointmentModel appointmentModel) throws SQLException {
@@ -77,6 +85,14 @@ public class ModifyAppointmentController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        ObservableList<ContactModel>allContacts = ContactQuery.obtainAllContacts();
+        modifyAppointmentContactComboBox.setItems(allContacts);
+
+        ObservableList<CustomerModel> allCustomers = CustomerQuery.obtainAllCustomers();
+        modifyAppointmentCustomerIDComboBox.setItems(allCustomers);
+
+        ObservableList<UserModel> allUsers = UserQuery.obtainAllUsers();
+        modifyAppointmentUserIDComboBox.setItems(allUsers);
 
     }
 }

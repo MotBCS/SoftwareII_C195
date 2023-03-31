@@ -19,7 +19,7 @@ public class ContactQuery {
         ObservableList<ContactModel> allContactList = FXCollections.observableArrayList();
         try {
             JavaDatabaseConnection.openConnection();
-            String SQL = "";
+            String SQL = "SELECT Contact_ID, Contact_Name FROM contacts";
             PreparedStatement preparedStatement = JavaDatabaseConnection.connection.prepareStatement(SQL);
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()){
