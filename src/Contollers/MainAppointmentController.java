@@ -1,10 +1,16 @@
 package Contollers;
 
 import javafx.event.ActionEvent;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.stage.Stage;
+
+import java.io.IOException;
 
 public class MainAppointmentController {
     public Button deleteAppointmentBtn;
@@ -26,13 +32,31 @@ public class MainAppointmentController {
     public RadioButton viewAppointmentByWeekRadioBtn;
     public RadioButton viewAppointmentByMonthRadioBtn;
 
-    public void toMainMenu(ActionEvent actionEvent) {
+    public void toMainMenu(ActionEvent actionEvent) throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource("/Views/HomeMenuScreen.fxml"));
+        Stage stage = (Stage) backBtn.getScene().getWindow();
+        Scene scene = new Scene(root,452.0,400.0);
+        stage.setScene(scene);
+        stage.centerOnScreen();
+        stage.show();
     }
 
-    public void onActionAddNewAppointment(ActionEvent actionEvent) {
+    public void onActionAddNewAppointment(ActionEvent actionEvent) throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource("/Views/AddNewAppointment.fxml"));
+        Stage stage = (Stage) addNewAppointmentBtn.getScene().getWindow();
+        Scene scene = new Scene(root,600.0,505.0);
+        stage.setScene(scene);
+        stage.centerOnScreen();
+        stage.show();
     }
 
-    public void toModifyAppointment(ActionEvent actionEvent) {
+    public void toModifyAppointment(ActionEvent actionEvent) throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource("/Views/ModifyExistingAppointmentScreen.fxml"));
+        Stage stage = (Stage) modifyAppointmentBtn.getScene().getWindow();
+        Scene scene = new Scene(root,600.0,505.0);
+        stage.setScene(scene);
+        stage.centerOnScreen();
+        stage.show();
     }
 
     public void deleteAppointment(ActionEvent actionEvent) {
