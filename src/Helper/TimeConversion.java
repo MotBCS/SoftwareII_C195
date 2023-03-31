@@ -38,12 +38,12 @@ public class TimeConversion {
         LocalDateTime startEST = appStart.atZone(userLocalZone).withZoneSameInstant(companyZone_EST).toLocalDateTime();
         LocalDateTime endEST = appEnd.atZone(userLocalZone).withZoneSameInstant(companyZone_EST).toLocalDateTime();
         LocalDateTime companyStart_EST = startEST.withHour(8).withMinute(0);
-        LocalDateTime companyEnd_EST = endEST.minusHours(22).withMinute(0);
+        LocalDateTime companyEnd_EST = endEST.withHour(22).withMinute(0);
 
         if (startEST.isBefore(companyStart_EST) || endEST.isAfter(companyEnd_EST)){
             Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setHeaderText("");
-            alert.setContentText("");
+            alert.setHeaderText("Time Conflict");
+            alert.setContentText("Conflict start or end time (Business Hours: 8AM to 10PM)");
             alert.showAndWait();
             return true;
         }

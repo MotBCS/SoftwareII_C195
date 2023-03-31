@@ -119,8 +119,8 @@ public class ModifyAppointmentController implements Initializable {
             return;
         }
 
-        LocalDateTime appLDTStart = LocalDateTime.of(modifyAppointmentDatePicker_Start.getValue(), ModifyAppointmentStartTimeComboBox.getValue());
-        LocalDateTime appLDTEnd = LocalDateTime.of(modifyAppointmentDatePicker_End.getValue(), ModifyAppointmentEndTimeComboBox.getValue());
+        LocalDateTime appStart = LocalDateTime.of(modifyAppointmentDatePicker_Start.getValue(), ModifyAppointmentStartTimeComboBox.getValue());
+        LocalDateTime appEnd = LocalDateTime.of(modifyAppointmentDatePicker_End.getValue(), ModifyAppointmentEndTimeComboBox.getValue());
         int appByCustomerId = modifyAppointmentCustomerIDComboBox.getValue().getCustomerId();
         int appByUserId = modifyAppointmentUserIDComboBox.getValue().getUserId();
 
@@ -148,13 +148,9 @@ public class ModifyAppointmentController implements Initializable {
             alert.setContentText("Empty Location");
             alert.showAndWait();
         }
-//        else if (Helper.TimeConversion.operationCompanyTime(appLDTStart, appLDTEnd)){
-//            Alert alert = new Alert(Alert.AlertType.ERROR);
-//            alert.setHeaderText("Unable to save modified appointment");
-//            alert.setContentText("Outside Business Hours");
-//            alert.showAndWait();
-//            return;
-//        }
+        else if (Helper.TimeConversion.operationCompanyTime(appStart, appEnd)){
+            return;
+        }
 //        else if (AppointmentQuery.clashingAppointments(appByCustomerId, appLDTStart, appLDTEnd)){
 //            Alert alert = new Alert(Alert.AlertType.ERROR);
 //            alert.setHeaderText("Unable to save modified appointment");
@@ -163,7 +159,7 @@ public class ModifyAppointmentController implements Initializable {
 //            return;
 //        }
         else {
-            AppointmentQuery.modifyExistingAppointment(appId, appTitle, appDescription, appContact, appType, appLDTStart, appLDTEnd, appByCustomerId, appByUserId, appLocation);
+            AppointmentQuery.modifyExistingAppointment(appId, appTitle, appDescription, appContact, appType, appStart, appEnd, appByCustomerId, appByUserId, appLocation);
             Parent root = FXMLLoader.load(getClass().getResource("/Views/AppointmentMenuScreen.fxml"));
             Stage stage = (Stage) saveBtn.getScene().getWindow();
             Scene scene = new Scene(root,868.0,720.0);
