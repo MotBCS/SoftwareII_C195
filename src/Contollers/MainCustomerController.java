@@ -65,15 +65,65 @@ public class MainCustomerController implements Initializable {
         stage.show();
     }
 
-    public void deleteCustomer(ActionEvent actionEvent) {
-        obtainCustomer = customerTable.getSelectionModel().getSelectedItem();
-        if (obtainCustomer instanceof CustomerModel){
+    public void deleteCustomer(ActionEvent actionEvent) throws IOException {
+        int associatedAppointment = 0;
+        ObservableList<AppointmentModel>allCustomerAppointments = AppointmentQuery.obtainAllAppointments();
+        CustomerModel customerModel = customerTable.getSelectionModel().getSelectedItem();
+        if (customerModel == null){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setHeaderText("No Customer Selected");
+            alert.setContentText("Select an existing customer to delete from the table");
+            alert.showAndWait();
+            return;
+        }
+        int obtainCustomer = customerTable.getSelectionModel().getSelectedItem().getCustomerId();
+        for (AppointmentModel appointmentModel : allCustomerAppointments){
+            int appointmentCustomerById = appointmentModel.getAppCustomerId();
+            if (appointmentCustomerById == obtainCustomer){
+                associatedAppointment++;
+            }
+        }
+        if (associatedAppointment > 0){
+            Alert alert2 = new Alert(Alert.AlertType.WARNING);
+            alert2.setHeaderText("Selected Customer has associated appointments");
+            alert2.setContentText("Selected customer has " + associatedAppointment + ", associated appointments\n\n" +
+                    "Select 'OK' to delete customer from table along with associated appointments.\n" +
+                    "Else select cancel");
+            Optional<ButtonType> choice = alert2.showAndWait();
+            if (choice.get() == ButtonType.OK){
+                for (AppointmentModel appointmentModel : allCustomerAppointments){
+                    if (appointmentModel.getAppCustomerId() == obtainCustomer){
+                        AppointmentQuery.deleteExistingAppointment(appointmentModel.getAppId());
+                    }
+                }
+                CustomerQuery.deleteExistingCustomer(customerTable.getSelectionModel().getSelectedItem().getCustomerId());
+                Alert alert3 = new Alert(Alert.AlertType.CONFIRMATION);
+                alert3.setHeaderText("Customer Deleted Successfully");
+                alert3.setContentText("Customer has been deleted from the table");
+                alert3.showAndWait();
+                allCustomersList = CustomerQuery.obtainAllCustomers();
+                customerTable.setItems(allCustomersList);
+                customerTable.refresh();
+            } else if (choice.get() == ButtonType.CANCEL){
+                return;
+            }
+            }
+        if (associatedAppointment == 0){
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.setHeaderText("Delete Customer?");
-            alert.setContentText("Delete selected customer");
+            alert.setContentText("Are you sure you want to delete this customer?");
             Optional<ButtonType> choice = alert.showAndWait();
+            if (choice.get() == ButtonType.OK){
+                CustomerQuery.deleteExistingCustomer(customerTable.getSelectionModel().getSelectedItem().getCustomerId());
+                allCustomersList = CustomerQuery.obtainAllCustomers();
+                customerTable.setItems(allCustomersList);
+                customerTable.refresh();
+            }
+            else if (choice.get() == ButtonType.CANCEL){
+                return;
+            }
         }
-    }
+        }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {

@@ -21,7 +21,7 @@ public class AppointmentQuery {
         ObservableList<AppointmentModel> allAppList = FXCollections.observableArrayList();
         try {
             JavaDatabaseConnection.openConnection();
-            String SQL = "SELECT * FROM appointments ORDER BY Appointment_ID ASC";
+            String SQL = "SELECT * FROM appointments JOIN contacts ON appointments.Contact_ID = contacts.Contact_ID ORDER BY appointments.Appointment_ID;";
             PreparedStatement preparedStatement = JavaDatabaseConnection.connection.prepareStatement(SQL);
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()){
