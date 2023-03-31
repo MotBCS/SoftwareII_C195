@@ -36,6 +36,24 @@ public class CustomerModel {
 
     public CustomerModel(
             int customerId,
+            String customer_Name,
+            String customer_Address,
+            String customer_PostalCode,
+            String customer_PhoneNumber,
+            int customer_StateProvinceId,
+            int customer_Country_Id
+    ){
+        this.customerId = customerId;
+        this.customer_Name = customer_Name;
+        this.customer_Address = customer_Address;
+        this.customer_PostalCode = customer_PostalCode;
+        this.customer_PhoneNumber = customer_PhoneNumber;
+        this.customer_StateProvinceId = customer_StateProvinceId;
+        this.customer_Country_Id = customer_Country_Id;
+    }
+
+    public CustomerModel(
+            int customerId,
             String customer_Name
     ){
         this.customerId = customerId;
