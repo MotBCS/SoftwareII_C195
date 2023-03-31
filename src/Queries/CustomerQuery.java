@@ -10,6 +10,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class CustomerQuery {
+
+    /** - GET ALL CUSTOMERS -------------------------------------------------------------------------------------*/
+
     public static ObservableList<CustomerModel> obtainAllCustomers(){
         ObservableList<CustomerModel> allCustomerList = FXCollections.observableArrayList();
         try {
@@ -47,6 +50,8 @@ public class CustomerQuery {
         return allCustomerList;
     }
 
+    /** - CREATE CUSTOMER -------------------------------------------------------------------------------------*/
+
     public static void createNewCustomer(String customer_Name, String customer_Address, String customer_PostalCode, String customer_PhoneNumber, int customer_StateProvinceId) throws SQLException{
         try {
             JavaDatabaseConnection.openConnection();
@@ -66,6 +71,8 @@ public class CustomerQuery {
         }
     }
 
+    /** - MODIFY CUSTOMER -------------------------------------------------------------------------------------*/
+
     public static void modifyExistingCustomer(int customerId, String customer_Name, String customer_Address, String customer_PostalCode, String customer_PhoneNumber, int customer_StateProvinceId) throws SQLException{
         try {
             JavaDatabaseConnection.openConnection();
@@ -84,5 +91,41 @@ public class CustomerQuery {
         }finally {
             JavaDatabaseConnection.closeConnection();
         }
+    }
+
+    /** - DELETE CUSTOMER -------------------------------------------------------------------------------------*/
+
+    public static void deleteExistingCustomer(int customerId){
+        try {
+            JavaDatabaseConnection.openConnection();
+            String SQL = "";
+            PreparedStatement preparedStatement = JavaDatabaseConnection.connection.prepareStatement(SQL);
+            preparedStatement.setInt(1, customerId);
+            preparedStatement.execute();
+        } catch (SQLException exception) {
+            System.out.println("Unable to delete customer (SQL Error)");
+        }finally {
+            JavaDatabaseConnection.closeConnection();
+        }
+    }
+
+    /** - GET CUSTOMER BY ID -------------------------------------------------------------------------------------*/
+
+    public static CustomerModel customerById(int customerId) throws SQLException{
+        String SQL = "";
+        PreparedStatement preparedStatement = JavaDatabaseConnection.connection.prepareStatement(SQL);
+        preparedStatement.setInt(1, customerId);
+        preparedStatement.execute();
+        ResultSet resultSet = preparedStatement.executeQuery();
+        while (resultSet.next()){
+            int customer_id = resultSet.getInt("Customer_ID");
+            String customerName = resultSet.getString("Customer_Name");
+            CustomerModel customerModel = new CustomerModel(
+                    customer_id,
+                    customerName
+            );
+            return customerModel;
+        }
+        return null;
     }
 }
