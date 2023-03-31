@@ -98,7 +98,7 @@ public class CustomerQuery {
     public static void deleteExistingCustomer(int customerId){
         try {
             JavaDatabaseConnection.openConnection();
-            String SQL = "DELETE * FROM customers WHERE Customer_ID = ?";
+            String SQL = "DELETE FROM customers WHERE Customer_ID = ?";
             PreparedStatement preparedStatement = JavaDatabaseConnection.connection.prepareStatement(SQL);
             preparedStatement.setInt(1, customerId);
             preparedStatement.execute();
