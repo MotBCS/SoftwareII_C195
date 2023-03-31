@@ -1,5 +1,7 @@
 package Contollers;
 
+import Models.CountryModel;
+import Models.StateProvinceModel;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -13,8 +15,8 @@ import java.io.IOException;
 
 public class CreateCustomerController {
     public TextField addCustomerPhoneNoText;
-    public ComboBox addCustomerCountryComboBox;
-    public ComboBox addCustomerStateProvinceComboBox;
+    public ComboBox<CountryModel>addCustomerCountryComboBox;
+    public ComboBox<StateProvinceModel>addCustomerStateProvinceComboBox;
     public TextField addCustomerIDText;
     public TextField addCustomerNameText;
     public TextField addCustomerAddressText;
