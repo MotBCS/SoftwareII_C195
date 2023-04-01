@@ -13,10 +13,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -62,6 +59,16 @@ public class CreateAppointmentController implements Initializable {
     }
 
     public void saveAddAppointment(ActionEvent actionEvent) {
+        String appTitle = createAppointmentTitleTextField.getText();
+        String appDes = createAppointmentDescriptionTextField.getText();
+        String appType = createAppointmentTypeTextField.getText();
+
+        ContactModel contactModel = createAppointmentContactComboBox.getValue();
+        if (contactModel == null){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setHeaderText("Unable to create new appointment");
+            alert.setContentText("Empty contact combo box");
+        }
     }
 
     @Override
@@ -70,8 +77,8 @@ public class CreateAppointmentController implements Initializable {
         createAppointmentStartTimeComboBox.setItems(Helper.TimeConversion.appTimeComboBoxPopulation());
         createAppointmentEndTimeComboBox.setItems(Helper.TimeConversion.appTimeComboBoxPopulation());
 
-        createAppointmentDatePicker_Start
-        createAppointmentDatePicker_End
+//        createAppointmentDatePicker_Start
+//        createAppointmentDatePicker_End
 
         ObservableList<ContactModel>allContacts = ContactQuery.obtainAllContacts();
         createAppointmentContactComboBox.setItems(allContacts);
