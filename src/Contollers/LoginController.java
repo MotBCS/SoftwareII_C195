@@ -24,6 +24,7 @@ public class LoginController {
     public PasswordField loginPasswordTextField;
     public Text LoginLabel;
     public Button loginBtn;
+    boolean validUser = false;
 
     public void quitApplication(ActionEvent actionEvent) {
         Stage stage = (Stage) quitBtn.getScene().getWindow();
