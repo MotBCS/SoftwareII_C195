@@ -57,7 +57,7 @@ public class TimeConversion {
         LocalTime start = LocalTime.of(8, 0);
         LocalTime end = LocalTime.of(22, 0);
 
-        while (start.isBefore(end.plusSeconds(1))){
+        while (start.isBefore(end.plusSeconds(2))){
             appTimeList.add(start);
             start = start.plusMinutes(15);
         }

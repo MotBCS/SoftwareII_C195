@@ -151,9 +151,9 @@ public class ModifyAppointmentController implements Initializable {
         else if (Helper.TimeConversion.operationCompanyTime(appStart, appEnd)){
             return;
         }
-        else if (AppointmentQuery.clashingAppointments(customerId, appStart, appEnd)){
-            return;
-        }
+//        else if (AppointmentQuery.clashingAppointments(customerId, appStart, appEnd)){
+//            return;
+//        }
         else {
             AppointmentQuery.modifyExistingAppointment(appId, appTitle, appDescription, appContact, appType, appStart, appEnd, customerId, appByUserId, appLocation);
             Parent root = FXMLLoader.load(getClass().getResource("/Views/AppointmentMenuScreen.fxml"));
