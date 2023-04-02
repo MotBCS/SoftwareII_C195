@@ -10,6 +10,7 @@ import Queries.CustomerQuery;
 import Queries.UserQuery;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
@@ -26,31 +27,33 @@ import java.time.LocalTime;
 import java.util.ResourceBundle;
 
 public class CreateAppointmentController implements Initializable {
-//    public ComboBox<CustomerModel>modifyAppointmentCustomerIDComboBox;
-//    public ComboBox<UserModel>modifyAppointmentUserIDComboBox;
-//    public DatePicker modifyAppointmentDatePicker_End;
-//    public TextField modifyAppointmentIDTextField;
-//    public TextField modifyAppointmentTitleTextField;
-//    public TextField ModifyAppointmentTypeTextField;
-//    public TextField ModifyLocationTextField;
-//    public ComboBox<LocalTime>ModifyAppointmentStartTimeComboBox;
-//    public ComboBox<LocalTime>ModifyAppointmentEndTimeComboBox;
-//    public ComboBox<ContactModel>modifyAppointmentContactComboBox;
-//    public TextField modifyAppointmentDescriptionTextField;
-//    public DatePicker modifyAppointmentDatePicker_Start;
+    @FXML
     public Button cancelBtn;
+    @FXML
     public Button saveBtn;
+    @FXML
     public ComboBox<CustomerModel>createAppointmentCustomerIDComboBox;
+    @FXML
     public ComboBox<UserModel>createAppointmentUserIDComboBox;
+    @FXML
     public DatePicker createAppointmentDatePicker_End;
+    @FXML
     public TextField createAppointmentIDTextField;
+    @FXML
     public TextField createAppointmentTitleTextField;
+    @FXML
     public TextField createAppointmentTypeTextField;
+    @FXML
     public TextField createLocationTextField;
+    @FXML
     public ComboBox<LocalTime>createAppointmentStartTimeComboBox;
+    @FXML
     public ComboBox<LocalTime>createAppointmentEndTimeComboBox;
+    @FXML
     public ComboBox<ContactModel>createAppointmentContactComboBox;
+    @FXML
     public TextField createAppointmentDescriptionTextField;
+    @FXML
     public DatePicker createAppointmentDatePicker_Start;
 
     public void toMainMenu(ActionEvent actionEvent) throws IOException {
@@ -73,6 +76,7 @@ public class CreateAppointmentController implements Initializable {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setHeaderText("Unable to create new appointment");
             alert.setContentText("Empty contact combo box");
+            alert.showAndWait();
         }
         int appContact = contactModel.getContactId();
 
@@ -81,6 +85,7 @@ public class CreateAppointmentController implements Initializable {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setHeaderText("Unable to create new appointment");
             alert.setContentText("Empty start date");
+            alert.showAndWait();
             return;
         }
         LocalTime startTime = createAppointmentStartTimeComboBox.getValue();
@@ -88,6 +93,7 @@ public class CreateAppointmentController implements Initializable {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setHeaderText("Unable to create new appointment");
             alert.setContentText("Empty start time");
+            alert.showAndWait();
             return;
         }
         LocalDateTime appStart = LocalDateTime.of(createAppointmentDatePicker_Start.getValue(), createAppointmentStartTimeComboBox.getValue());
@@ -97,6 +103,7 @@ public class CreateAppointmentController implements Initializable {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setHeaderText("Unable to create new appointment");
             alert.setContentText("Empty end date");
+            alert.showAndWait();
             return;
         }
 
@@ -105,6 +112,7 @@ public class CreateAppointmentController implements Initializable {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setHeaderText("Unable to create new appointment");
             alert.setContentText("Empty end time");
+            alert.showAndWait();
             return;
         }
         LocalDateTime appEnd = LocalDateTime.of(createAppointmentDatePicker_End.getValue(), createAppointmentEndTimeComboBox.getValue());
@@ -114,15 +122,24 @@ public class CreateAppointmentController implements Initializable {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setHeaderText("Unable to create new appointment");
             alert.setContentText("Empty customer combo box");
+            alert.showAndWait();
             return;
         }
         int appByCustomerId = createAppointmentCustomerIDComboBox.getValue().getCustomerId();
 
         UserModel userModel = createAppointmentUserIDComboBox.getValue();
+        if (createAppointmentDatePicker_Start != createAppointmentDatePicker_End){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setHeaderText("Unable to create new appointment");
+            alert.setContentText("Appointment must start and end on the same day");
+            alert.showAndWait();
+            return;
+        }
         if (userModel == null){
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setHeaderText("Unable to create new appointment");
             alert.setContentText("Empty user combo box");
+            alert.showAndWait();
             return;
         }
         int appByUserId = createAppointmentUserIDComboBox.getValue().getUserId();
@@ -131,21 +148,26 @@ public class CreateAppointmentController implements Initializable {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setHeaderText("Unable to create new appointment");
             alert.setContentText("Empty appointment title");
+            alert.showAndWait();
         }
         else if(appDes.isEmpty()){
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setHeaderText("Unable to create new appointment");
             alert.setContentText("Empty appointment Description");
+            alert.showAndWait();
         }
         else if (appType.isEmpty()){
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setHeaderText("Unable to create new appointment");
             alert.setContentText("Empty appointment type");
+            alert.showAndWait();
+            alert.showAndWait();
         }
         else if (appLocation.isEmpty()){
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setHeaderText("Unable to create new appointment");
             alert.setContentText("Empty appointment location");
+            alert.showAndWait();
         }
         else if (Helper.TimeConversion.operationCompanyTime(appStart, appEnd)){
             return;

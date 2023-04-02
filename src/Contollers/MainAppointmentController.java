@@ -111,18 +111,31 @@ public class MainAppointmentController implements Initializable {
     }
 
     public void onActionViewAllRadioBtn(ActionEvent actionEvent) {
+        appointmentTable.setItems(AppointmentQuery.obtainAllAppointments());
+        System.out.println("All Radio Btn pressed");
     }
 
     public void onActionViewByWeekRadioBtn(ActionEvent actionEvent) {
+        appointmentTable.setItems(AppointmentQuery.appByCurrentWeek());
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setHeaderText("View By Current Week");
+        alert.setContentText("Viewing appointments scheduled this week");
+        alert.showAndWait();
+        System.out.println("Week Radio Btn pressed");
     }
 
     public void onActionViewByMonthRadioBtn(ActionEvent actionEvent) {
+        appointmentTable.setItems(AppointmentQuery.appByCurrentMonth());
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setHeaderText("View By Current Month");
+        alert.setContentText("Viewing appointments scheduled this month");
+        alert.showAndWait();
+        System.out.println("Month Radio Btn pressed");
     }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-
-
+        viewAllAppointmentsRadioBtn.isSelected();
 
         appIDColumn.setCellValueFactory(new PropertyValueFactory<>("appId"));
         titleColumn.setCellValueFactory(new PropertyValueFactory<>("appTitle"));

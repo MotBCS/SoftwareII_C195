@@ -5,6 +5,7 @@
 <?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
@@ -34,9 +35,12 @@
             <TableColumn fx:id="userIDColumn" minWidth="0.0" prefWidth="40.0" text="User" />
         </columns>
       </TableView>
-      <RadioButton fx:id="viewAllAppointmentsRadioBtn" layoutX="433.0" layoutY="23.0" mnemonicParsing="false" onAction="#onActionViewAllRadioBtn" text="View All Appointments" />
-      <RadioButton fx:id="viewAppointmentByWeekRadioBtn" layoutX="748.0" layoutY="23.0" mnemonicParsing="false" onAction="#onActionViewByWeekRadioBtn" text="View By Week" />
-      <RadioButton fx:id="viewAppointmentByMonthRadioBtn" layoutX="611.0" layoutY="23.0" mnemonicParsing="false" onAction="#onActionViewByMonthRadioBtn" text="View By Month" />
+      <RadioButton fx:id="viewAllAppointmentsRadioBtn" layoutX="433.0" layoutY="23.0" mnemonicParsing="false" onAction="#onActionViewAllRadioBtn" selected="true" text="View All Appointments">
+         <toggleGroup>
+            <ToggleGroup fx:id="appointmentViewToggle" />
+         </toggleGroup></RadioButton>
+      <RadioButton fx:id="viewAppointmentByWeekRadioBtn" layoutX="748.0" layoutY="23.0" mnemonicParsing="false" onAction="#onActionViewByWeekRadioBtn" text="View By Week" toggleGroup="$appointmentViewToggle" />
+      <RadioButton fx:id="viewAppointmentByMonthRadioBtn" layoutX="611.0" layoutY="23.0" mnemonicParsing="false" onAction="#onActionViewByMonthRadioBtn" text="View By Month" toggleGroup="$appointmentViewToggle" />
       <Label layoutX="14.0" layoutY="15.0" text="In Session User:" />
       <Label fx:id="inSessionUserLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="107.0" layoutY="15.0" text="///" textAlignment="CENTER" textFill="#e47e0a" />
    </children>

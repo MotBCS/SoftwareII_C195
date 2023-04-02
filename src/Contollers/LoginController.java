@@ -48,8 +48,6 @@ public class LoginController implements Initializable {
     public Button loginBtn;
     public static UserModel obtainUserByID;
 
-    boolean validUser = false;
-
     public void quitApplication(ActionEvent actionEvent) {
         Stage stage = (Stage) quitBtn.getScene().getWindow();
         stage.close();
@@ -111,23 +109,25 @@ public class LoginController implements Initializable {
             stage.setScene(scene);
             stage.centerOnScreen();
             stage.show();
+//            NavigationMenuController.sendUserInformation(obtainUserByID);
+            UserLog_SuccessfulLogIN(username);
 
-            try {
-                JavaDatabaseConnection.openConnection();
-                String SQL = "SELECT User_ID, User_Name FROM users WHERE User_Name=?;"; //Add password validation here
-                PreparedStatement preparedStatement = JavaDatabaseConnection.connection.prepareStatement(SQL);
-                ///preparedStatement
-                preparedStatement.setString(1, username);
-                preparedStatement.execute();
-                ResultSet resultSet = preparedStatement.getResultSet();
-                resultSet.next();
-                UserModel obtainUserByID = new UserModel(resultSet.getInt("User_ID"), resultSet.getString("User_Name"), resultSet.getString(password), true);
-                this.obtainUserByID = obtainUserByID;
-                NavigationMenuController.sendUserInformation(obtainUserByID);
-                JavaDatabaseConnection.closeConnection();
-            } catch (SQLException exception) {
-                System.out.println("Unable to obtain user login data from database (Error)");
-            }
+//            try {
+//                JavaDatabaseConnection.openConnection();
+//                String SQL = "SELECT User_ID, User_Name FROM users WHERE User_Name=?;"; //Add password validation here
+//                PreparedStatement preparedStatement = JavaDatabaseConnection.connection.prepareStatement(SQL);
+//                ///preparedStatement
+//                preparedStatement.setString(1, username);
+//                preparedStatement.execute();
+//                ResultSet resultSet = preparedStatement.getResultSet();
+//                resultSet.next();
+//                UserModel obtainUserByID = new UserModel(resultSet.getInt("User_ID"), resultSet.getString("User_Name"), resultSet.getString(password), true);
+//                this.obtainUserByID = obtainUserByID;
+//                NavigationMenuController.sendUserInformation(obtainUserByID);
+//                JavaDatabaseConnection.closeConnection();
+//            } catch (SQLException exception) {
+//                System.out.println("Unable to obtain user login data from database (Error)");
+//            }
 
             UserLog_SuccessfulLogIN(username);
             boolean checkUpcomingApps = false;

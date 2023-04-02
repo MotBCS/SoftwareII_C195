@@ -135,7 +135,7 @@ public class AppointmentQuery {
         ObservableList<AppointmentModel> appMonthList = FXCollections.observableArrayList();
         try {
             JavaDatabaseConnection.openConnection();
-            String SQL = "SELECT Appointment_ID, Customer_ID, Title, Description, Location, Type, User_ID, Contact_ID, Contact_Name, Start, End FROM appointments WHERE MONTH(Start)=MONTH(NOW())";
+            String SQL = "SELECT Appointment_ID, Customer_ID, Title, Description, Location, Type, User_ID, Contact_ID, Start, End FROM appointments WHERE MONTH(Start)=MONTH(NOW())";
             PreparedStatement preparedStatement = JavaDatabaseConnection.connection.prepareStatement(SQL);
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()){
@@ -149,7 +149,7 @@ public class AppointmentQuery {
                 int appCustomerId = resultSet.getInt("Customer_ID");
                 int appUserId = resultSet.getInt("User_ID");
                 String appLocation = resultSet.getString("Location");
-                String appointmentContactName = resultSet.getString("Contact_Name");
+                //String appointmentContactName = resultSet.getString("Contact_Name");
                 AppointmentModel appointmentModel = new AppointmentModel(
                         appId,
                         appTitle,
@@ -160,8 +160,8 @@ public class AppointmentQuery {
                         appEnd,
                         appCustomerId,
                         appUserId,
-                        appLocation,
-                        appointmentContactName
+                        appLocation
+                        //appointmentContactName
                 );
                 appMonthList.add(appointmentModel);
             }
@@ -177,7 +177,7 @@ public class AppointmentQuery {
         ObservableList<AppointmentModel> appWeekList = FXCollections.observableArrayList();
         try {
             JavaDatabaseConnection.openConnection();
-            String SQL = "SELECT Appointment_ID, Customer_ID, Title, Description, Location, Type, User_ID, Contact_ID, Contact_Name, Start, End FROM appointments WHERE Start BETWEEN NOW() AND DATE_ADD(NOW(), INTERVAL 7 DAY);";
+            String SQL = "SELECT Appointment_ID, Customer_ID, Title, Description, Location, Type, User_ID, Contact_ID, Start, End FROM appointments WHERE Start BETWEEN NOW() AND DATE_ADD(NOW(), INTERVAL 7 DAY);";
             PreparedStatement preparedStatement = JavaDatabaseConnection.connection.prepareStatement(SQL);
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()){
@@ -191,7 +191,7 @@ public class AppointmentQuery {
                 int appCustomerId = resultSet.getInt("Customer_ID");
                 int appUserId = resultSet.getInt("User_ID");
                 String appLocation = resultSet.getString("Location");
-                String appointmentContactName = resultSet.getString("Contact_Name");
+                //String appointmentContactName = resultSet.getString("Contact_Name");
                 AppointmentModel appointmentModel = new AppointmentModel(
                         appId,
                         appTitle,
@@ -202,13 +202,13 @@ public class AppointmentQuery {
                         appEnd,
                         appCustomerId,
                         appUserId,
-                        appLocation,
-                        appointmentContactName
+                        appLocation
+                        //appointmentContactName
                 );
                 appWeekList.add(appointmentModel);
             }
         } catch (SQLException exception) {
-            System.out.println("Unable to obtain appointment by current month");
+            System.out.println("Unable to obtain appointment by current week");
         }
         return appWeekList;
     }
