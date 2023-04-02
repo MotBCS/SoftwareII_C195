@@ -4,6 +4,8 @@ import Models.AppointmentModel;
 import Models.REPORT_MonthType_TotalAppointment;
 import Models.REPORT_StateProvince_TotalCustomer;
 import Queries.AppointmentQuery;
+import Queries.ReportQuery;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -80,6 +82,7 @@ public class ReportController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
+        /** Contact Report Table */
         appIDColumn.setCellValueFactory(new PropertyValueFactory<>("appId"));
         titleColumn.setCellValueFactory(new PropertyValueFactory<>("appTitle"));
         AppointmentTypeColumn.setCellValueFactory(new PropertyValueFactory<>("appType"));
@@ -93,5 +96,25 @@ public class ReportController implements Initializable {
 
         appointmentTable.setItems(AppointmentQuery.obtainAllAppointments());
 
+        /**
+         * Combine Month and Type Tables into one
+         * */
+        ObservableList<REPORT_MonthType_TotalAppointment> viewAllMonthType = ReportQuery.appByMonthType();
+        /** Binding Month, type and total column to table */
+        monthColumn.setCellValueFactory(new PropertyValueFactory<>("appMonth"));
+        typeColumn.setCellValueFactory(new PropertyValueFactory<>("appType"));
+        appointmentTotalColumn.setCellValueFactory(new PropertyValueFactory<>("totalPerMonth"));
+        /** Set values to table */
+        monthTypeTable.setItems(viewAllMonthType);
+
+        /**
+         * State/Province Table
+         * */
+        ObservableList<REPORT_StateProvince_TotalCustomer> viewAllStateProvince = ReportQuery.customerTotalByStateProvince();
+        /** Binding State/Province columns to table*/
+        stateProvinceColumn.setCellValueFactory(new PropertyValueFactory<>("stateProvince"));
+        customerTotalColumn.setCellValueFactory(new PropertyValueFactory<>("customerTotal"));
+        /** Set values to table */
+        stateProvinceTable.setItems(viewAllStateProvince);
     }
 }
