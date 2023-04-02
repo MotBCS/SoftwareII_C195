@@ -1,10 +1,13 @@
 package Contollers;
 
 import Models.AppointmentModel;
+import Models.ContactModel;
 import Models.REPORT_MonthType_TotalAppointment;
 import Models.REPORT_StateProvince_TotalCustomer;
 import Queries.AppointmentQuery;
+import Queries.ContactQuery;
 import Queries.ReportQuery;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -43,7 +46,7 @@ public class ReportController implements Initializable {
     @FXML
     public TableColumn<REPORT_StateProvince_TotalCustomer, Integer>customerTotalColumn;
     @FXML
-    public ComboBox<String>reportContactComboBox;
+    public ComboBox<ContactModel>reportContactComboBox;
     @FXML
     public TableView<AppointmentModel>appointmentTable;
     @FXML
@@ -68,6 +71,17 @@ public class ReportController implements Initializable {
     public TableColumn<AppointmentModel, Integer>userIDColumn;
 
     public void filterContactReportTable(ActionEvent actionEvent) {
+        ContactModel contactModel = reportContactComboBox.getSelectionModel().getSelectedItem();
+        if (contactModel.getContactId() == 1){
+            appointmentTable.setItems(ContactQuery.contactReportByContactID1());
+        }else if (contactModel.getContactId() == 2){
+            appointmentTable.setItems(ContactQuery.contactReportByContactID2());
+        }else if (contactModel.getContactId() == 3){
+            appointmentTable.setItems(ContactQuery.contactReportByContactID3());
+        }else {
+            ObservableList<AppointmentModel> viewAll = ContactQuery.contactReport();
+            appointmentTable.setItems(viewAll);
+        }
     }
 
     public void toMainMenu(ActionEvent actionEvent) throws IOException {
@@ -81,6 +95,13 @@ public class ReportController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        reportContactComboBox.setPromptText("Select Contact");
+
+        ObservableList<ContactModel>populateContactComboBox = FXCollections.observableArrayList();
+        populateContactComboBox.clear();
+        populateContactComboBox = ContactQuery.obtainAllContacts();
+        reportContactComboBox.setItems(populateContactComboBox);
+
 
         /** Contact Report Table */
         appIDColumn.setCellValueFactory(new PropertyValueFactory<>("appId"));

@@ -129,7 +129,7 @@ public class ContactQuery {
                 int appCustomerId = resultSet.getInt("Customer_ID");
                 int appUserId = resultSet.getInt("User_ID");
                 String appLocation = resultSet.getString("Location");
-                String appointmentContactName = resultSet.getString("Contact_Name");
+                //String appointmentContactName = resultSet.getString("Contact_Name");
 
                 AppointmentModel appointmentModel = new AppointmentModel(
                         appId,
@@ -141,8 +141,8 @@ public class ContactQuery {
                         appEnd,
                         appCustomerId,
                         appUserId,
-                        appLocation,
-                        appointmentContactName
+                        appLocation
+                        //appointmentContactName
                 );
                 contact_1_ReportList.add(appointmentModel);
             }
@@ -174,7 +174,7 @@ public class ContactQuery {
                 int appCustomerId = resultSet.getInt("Customer_ID");
                 int appUserId = resultSet.getInt("User_ID");
                 String appLocation = resultSet.getString("Location");
-                String appointmentContactName = resultSet.getString("Contact_Name");
+                //String appointmentContactName = resultSet.getString("Contact_Name");
 
                 AppointmentModel appointmentModel = new AppointmentModel(
                         appId,
@@ -186,8 +186,8 @@ public class ContactQuery {
                         appEnd,
                         appCustomerId,
                         appUserId,
-                        appLocation,
-                        appointmentContactName
+                        appLocation
+                        //appointmentContactName
                 );
                 contact_2_ReportList.add(appointmentModel);
             }
@@ -219,7 +219,7 @@ public class ContactQuery {
                 int appCustomerId = resultSet.getInt("Customer_ID");
                 int appUserId = resultSet.getInt("User_ID");
                 String appLocation = resultSet.getString("Location");
-                String appointmentContactName = resultSet.getString("Contact_Name");
+                //String appointmentContactName = resultSet.getString("Contact_Name");
 
                 AppointmentModel appointmentModel = new AppointmentModel(
                         appId,
@@ -231,8 +231,8 @@ public class ContactQuery {
                         appEnd,
                         appCustomerId,
                         appUserId,
-                        appLocation,
-                        appointmentContactName
+                        appLocation
+                        //appointmentContactName
                 );
                 contact_3_ReportList.add(appointmentModel);
             }
