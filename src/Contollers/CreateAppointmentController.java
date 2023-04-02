@@ -21,6 +21,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -66,12 +67,34 @@ public class CreateAppointmentController implements Initializable {
     }
 
     public void saveAddAppointment(ActionEvent actionEvent) throws SQLException, IOException {
+
+        DayOfWeek checkStartAppDay = createAppointmentDatePicker_Start.getValue().getDayOfWeek();
+        DayOfWeek checkEndAppDay = createAppointmentDatePicker_End.getValue().getDayOfWeek();
+        Integer checkStartAppInt = checkStartAppDay.getValue();
+        Integer checkEndAppInt = checkEndAppDay.getValue();
+        Integer weekStart = DayOfWeek.MONDAY.getValue();
+        Integer weekEnd = DayOfWeek.FRIDAY.getValue();
+
+
         String appTitle = createAppointmentTitleTextField.getText();
         String appDes = createAppointmentDescriptionTextField.getText();
         String appType = createAppointmentTypeTextField.getText();
         String appLocation = createLocationTextField.getText();
 
         ContactModel contactModel = createAppointmentContactComboBox.getValue();
+
+        if (checkStartAppInt < weekStart || checkStartAppInt > weekEnd){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setHeaderText("Unable to create new appointment");
+            alert.setContentText("Appointment outside business operation days");
+            alert.showAndWait();
+        }
+        else if (checkEndAppInt < weekStart || checkEndAppInt > weekEnd){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setHeaderText("Unable to create new appointment");
+            alert.setContentText("Appointment outside business operation days");
+            alert.showAndWait();
+        }
         if (contactModel == null){
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setHeaderText("Unable to create new appointment");
@@ -128,7 +151,7 @@ public class CreateAppointmentController implements Initializable {
         int appByCustomerId = createAppointmentCustomerIDComboBox.getValue().getCustomerId();
 
         UserModel userModel = createAppointmentUserIDComboBox.getValue();
-        if (createAppointmentDatePicker_Start != createAppointmentDatePicker_End){
+        if (startDate.getDayOfWeek() != endDate.getDayOfWeek()){
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setHeaderText("Unable to create new appointment");
             alert.setContentText("Appointment must start and end on the same day");
