@@ -116,6 +116,7 @@ public class LoginController implements Initializable {
                 JavaDatabaseConnection.openConnection();
                 String SQL = "SELECT User_ID, User_Name FROM users WHERE User_Name=?;"; //Add password validation here
                 PreparedStatement preparedStatement = JavaDatabaseConnection.connection.prepareStatement(SQL);
+                ///preparedStatement
                 preparedStatement.setString(1, username);
                 preparedStatement.execute();
                 ResultSet resultSet = preparedStatement.getResultSet();
@@ -125,7 +126,7 @@ public class LoginController implements Initializable {
                 NavigationMenuController.sendUserInformation(obtainUserByID);
                 JavaDatabaseConnection.closeConnection();
             } catch (SQLException exception) {
-                System.out.println("Unable to obtain user login data from database");
+                System.out.println("Unable to obtain user login data from database (Error)");
             }
 
             UserLog_SuccessfulLogIN(username);

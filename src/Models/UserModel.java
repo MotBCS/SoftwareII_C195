@@ -66,6 +66,14 @@ public class UserModel {
         this.password = password;
     }
 
+    public boolean isInSession() {
+        return inSession;
+    }
+
+    public void setInSession(boolean inSession) {
+        this.inSession = inSession;
+    }
+
     @Override
     public String toString(){
         return Integer.toString(userId) + " " + username;
