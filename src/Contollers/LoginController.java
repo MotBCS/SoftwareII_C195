@@ -32,6 +32,8 @@ import java.time.ZonedDateTime;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import static Queries.UserQuery.checkUserLogin;
+import static Queries.UserQuery.obtainUserById;
+import static Contollers.NavigationMenuController.sendUserInformation;
 
 public class LoginController implements Initializable {
     public TextField locationField;
@@ -56,28 +58,10 @@ public class LoginController implements Initializable {
     LocalDateTime loginUserTime = LocalDateTime.now();
     ZonedDateTime localDateTimeToUser = loginUserTime.atZone(ZoneId.systemDefault());
     LocalDateTime loginUserTimeAdd = LocalDateTime.now().plusMinutes(15);
-    public void loginUser(ActionEvent actionEvent) throws IOException {
-        if (loginUsernameTextField.getText().isEmpty() && loginPasswordTextField.getText().isEmpty()){
-            if (Locale.getDefault().getLanguage().equals("fr")){
-                //Error message in French
-                ResourceBundle resourceBundle = ResourceBundle.getBundle("Main/Nat", Locale.getDefault());
-                errorMessageLabel.setText(resourceBundle.getString("BothFieldsEmpty"));
-            }
-            else {
-                errorMessageLabel.setText("Please Enter Username and Password");
-            }
-        }
-        else if (loginPasswordTextField.getText().isEmpty()){
-            if (Locale.getDefault().getLanguage().equals("fr")) {
-                //Error message in French
-                ResourceBundle resourceBundle = ResourceBundle.getBundle("Main/Nat", Locale.getDefault());
-                errorMessageLabel.setText(resourceBundle.getString("EnterPassword"));
-            }
-            else {
-                errorMessageLabel.setText("Please Enter Password");
-            }
-        }
-        else if (loginUsernameTextField.getText().isEmpty()){
+    public void loginUser(ActionEvent actionEvent) throws IOException, SQLException{
+        String username = loginUsernameTextField.getText();
+        String password = loginPasswordTextField.getText();
+        if (username.isEmpty()){
             if (Locale.getDefault().getLanguage().equals("fr")) {
                 //Error message in French
                 ResourceBundle resourceBundle = ResourceBundle.getBundle("Main/Nat", Locale.getDefault());
@@ -87,88 +71,86 @@ public class LoginController implements Initializable {
                 errorMessageLabel.setText("Please Enter Username");
             }
         }
-        else {
-            String username;
-            String password;
-            username = loginUsernameTextField.getText();
-            password = loginPasswordTextField.getText();
-            Boolean checkLoginUserData = UserQuery.checkUserLogin(username, password);
-            if (checkLoginUserData){
-                if (futureAppointments().size()>=1){
-                    for (AppointmentModel appointmentModel: futureAppointments()){
-                        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                        alert.setHeaderText("Hello, " + appointmentModel.getAppId() + ", You Have An Upcoming Appointment!");
-                        alert.setContentText("You have a appointment in 15 minutes! \n Appointment ID: " + appointmentModel.getAppId() + "\n Appointment Time: " + appointmentModel.getAppStart());
-                        alert.showAndWait();
-                    }
-                }
+        if (password.isEmpty()){
+            if (Locale.getDefault().getLanguage().equals("fr")) {
+                //Error message in French
+                ResourceBundle resourceBundle = ResourceBundle.getBundle("Main/Nat", Locale.getDefault());
+                errorMessageLabel.setText(resourceBundle.getString("EnterPassword"));
             }
             else {
+                errorMessageLabel.setText("Please Enter Password");
+            }
+        }
+        if (username.isEmpty() && password.isEmpty()){
+            if (Locale.getDefault().getLanguage().equals("fr")){
+                //Error message in French
+                ResourceBundle resourceBundle = ResourceBundle.getBundle("Main/Nat", Locale.getDefault());
+                errorMessageLabel.setText(resourceBundle.getString("BothFieldsEmpty"));
+            }
+            else {
+                errorMessageLabel.setText("Please Enter Username and Password");
+            }
+        }
+        else if (!checkUserLogin(username, password)){
+            UserLog_FailedLogIN(username);
+            if (Locale.getDefault().getLanguage().equals("fr")) {
+                //Error message in French
+                ResourceBundle resourceBundle = ResourceBundle.getBundle("Main/Nat", Locale.getDefault());
+                errorMessageLabel.setText(resourceBundle.getString("InvalidUser"));
+            }
+            else {
+                errorMessageLabel.setText("No User Found");
+            }
+        }
+        else if (checkUserLogin(username, password)){
+            int userId = obtainUserById(username);
+            ObservableList<AppointmentModel> allAssociatedAppsToUser = AppointmentQuery.appByUserID(userId);
+            Parent root = FXMLLoader.load(getClass().getResource("/Views/HomeMenuScreen.fxml"));
+            Stage stage = (Stage) loginBtn.getScene().getWindow();
+            Scene scene = new Scene(root,452.0,400.0);
+            stage.setScene(scene);
+            stage.centerOnScreen();
+            stage.show();
+
+            try {
+                JavaDatabaseConnection.openConnection();
+                String SQL = "SELECT User_ID, User_Name FROM users WHERE User_Name=?;"; //Add password validation here
+                PreparedStatement preparedStatement = JavaDatabaseConnection.connection.prepareStatement(SQL);
+                preparedStatement.setString(1, username);
+                preparedStatement.execute();
+                ResultSet resultSet = preparedStatement.getResultSet();
+                resultSet.next();
+                UserModel obtainUserByID = new UserModel(resultSet.getInt("User_ID"), resultSet.getString("User_Name"), resultSet.getString(password), true);
+                this.obtainUserByID = obtainUserByID;
+                NavigationMenuController.sendUserInformation(obtainUserByID);
+                JavaDatabaseConnection.closeConnection();
+            } catch (SQLException exception) {
+                System.out.println("Unable to obtain user login data from database");
+            }
+
+            UserLog_SuccessfulLogIN(username);
+            boolean checkUpcomingApps = false;
+            for (AppointmentModel appointmentModel : allAssociatedAppsToUser){
+                LocalDateTime appStart = appointmentModel.getAppStart();
+                if ((appStart.isAfter(loginUserTime) || appStart.isEqual(loginUserTimeAdd)) && (appStart.isBefore(loginUserTimeAdd) || appStart.isEqual(loginUserTime))){
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setHeaderText("Hello, You Have An Upcoming Appointment!");
+                    alert.setContentText("You have a appointment in 15 minutes! \n Appointment ID: " + appointmentModel.getAppId() + "\n Appointment Time: " + appointmentModel.getAppStart());
+                    alert.showAndWait();
+                    checkUpcomingApps = true;
+                }
+            }
+            if (!checkUpcomingApps){
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setHeaderText("No Upcoming Appointments");
                 alert.setContentText("You have no upcoming appointments at the moment");
                 alert.showAndWait();
             }
-            if (checkUserLogin(username, password)){
-                try {
-                    JavaDatabaseConnection.openConnection();
-                    String SQL = "SELECT User_ID, User_Name FROM users WHERE User_Name=?;"; //Add password validation here
-                    PreparedStatement preparedStatement = JavaDatabaseConnection.connection.prepareStatement(SQL);
-                    preparedStatement.setString(1, username);
-                    preparedStatement.execute();
-                    ResultSet resultSet = preparedStatement.getResultSet();
-                    resultSet.next();
-                    UserModel obtainUserByID = new UserModel(resultSet.getInt("User_ID"), resultSet.getString("User_Name"), resultSet.getString("Password"), true);
-                    this.obtainUserByID = obtainUserByID;
-                    NavigationMenuController.sendUserInformation(obtainUserByID);
-                    JavaDatabaseConnection.closeConnection();
-                } catch (SQLException exception) {
-                    System.out.println("Unable to obtain user login data from database (SQL Error)");
-                }
-                Parent root = FXMLLoader.load(getClass().getResource("/Views/HomeMenuScreen.fxml"));
-                Stage stage = (Stage) loginBtn.getScene().getWindow();
-                Scene scene = new Scene(root,452.0,400.0);
-                stage.setTitle("Main Menu");
-                stage.setScene(scene);
-                stage.centerOnScreen();
-                stage.show();
-                //Record login attempt in txt field
-                UserLog_SuccessfulLogIN(username);
-            }
-            else {
-                //Record login attempt in txt field
-                UserLog_FailedLogIN(username);
-                if (Locale.getDefault().getLanguage().equals("fr")) {
-                    //Error message in French
-                    ResourceBundle resourceBundle = ResourceBundle.getBundle("Main/Nat", Locale.getDefault());
-                    errorMessageLabel.setText(resourceBundle.getString("InvalidUser"));
-                }
-                else {
-                    errorMessageLabel.setText("No User Found");
-                }
-            }
         }
     }
 
-    public ObservableList<AppointmentModel> futureAppointments(){
-        ObservableList<AppointmentModel>allFutureAppointments = AppointmentQuery.obtainAllAppointments();
-        ObservableList<AppointmentModel>futureAppointmentList = FXCollections.observableArrayList();
-        if (allFutureAppointments != null){
-            for (AppointmentModel appointmentModel : allFutureAppointments){
-                LocalDateTime appStart = appointmentModel.getAppStart();
-                LocalDateTime appNow = Timestamp.from(Instant.now()).toLocalDateTime();
 
-                if (appStart.isBefore(appNow.plusMinutes(30))){
-                    if (appStart.isAfter(appNow)){
-                        futureAppointmentList.add(appointmentModel);
-                    }
-                }
-            }
-        }
-        return futureAppointmentList;
-    }
-
-    public static void UserLog_SuccessfulLogIN(String UserUsername){
+    public static void UserLog_SuccessfulLogIN(String username){
         try {
             String userLog = "login_activity.txt";
             File file = new File(userLog);
@@ -176,7 +158,7 @@ public class LoginController implements Initializable {
             PrintWriter printWriter = new PrintWriter(fileWriter);
             LocalDateTime localDateTime = LocalDateTime.now();
 
-            printWriter.println("*** User: " + UserUsername + " Login Time: " + Timestamp.valueOf(localDateTime) + " Attempt: Successful ***\n");
+            printWriter.println("*** User: " + username + " Login Time: " + Timestamp.valueOf(localDateTime) + " Attempt: Successful ***\n");
             printWriter.close();
 
         } catch (IOException e) {
@@ -184,7 +166,7 @@ public class LoginController implements Initializable {
         }
     }
 
-    public static void UserLog_FailedLogIN(String UserUsername){
+    public static void UserLog_FailedLogIN(String username){
         try {
             String userLog = "login_activity.txt";
             File file = new File(userLog);
@@ -192,7 +174,7 @@ public class LoginController implements Initializable {
             PrintWriter printWriter = new PrintWriter(fileWriter);
             LocalDateTime localDateTime = LocalDateTime.now();
 
-            printWriter.println("*** User: " + UserUsername + " Login Time: " + Timestamp.valueOf(localDateTime) + " Attempt: Failed ***\n");
+            printWriter.println("*** User: " + username + " Login Time: " + Timestamp.valueOf(localDateTime) + " Attempt: Failed ***\n");
             printWriter.close();
 
         } catch (IOException e) {
