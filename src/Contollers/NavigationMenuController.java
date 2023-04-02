@@ -1,24 +1,38 @@
 package Contollers;
 
+import Models.UserModel;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.Label;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.Optional;
+import java.util.ResourceBundle;
 
-public class NavigationMenuController {
+public class NavigationMenuController implements Initializable {
     public Button mainAppointmentsBtn;
     public Button mainLogoutBtn;
     public Button mainCustomerBtn;
     public Button mainReportBtn;
     public Text mainMenuLabel;
+
+    public static UserModel inSessionUser;
+    public Label inSessionUserLabel;
+
+    public static void sendUserInformation(UserModel obtainUserByID) {
+        UserModel userModel = new UserModel(obtainUserByID.getUserId(), obtainUserByID.getUsername());
+        inSessionUser = userModel;
+        System.out.println("In session user: " + userModel);
+    }
 
     public void appointmentBtnHandler(ActionEvent actionEvent) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("/Views/AppointmentMenuScreen.fxml"));
@@ -63,5 +77,9 @@ public class NavigationMenuController {
         stage.setScene(scene);
         stage.centerOnScreen();
         stage.show();
+    }
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
     }
 }

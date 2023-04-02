@@ -4,6 +4,7 @@ public class UserModel {
     private int userId;
     private String username;
     private String password;
+    private boolean inSession;
 
     public UserModel(
             int userId,
@@ -27,6 +28,18 @@ public class UserModel {
             String username
     ){
         this.username = username;
+    }
+
+    public UserModel(
+            int userId,
+            String username,
+            String password,
+            boolean inSession
+    ){
+        this.userId = userId;
+        this.username = username;
+        this.password = password;
+        this.inSession = inSession;
     }
 
     public int getUserId() {

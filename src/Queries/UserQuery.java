@@ -51,23 +51,25 @@ public class UserQuery {
         return allUsersList;
     }
 
-    public static int obtainUserById(String username) throws SQLException{
-        int userId = 0;
+    public static UserModel obtainUserByID(Integer userId) {
         try {
             JavaDatabaseConnection.openConnection();
-            String SQL = "SELECT User_ID, User_Name FROM users WHERE User_Name = '" + username +"'";
+            String SQL = "SELECT User_Name FROM users WHERE User_ID=?";
             PreparedStatement preparedStatement = JavaDatabaseConnection.connection.prepareStatement(SQL);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            while (resultSet.next()){
-                userId = resultSet.getInt("User_ID");
-                username = resultSet.getString("User_Name");
+            preparedStatement.setInt(1, userId);
+            preparedStatement.execute();
+            ResultSet resultSet = preparedStatement.getResultSet();
+            if (resultSet.next()){
+                UserModel obtainUser = new UserModel( userId, resultSet.getString("User_Name"));
+                return obtainUser;
             }
         } catch (SQLException exception) {
-            System.out.println("Unable to get user by user Id (SQL Error)");
-        }finally {
+            System.out.println("Unable to get user from database by ID");
+        }
+        finally {
             JavaDatabaseConnection.closeConnection();
         }
-        return userId;
+        return null;
     }
 
     public static UserModel obtainUsernameById(int userId){

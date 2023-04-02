@@ -1,6 +1,7 @@
 package Contollers;
 
 import Models.AppointmentModel;
+import Models.UserModel;
 import Queries.AppointmentQuery;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -120,6 +121,9 @@ public class MainAppointmentController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+
+
+
         appIDColumn.setCellValueFactory(new PropertyValueFactory<>("appId"));
         titleColumn.setCellValueFactory(new PropertyValueFactory<>("appTitle"));
         typeColumn.setCellValueFactory(new PropertyValueFactory<>("appType"));
