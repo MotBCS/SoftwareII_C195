@@ -88,12 +88,14 @@ public class CreateAppointmentController implements Initializable {
             alert.setHeaderText("Unable to create new appointment");
             alert.setContentText("Appointment outside business operation days");
             alert.showAndWait();
+            return;
         }
         else if (checkEndAppInt < weekStart || checkEndAppInt > weekEnd){
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setHeaderText("Unable to create new appointment");
             alert.setContentText("Appointment outside business operation days");
             alert.showAndWait();
+            return;
         }
         if (contactModel == null){
             Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -101,6 +103,7 @@ public class CreateAppointmentController implements Initializable {
             alert.setContentText("Empty contact combo box");
             alert.showAndWait();
         }
+
         int appContact = contactModel.getContactId();
 
         LocalDate startDate = createAppointmentDatePicker_Start.getValue();
@@ -140,6 +143,20 @@ public class CreateAppointmentController implements Initializable {
         }
         LocalDateTime appEnd = LocalDateTime.of(createAppointmentDatePicker_End.getValue(), createAppointmentEndTimeComboBox.getValue());
 
+        if (startTime.isAfter(endTime)){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setHeaderText("Unable to create new appointment");
+            alert.setContentText("Appointment start time is after appointment end time");
+            alert.showAndWait();
+            return;
+        }
+        if (startTime.equals(endTime)){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setHeaderText("Unable to create new appointment");
+            alert.setContentText("Appointment start time can not be the same as appointment end time");
+            alert.showAndWait();
+            return;
+        }
         CustomerModel customerModel = createAppointmentCustomerIDComboBox.getValue();
         if (customerModel == null){
             Alert alert = new Alert(Alert.AlertType.ERROR);

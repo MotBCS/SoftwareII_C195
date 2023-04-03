@@ -10,6 +10,7 @@ import Queries.CustomerQuery;
 import Queries.UserQuery;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
@@ -20,25 +21,40 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ResourceBundle;
 
 public class ModifyAppointmentController implements Initializable {
+    @FXML
     public ComboBox<CustomerModel>modifyAppointmentCustomerIDComboBox;
+    @FXML
     public ComboBox<UserModel>modifyAppointmentUserIDComboBox;
+    @FXML
     public DatePicker modifyAppointmentDatePicker_End;
+    @FXML
     public TextField modifyAppointmentIDTextField;
+    @FXML
     public TextField modifyAppointmentTitleTextField;
+    @FXML
     public TextField ModifyAppointmentTypeTextField;
+    @FXML
     public TextField ModifyLocationTextField;
+    @FXML
     public ComboBox<LocalTime>ModifyAppointmentStartTimeComboBox;
+    @FXML
     public ComboBox<LocalTime>ModifyAppointmentEndTimeComboBox;
+    @FXML
     public ComboBox<ContactModel>modifyAppointmentContactComboBox;
+    @FXML
     public TextField modifyAppointmentDescriptionTextField;
+    @FXML
     public DatePicker modifyAppointmentDatePicker_Start;
+    @FXML
     public Button cancelBtn;
+    @FXML
     public Button saveBtn;
 
     public void toMainMenu(ActionEvent actionEvent) throws IOException {
@@ -51,13 +67,38 @@ public class ModifyAppointmentController implements Initializable {
     }
 
     public void saveAddAppointment(ActionEvent actionEvent) throws IOException{
+
+        DayOfWeek checkStartAppDay = modifyAppointmentDatePicker_Start.getValue().getDayOfWeek();
+        DayOfWeek checkEndAppDay = modifyAppointmentDatePicker_End.getValue().getDayOfWeek();
+        Integer checkStartAppInt = checkStartAppDay.getValue();
+        Integer checkEndAppInt = checkEndAppDay.getValue();
+        Integer weekStart = DayOfWeek.MONDAY.getValue();
+        Integer weekEnd = DayOfWeek.FRIDAY.getValue();
+
         int appId = Integer.parseInt(modifyAppointmentIDTextField.getText());
         String appTitle = modifyAppointmentTitleTextField.getText();
         String appDescription = modifyAppointmentDescriptionTextField.getText();
         String appType = ModifyAppointmentTypeTextField.getText();
         String appLocation = ModifyLocationTextField.getText();
 
+
+
         ContactModel contactModel = modifyAppointmentContactComboBox.getValue();
+
+        if (checkStartAppInt < weekStart || checkStartAppInt > weekEnd){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setHeaderText("Unable to create new appointment");
+            alert.setContentText("Appointment outside business operation days");
+            alert.showAndWait();
+            return;
+        }
+        else if (checkEndAppInt < weekStart || checkEndAppInt > weekEnd){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setHeaderText("Unable to create new appointment");
+            alert.setContentText("Appointment outside business operation days");
+            alert.showAndWait();
+            return;
+        }
         if (contactModel == null){
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setHeaderText("Unable to save modified appointment");
@@ -97,6 +138,21 @@ public class ModifyAppointmentController implements Initializable {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setHeaderText("Unable to save modified appointment");
             alert.setContentText("Empty End Time");
+            alert.showAndWait();
+            return;
+        }
+
+        if (appST.isAfter(appED)){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setHeaderText("Unable to create new appointment");
+            alert.setContentText("Appointment start time is after appointment end time");
+            alert.showAndWait();
+            return;
+        }
+        if (appST.equals(appED)){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setHeaderText("Unable to create new appointment");
+            alert.setContentText("Appointment start time can not be the same as appointment end time");
             alert.showAndWait();
             return;
         }
@@ -151,9 +207,9 @@ public class ModifyAppointmentController implements Initializable {
         else if (Helper.TimeConversion.operationCompanyTime(appStart, appEnd)){
             return;
         }
-//        else if (AppointmentQuery.clashingAppointments(customerId, appStart, appEnd)){
-//            return;
-//        }
+        else if (AppointmentQuery.clashingAppointments(customerId, appStart, appEnd)){
+            return;
+        }
         else {
             AppointmentQuery.modifyExistingAppointment(appId, appTitle, appDescription, appContact, appType, appStart, appEnd, customerId, appByUserId, appLocation);
             Parent root = FXMLLoader.load(getClass().getResource("/Views/AppointmentMenuScreen.fxml"));

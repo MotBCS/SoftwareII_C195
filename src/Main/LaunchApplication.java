@@ -30,6 +30,7 @@ public class LaunchApplication extends Application {
         stage.show();
     }
 
+
     public static void main(String[] args){
         Locale france = new Locale("fr", "FR");
 
@@ -38,6 +39,28 @@ public class LaunchApplication extends Application {
         if (Locale.getDefault().getLanguage().equals("fr")){
             System.out.println(resourceBundle.getString("Login"));
         }
+
+        /** Reference From CI Software Team Resource Repo
+         * Referenced to help better understand UTC time conversion
+         * */
+        Timestamp timeStamp = Timestamp.valueOf(LocalDateTime.now());
+        LocalDateTime localDateTime = timeStamp.toLocalDateTime();
+        ZonedDateTime zonedDateTime = localDateTime.atZone(ZoneId.of(ZoneId.systemDefault().toString()));
+        ZonedDateTime UTC_ZonedDateTime = zonedDateTime.withZoneSameInstant(ZoneId.of("UTC"));
+        LocalDateTime localDateTime_IN = UTC_ZonedDateTime.toLocalDateTime();
+        ZonedDateTime zonedDateTime_OUT = localDateTime_IN.atZone(ZoneId.of("UTC"));
+        ZonedDateTime zonedDateTime_OUT_ToLocalTime = zonedDateTime_OUT.withZoneSameInstant(ZoneId.of(ZoneId.systemDefault().toString()));
+        LocalDateTime localDateTimeFinal = zonedDateTime_OUT_ToLocalTime.toLocalDateTime();
+
+        /** Prints system time and UTC time conversion to console */
+        System.out.println(timeStamp);
+        System.out.println(localDateTime);
+        System.out.println(zonedDateTime);
+        System.out.println(UTC_ZonedDateTime);
+        System.out.println(localDateTime_IN);
+        System.out.println(zonedDateTime_OUT);
+        System.out.println(zonedDateTime_OUT_ToLocalTime);
+        System.out.println(localDateTimeFinal);
 
 
         /** Opens database before application is launched */

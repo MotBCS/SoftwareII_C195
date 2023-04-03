@@ -6,6 +6,7 @@ import Queries.AppointmentQuery;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
@@ -22,23 +23,41 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class MainAppointmentController implements Initializable {
+    @FXML
     public Button deleteAppointmentBtn;
+    @FXML
     public Button modifyAppointmentBtn;
+    @FXML
     public Button addNewAppointmentBtn;
+    @FXML
     public Button backBtn;
+    @FXML
     public TableView<AppointmentModel>appointmentTable;
+    @FXML
     public TableColumn<AppointmentModel, Integer>appIDColumn;
+    @FXML
     public TableColumn<AppointmentModel, String>titleColumn;
+    @FXML
     public TableColumn<AppointmentModel, String>typeColumn;
+    @FXML
     public TableColumn<AppointmentModel, String>locationColumn;
+    @FXML
     public TableColumn<AppointmentModel, Timestamp>startDateTimeColumn;
+    @FXML
     public TableColumn<AppointmentModel, Timestamp>endDateTimeColumn;
+    @FXML
     public TableColumn<AppointmentModel, Integer>contactIDColumn;
+    @FXML
     public TableColumn<AppointmentModel, Integer>customerIDColumn;
+    @FXML
     public TableColumn<AppointmentModel, String>descriptionColumn;
+    @FXML
     public TableColumn<AppointmentModel, Integer>userIDColumn;
+    @FXML
     public RadioButton viewAllAppointmentsRadioBtn;
+    @FXML
     public RadioButton viewAppointmentByWeekRadioBtn;
+    @FXML
     public RadioButton viewAppointmentByMonthRadioBtn;
 
     ObservableList<AppointmentModel> allAppList = FXCollections.observableArrayList();
@@ -78,6 +97,7 @@ public class MainAppointmentController implements Initializable {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setHeaderText("No Appointment Selected");
             alert.setContentText("Select an existing appointment from the table to modify");
+            alert.showAndWait();
         }
     }
 
