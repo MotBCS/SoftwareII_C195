@@ -175,6 +175,12 @@ public class ModifyAppointmentController implements Initializable {
         }
         else {
             AppointmentQuery.modifyExistingAppointment(appId, appTitle, appDescription, appContact, appType, appStartDateTime, appEndDateTime, customerId, userId,appLocation);
+            Parent root = FXMLLoader.load(getClass().getResource("/Views/AppointmentMenuScreen.fxml"));
+            Stage stage = (Stage) saveBtn.getScene().getWindow();
+            Scene scene = new Scene(root,868.0,720.0);
+            stage.setScene(scene);
+            stage.centerOnScreen();
+            stage.show();
         }
     }
 
