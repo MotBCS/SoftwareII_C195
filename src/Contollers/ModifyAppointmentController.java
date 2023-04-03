@@ -203,16 +203,16 @@ public class ModifyAppointmentController implements Initializable {
             alert.setContentText("Empty Location");
             alert.showAndWait();
         }
-        int appointmentCustomerId = modifyAppointmentCustomerIDComboBox.getValue().getCustomerId();
+
 
         if (Helper.TimeConversion.operationCompanyTime(appStart, appEnd)){
             return;
         }
-        else if (AppointmentQuery.clashingButNotAgainstSelectedApp(appointmentCustomerId, appId, appStart, appEnd)){
+        else if (AppointmentQuery.clashingAppointments(customerId, appStart, appEnd)){
             return;
         }
         else {
-            AppointmentQuery.modifyExistingAppointment(appId, appTitle, appDescription, appContact, appType, appStart, appEnd, appointmentCustomerId, appByUserId, appLocation);
+            AppointmentQuery.modifyExistingAppointment(appId, appTitle, appDescription, appContact, appType, appStart, appEnd, customerId, appByUserId, appLocation);
             Parent root = FXMLLoader.load(getClass().getResource("/Views/AppointmentMenuScreen.fxml"));
             Stage stage = (Stage) saveBtn.getScene().getWindow();
             Scene scene = new Scene(root,868.0,720.0);
