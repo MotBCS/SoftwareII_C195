@@ -232,9 +232,6 @@ public class CreateAppointmentController implements Initializable {
         createAppointmentStartTimeComboBox.setItems(Helper.TimeConversion.appTimeComboBoxPopulation());
         createAppointmentEndTimeComboBox.setItems(Helper.TimeConversion.appTimeComboBoxPopulation());
 
-//        createAppointmentDatePicker_Start
-//        createAppointmentDatePicker_End
-
         ObservableList<ContactModel>allContacts = ContactQuery.obtainAllContacts();
         createAppointmentContactComboBox.setItems(allContacts);
 
@@ -243,7 +240,5 @@ public class CreateAppointmentController implements Initializable {
 
         ObservableList<CustomerModel>allCustomers = CustomerQuery.obtainAllCustomers();
         createAppointmentCustomerIDComboBox.setItems(allCustomers);
-
-
     }
 }

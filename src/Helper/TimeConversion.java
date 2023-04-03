@@ -37,8 +37,8 @@ public class TimeConversion {
 
         LocalDateTime startEST = appStart.atZone(userLocalZone).withZoneSameInstant(companyZone_EST).toLocalDateTime();
         LocalDateTime endEST = appEnd.atZone(userLocalZone).withZoneSameInstant(companyZone_EST).toLocalDateTime();
-        LocalDateTime companyStart_EST = startEST.withHour(8).withMinute(0);
-        LocalDateTime companyEnd_EST = endEST.withHour(22).withMinute(0);
+        LocalDateTime companyStart_EST = startEST.withHour(7).withMinute(59);
+        LocalDateTime companyEnd_EST = endEST.withHour(22).withMinute(1);
 
         if (startEST.isBefore(companyStart_EST) || endEST.isAfter(companyEnd_EST)){
             Alert alert = new Alert(Alert.AlertType.ERROR);
