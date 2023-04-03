@@ -68,14 +68,6 @@ public class ModifyAppointmentController implements Initializable {
     }
 
     public void saveAddAppointment(ActionEvent actionEvent) throws IOException{
-
-        DayOfWeek checkStartAppDay = modifyAppointmentDatePicker_Start.getValue().getDayOfWeek();
-        DayOfWeek checkEndAppDay = modifyAppointmentDatePicker_End.getValue().getDayOfWeek();
-        Integer checkStartAppInt = checkStartAppDay.getValue();
-        Integer checkEndAppInt = checkEndAppDay.getValue();
-        Integer weekStart = DayOfWeek.MONDAY.getValue();
-        Integer weekEnd = DayOfWeek.FRIDAY.getValue();
-
         int appId = Integer.parseInt(modifyAppointmentIDTextField.getText());
         String appTitle = modifyAppointmentTitleTextField.getText();
         String appDescription = modifyAppointmentDescriptionTextField.getText();
@@ -83,148 +75,113 @@ public class ModifyAppointmentController implements Initializable {
         String appLocation = ModifyLocationTextField.getText();
 
         ContactModel contactModel = modifyAppointmentContactComboBox.getValue();
-
-        if (checkStartAppInt < weekStart || checkStartAppInt > weekEnd){
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setHeaderText("Unable to create new appointment");
-            alert.setContentText("Appointment outside business operation days");
-            alert.showAndWait();
-            return;
-        }
-        else if (checkEndAppInt < weekStart || checkEndAppInt > weekEnd){
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setHeaderText("Unable to create new appointment");
-            alert.setContentText("Appointment outside business operation days");
-            alert.showAndWait();
-            return;
-        }
         if (contactModel == null){
             Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setHeaderText("Unable to save modified appointment");
-            alert.setContentText("Empty Contact Combo Box");
+            alert.setHeaderText("Empty Contact");
+            alert.setHeaderText("Empty Contact Combo Box");
             alert.showAndWait();
             return;
         }
         int appContact = modifyAppointmentContactComboBox.getValue().getContactId();
 
-        LocalDate appStartDatePicker = modifyAppointmentDatePicker_Start.getValue();
-        if (appStartDatePicker == null){
+        LocalDate appStartDate = modifyAppointmentDatePicker_Start.getValue();
+        if (appStartDate == null){
             Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setHeaderText("Unable to save modified appointment");
-            alert.setContentText("Empty Start Date Picker");
+            alert.setHeaderText("Empty Start Date");
+            alert.setHeaderText("Empty Start Date Picker");
             alert.showAndWait();
             return;
         }
-        LocalDate appEndDatePicker = modifyAppointmentDatePicker_End.getValue();
-        if (appEndDatePicker == null){
+        LocalTime appStart = ModifyAppointmentStartTimeComboBox.getValue();
+        if (appStart == null){
             Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setHeaderText("Unable to save modified appointment");
-            alert.setContentText("Empty End Date Picker");
+            alert.setHeaderText("Empty Start Time");
+            alert.setHeaderText("Empty Start Time Combo Box");
+            alert.showAndWait();
+            return;
+        }
+        LocalDateTime appStartDateTime = LocalDateTime.of(modifyAppointmentDatePicker_Start.getValue(), ModifyAppointmentStartTimeComboBox.getValue());
+
+        LocalDate appEndDate = modifyAppointmentDatePicker_End.getValue();
+        if (appEndDate == null){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setHeaderText("Empty End Date");
+            alert.setHeaderText("Empty End Date Picker");
             alert.showAndWait();
             return;
         }
 
-        LocalTime appST = ModifyAppointmentStartTimeComboBox.getValue();
-        if (appST == null){
+        LocalTime appEnd = ModifyAppointmentEndTimeComboBox.getValue();
+        if (appEnd == null){
             Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setHeaderText("Unable to save modified appointment");
-            alert.setContentText("Empty Start Time");
+            alert.setHeaderText("Empty End Time");
+            alert.setHeaderText("Empty End Time Combo Box");
             alert.showAndWait();
             return;
         }
-        LocalTime appED = ModifyAppointmentEndTimeComboBox.getValue();
-        if (appED == null){
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setHeaderText("Unable to save modified appointment");
-            alert.setContentText("Empty End Time");
-            alert.showAndWait();
-            return;
-        }
-
-        if (appST.isAfter(appED)){
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setHeaderText("Unable to create new appointment");
-            alert.setContentText("Appointment start time is after appointment end time");
-            alert.showAndWait();
-            return;
-        }
-        if (appST.equals(appED)){
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setHeaderText("Unable to create new appointment");
-            alert.setContentText("Appointment start time can not be the same as appointment end time");
-            alert.showAndWait();
-            return;
-        }
-
+        LocalDateTime appEndDateTime = LocalDateTime.of(modifyAppointmentDatePicker_End.getValue(), ModifyAppointmentEndTimeComboBox.getValue());
         CustomerModel customerModel = modifyAppointmentCustomerIDComboBox.getValue();
         if (customerModel == null){
             Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setHeaderText("Unable to save modified appointment");
-            alert.setContentText("Empty Customer Combo Box");
+            alert.setHeaderText("Empty Customer");
+            alert.setHeaderText("Empty Customer Combo Box");
             alert.showAndWait();
             return;
         }
+        int customerId = modifyAppointmentCustomerIDComboBox.getValue().getCustomerId();
 
         UserModel userModel = modifyAppointmentUserIDComboBox.getValue();
         if (userModel == null){
             Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setHeaderText("Unable to save modified appointment");
-            alert.setContentText("Empty User Combo Box");
+            alert.setHeaderText("Empty Customer");
+            alert.setHeaderText("Empty Customer Combo Box");
             alert.showAndWait();
             return;
         }
-
-        LocalDateTime appStart = LocalDateTime.of(modifyAppointmentDatePicker_Start.getValue(), ModifyAppointmentStartTimeComboBox.getValue());
-        LocalDateTime appEnd = LocalDateTime.of(modifyAppointmentDatePicker_End.getValue(), ModifyAppointmentEndTimeComboBox.getValue());
-        int customerId = modifyAppointmentCustomerIDComboBox.getValue().getCustomerId();
-        int appByUserId = modifyAppointmentUserIDComboBox.getValue().getUserId();
-
+        int userId = modifyAppointmentUserIDComboBox.getValue().getUserId();
         if (appTitle.isEmpty()){
             Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setHeaderText("Unable to save modified appointment");
-            alert.setContentText("Empty Title");
+            alert.setHeaderText("Empty User Id");
+            alert.setHeaderText("Empty User Id Combo Box");
             alert.showAndWait();
+            return;
         }
         else if (appDescription.isEmpty()){
             Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setHeaderText("Unable to save modified appointment");
-            alert.setContentText("Empty Description");
+            alert.setHeaderText("Empty Description");
+            alert.setHeaderText("Empty Description Box");
             alert.showAndWait();
+            return;
         }
         else if (appType.isEmpty()){
             Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setHeaderText("Unable to save modified appointment");
-            alert.setContentText("Empty Type");
+            alert.setHeaderText("Empty Type");
+            alert.setHeaderText("Empty Appointment Type");
             alert.showAndWait();
+            return;
         }
         else if (appLocation.isEmpty()){
             Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setHeaderText("Unable to save modified appointment");
-            alert.setContentText("Empty Location");
+            alert.setHeaderText("Empty Location");
+            alert.setHeaderText("Empty Appointment Location");
             alert.showAndWait();
-        }
-
-
-        if (Helper.TimeConversion.operationCompanyTime(appStart, appEnd)){
             return;
         }
-        else if (AppointmentQuery.clashingAppointments(customerId, appStart, appEnd)){
+        else if (Helper.TimeConversion.operationCompanyTime(appStartDateTime, appEndDateTime)){
+            return;
+        }
+        else if (AppointmentQuery.clashingAppointments(customerId, appStartDateTime, appEndDateTime)){
             return;
         }
         else {
-            AppointmentQuery.modifyExistingAppointment(appId, appTitle, appDescription, appContact, appType, appStart, appEnd, customerId, appByUserId, appLocation);
-            Parent root = FXMLLoader.load(getClass().getResource("/Views/AppointmentMenuScreen.fxml"));
-            Stage stage = (Stage) saveBtn.getScene().getWindow();
-            Scene scene = new Scene(root,868.0,720.0);
-            stage.setScene(scene);
-            stage.centerOnScreen();
-            stage.show();
+            AppointmentQuery.modifyExistingAppointment(appId, appTitle, appDescription, appContact, appType, appStartDateTime, appEndDateTime, customerId, userId,appLocation);
         }
     }
 
     public void sendAppData(AppointmentModel appointmentModel) throws SQLException {
         ModifyAppointmentStartTimeComboBox.setItems(Helper.TimeConversion.appTimeComboBoxPopulation());
         ModifyAppointmentEndTimeComboBox.setItems(Helper.TimeConversion.appTimeComboBoxPopulation());
+
         modifyAppointmentIDTextField.setText(Integer.toString(appointmentModel.getAppId()));
         modifyAppointmentTitleTextField.setText(appointmentModel.getAppTitle());
         modifyAppointmentDescriptionTextField.setText(appointmentModel.getAppDescription());
