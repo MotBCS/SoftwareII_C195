@@ -1,6 +1,5 @@
 package Contollers;
 
-import Models.AppointmentModel;
 import Models.ContactModel;
 import Models.CustomerModel;
 import Models.UserModel;
@@ -56,6 +55,7 @@ public class CreateAppointmentController implements Initializable {
     public TextField createAppointmentDescriptionTextField;
     @FXML
     public DatePicker createAppointmentDatePicker_Start;
+    private final int addDays_ToEndDatePicker = 0;
 
     public void toMainMenu(ActionEvent actionEvent) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("/Views/AppointmentMenuScreen.fxml"));
@@ -240,5 +240,10 @@ public class CreateAppointmentController implements Initializable {
 
         ObservableList<CustomerModel>allCustomers = CustomerQuery.obtainAllCustomers();
         createAppointmentCustomerIDComboBox.setItems(allCustomers);
+
+        /**
+         * Lambda Expression #2
+         * */
+        createAppointmentDatePicker_Start.valueProperty().addListener((DatePicker, DatePickerOriginal, DatePickerNewValue) -> createAppointmentDatePicker_End.setValue(DatePickerNewValue.plusDays(addDays_ToEndDatePicker)));
     }
 }

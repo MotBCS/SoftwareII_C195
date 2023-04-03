@@ -1,5 +1,6 @@
 package Helper;
 
+import Models.AppointmentModel;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Alert;
@@ -8,6 +9,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 
 public class TimeConversion {
 
@@ -41,9 +43,11 @@ public class TimeConversion {
         LocalDateTime companyEnd_EST = endEST.withHour(22).withMinute(1);
 
         if (startEST.isBefore(companyStart_EST) || endEST.isAfter(companyEnd_EST)){
+            LocalTime start = Helper.TimeConversion.Company_ltStart();
+            LocalTime end = Helper.TimeConversion.Company_ltEnd();
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setHeaderText("Time Conflict");
-            alert.setContentText("Conflict start or end time (Business Hours: 8AM to 10PM)");
+            alert.setContentText("Conflict start or end time (Business Hours: 8AM to 10PM) \n Appointment must be between " + Company_ltStart().format(DateTimeFormatter.ofPattern("HH:mm")) + " to " + Company_ltEnd().format(DateTimeFormatter.ofPattern("HH:mm")) + " Local User Time");
             alert.showAndWait();
             return true;
         }
@@ -54,7 +58,7 @@ public class TimeConversion {
 
     public static ObservableList<LocalTime>appTimeComboBoxPopulation(){
         ObservableList<LocalTime>appTimeList = FXCollections.observableArrayList();
-        LocalTime start = LocalTime.of(8, 0);
+        LocalTime start = LocalTime.of(6, 0);
         LocalTime end = LocalTime.of(22, 0);
 
         while (start.isBefore(end.plusSeconds(2))){
