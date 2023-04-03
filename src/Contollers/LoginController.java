@@ -15,6 +15,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import lamdaInterface.UserLocation;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -31,6 +32,8 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.TimeZone;
+
 import static Queries.UserQuery.checkUserLogin;
 import static Queries.UserQuery.obtainUserById;
 import static Contollers.NavigationMenuController.sendUserInformation;
@@ -185,6 +188,12 @@ public class LoginController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        /** Lambda #1 */
+        UserLocation userTimeZoneLocation = () -> {
+            locationLabel.setText(String.valueOf(ZoneId.of(TimeZone.getDefault().getID())));
+        };
+        userTimeZoneLocation.userLocation();
+
         ResourceBundle rb = ResourceBundle.getBundle("Main/Nat", Locale.getDefault());
 
         if (Locale.getDefault().getLanguage().equals("fr")){
@@ -204,8 +213,8 @@ public class LoginController implements Initializable {
 
 
         /** Get users systems time zone and replace label text with location */
-        ZoneId usersLocalTimeZone = ZoneId.systemDefault();
-        locationLabel.setText(String.valueOf(usersLocalTimeZone));
+//        ZoneId usersLocalTimeZone = ZoneId.systemDefault();
+//        locationLabel.setText(String.valueOf(usersLocalTimeZone));
 
     }
 }
