@@ -11,23 +11,26 @@ import java.sql.SQLException;
 
 public class UserQuery {
 
-    public static boolean checkUserLogin(String username, String password){
+    public static int checkUserLogin(String username, String password){
         try {
             JavaDatabaseConnection.openConnection();
-            String SQL = "SELECT User_Name, Password FROM users WHERE User_Name=? AND Password=?";
+            String SQL = "SELECT * FROM users WHERE User_Name= '" + username + "' AND Password= '"+ password +"';";
             PreparedStatement preparedStatement = JavaDatabaseConnection.connection.prepareStatement(SQL);
-            preparedStatement.setString(1, username);
-            preparedStatement.setString(2, password);
-            preparedStatement.execute();
-            ResultSet resultSet = preparedStatement.getResultSet();
-            return resultSet.next();
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()){
+                if (resultSet.getString("User_Name").equals(username)){
+                    if (resultSet.getString("Password").equals(password)){
+                        return resultSet.getInt("User_ID");
+                    }
+                }
+            }
         } catch (SQLException exception) {
             System.out.print("Unable to get user login information");
-            return false;
         }
         finally {
             JavaDatabaseConnection.closeConnection();
         }
+        return 0;
     }
 
     public static ObservableList<UserModel>obtainAllUsers(){

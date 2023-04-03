@@ -30,13 +30,10 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.TimeZone;
-
-import static Queries.UserQuery.checkUserLogin;
-import static Queries.UserQuery.obtainUserById;
-import static Contollers.NavigationMenuController.sendUserInformation;
 
 public class LoginController implements Initializable {
     public TextField locationField;
@@ -49,107 +46,95 @@ public class LoginController implements Initializable {
     public PasswordField loginPasswordTextField;
     public Text LoginLabel;
     public Button loginBtn;
-    public static UserModel obtainUserByID;
+    public static int userId;
+
+    private LocalDateTime plus15 = LocalDateTime.now().plusMinutes(15);
+    private LocalDateTime minus15 = LocalDateTime.now().minusMinutes(15);
+    private LocalDateTime appST;
+    private LocalDateTime appTime;
+    private boolean checkAppTime;
+    private int appId;
 
     public void quitApplication(ActionEvent actionEvent) {
         Stage stage = (Stage) quitBtn.getScene().getWindow();
         stage.close();
     }
 
-    LocalDateTime loginUserTime = LocalDateTime.now();
-    ZonedDateTime localDateTimeToUser = loginUserTime.atZone(ZoneId.systemDefault());
-    LocalDateTime loginUserTimeAdd = LocalDateTime.now().plusMinutes(15);
     public void loginUser(ActionEvent actionEvent) throws IOException, SQLException{
         String username = loginUsernameTextField.getText();
         String password = loginPasswordTextField.getText();
-        if (username.isEmpty()){
-            if (Locale.getDefault().getLanguage().equals("fr")) {
-                //Error message in French
-                ResourceBundle resourceBundle = ResourceBundle.getBundle("Main/Nat", Locale.getDefault());
-                errorMessageLabel.setText(resourceBundle.getString("EnterUsername"));
-            }
-            else {
-                errorMessageLabel.setText("Please Enter Username");
-            }
-        }
-        if (password.isEmpty()){
-            if (Locale.getDefault().getLanguage().equals("fr")) {
-                //Error message in French
-                ResourceBundle resourceBundle = ResourceBundle.getBundle("Main/Nat", Locale.getDefault());
-                errorMessageLabel.setText(resourceBundle.getString("EnterPassword"));
-            }
-            else {
-                errorMessageLabel.setText("Please Enter Password");
-            }
-        }
-        if (username.isEmpty() && password.isEmpty()){
-            if (Locale.getDefault().getLanguage().equals("fr")){
-                //Error message in French
-                ResourceBundle resourceBundle = ResourceBundle.getBundle("Main/Nat", Locale.getDefault());
-                errorMessageLabel.setText(resourceBundle.getString("BothFieldsEmpty"));
-            }
-            else {
-                errorMessageLabel.setText("Please Enter Username and Password");
-            }
-        }
-        else if (!checkUserLogin(username, password)){
-            UserLog_FailedLogIN(username);
-            if (Locale.getDefault().getLanguage().equals("fr")) {
-                //Error message in French
-                ResourceBundle resourceBundle = ResourceBundle.getBundle("Main/Nat", Locale.getDefault());
-                errorMessageLabel.setText(resourceBundle.getString("InvalidUser"));
-            }
-            else {
-                errorMessageLabel.setText("No User Found");
-            }
-        }
-        else if (checkUserLogin(username, password)){
-            int userId = obtainUserById(username);
-            ObservableList<AppointmentModel> allAssociatedAppsToUser = AppointmentQuery.appByUserID(userId);
+        userId = UserQuery.checkUserLogin(username, password);
+        if (userId >=1){
+            System.out.println("In-Session User: " + loginUsernameTextField.getText());
             Parent root = FXMLLoader.load(getClass().getResource("/Views/HomeMenuScreen.fxml"));
             Stage stage = (Stage) loginBtn.getScene().getWindow();
             Scene scene = new Scene(root,452.0,400.0);
             stage.setScene(scene);
             stage.centerOnScreen();
             stage.show();
-//            NavigationMenuController.sendUserInformation(obtainUserByID);
             UserLog_SuccessfulLogIN(username);
-
-//            try {
-//                JavaDatabaseConnection.openConnection();
-//                String SQL = "SELECT User_ID, User_Name FROM users WHERE User_Name=?;"; //Add password validation here
-//                PreparedStatement preparedStatement = JavaDatabaseConnection.connection.prepareStatement(SQL);
-//                ///preparedStatement
-//                preparedStatement.setString(1, username);
-//                preparedStatement.execute();
-//                ResultSet resultSet = preparedStatement.getResultSet();
-//                resultSet.next();
-//                UserModel obtainUserByID = new UserModel(resultSet.getInt("User_ID"), resultSet.getString("User_Name"), resultSet.getString(password), true);
-//                this.obtainUserByID = obtainUserByID;
-//                NavigationMenuController.sendUserInformation(obtainUserByID);
-//                JavaDatabaseConnection.closeConnection();
-//            } catch (SQLException exception) {
-//                System.out.println("Unable to obtain user login data from database (Error)");
-//            }
-
-            UserLog_SuccessfulLogIN(username);
-            boolean checkUpcomingApps = false;
-            for (AppointmentModel appointmentModel : allAssociatedAppsToUser){
-                LocalDateTime appStart = appointmentModel.getAppStart();
-                if ((appStart.isAfter(loginUserTime) || appStart.isEqual(loginUserTimeAdd)) && (appStart.isBefore(loginUserTimeAdd) || appStart.isEqual(loginUserTime))){
-                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                    alert.setHeaderText("Hello, You Have An Upcoming Appointment!");
-                    alert.setContentText("You have a appointment in 15 minutes! \n Appointment ID: " + appointmentModel.getAppId() + "\n Appointment Time: " + appointmentModel.getAppStart());
-                    alert.showAndWait();
-                    checkUpcomingApps = true;
+            futureAppointments();
+        }
+        else {
+            if (username.isEmpty() || username.isBlank()) {
+                if (Locale.getDefault().getLanguage().equals("fr")) {
+                    //Error message in French
+                    ResourceBundle resourceBundle = ResourceBundle.getBundle("Main/Nat", Locale.getDefault());
+                    errorMessageLabel.setText(resourceBundle.getString("EnterUsername"));
+                } else {
+                    errorMessageLabel.setText("Please Enter Username");
                 }
             }
-            if (!checkUpcomingApps){
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            if (password.isEmpty() || password.isBlank()) {
+                if (Locale.getDefault().getLanguage().equals("fr")) {
+                    //Error message in French
+                    ResourceBundle resourceBundle = ResourceBundle.getBundle("Main/Nat", Locale.getDefault());
+                    errorMessageLabel.setText(resourceBundle.getString("EnterPassword"));
+                } else {
+                    errorMessageLabel.setText("Please Enter Password");
+                }
+            }
+            if (username.isEmpty() && password.isEmpty()) {
+                if (Locale.getDefault().getLanguage().equals("fr")) {
+                    //Error message in French
+                    ResourceBundle resourceBundle = ResourceBundle.getBundle("Main/Nat", Locale.getDefault());
+                    errorMessageLabel.setText(resourceBundle.getString("BothFieldsEmpty"));
+                } else {
+                    errorMessageLabel.setText("Please Enter Username and Password");
+                }
+            } else if (userId < 1) {
+                UserLog_FailedLogIN(username);
+                if (Locale.getDefault().getLanguage().equals("fr")) {
+                    //Error message in French
+                    ResourceBundle resourceBundle = ResourceBundle.getBundle("Main/Nat", Locale.getDefault());
+                    errorMessageLabel.setText(resourceBundle.getString("InvalidUser"));
+                } else {
+                    errorMessageLabel.setText("No User Found");
+                }
+            }
+        }
+    }
+
+    private void futureAppointments() throws SQLException {
+        for (AppointmentModel appointmentModel : AppointmentQuery.obtainAllAppointments()){
+            appST = (appointmentModel.getAppStart());
+            if ((appST.isBefore(plus15)) && (appST.isAfter(plus15))){
+                appId = appointmentModel.getAppId();
+                appTime = appST;
+                checkAppTime = true;
+            }
+        }
+        if (checkAppTime != false){
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setHeaderText("Upcoming Appointment");
+            alert.setContentText("You have a appointment in 15 minutes,\n Appointment ID: " + appId + ", starts at: " + appTime.format(DateTimeFormatter.ofPattern("yyyy-dd-MM hh:mm")));
+            alert.showAndWait();
+        }
+        else {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setHeaderText("No Upcoming Appointments");
                 alert.setContentText("You have no upcoming appointments at the moment");
                 alert.showAndWait();
-            }
         }
     }
 
@@ -188,7 +173,10 @@ public class LoginController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        /** Lambda #1 */
+        /**
+         *  Lambda #1
+         * Get users systems time zone and replace label text with location
+         * */
         UserLocation userTimeZoneLocation = () -> {
             locationLabel.setText(String.valueOf(ZoneId.of(TimeZone.getDefault().getID())));
         };
@@ -210,11 +198,5 @@ public class LoginController implements Initializable {
             passwordLabel.setText(rb.getString("Password")); //Password label
             loginPasswordTextField.setPromptText(rb.getString("Password")); //Password prompt text
         }
-
-
-        /** Get users systems time zone and replace label text with location */
-//        ZoneId usersLocalTimeZone = ZoneId.systemDefault();
-//        locationLabel.setText(String.valueOf(usersLocalTimeZone));
-
     }
 }
