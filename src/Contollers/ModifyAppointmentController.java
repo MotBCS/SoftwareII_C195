@@ -57,6 +57,7 @@ public class ModifyAppointmentController implements Initializable {
     @FXML
     public Button saveBtn;
 
+
     public void toMainMenu(ActionEvent actionEvent) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("/Views/AppointmentMenuScreen.fxml"));
         Stage stage = (Stage) cancelBtn.getScene().getWindow();
@@ -80,8 +81,6 @@ public class ModifyAppointmentController implements Initializable {
         String appDescription = modifyAppointmentDescriptionTextField.getText();
         String appType = ModifyAppointmentTypeTextField.getText();
         String appLocation = ModifyLocationTextField.getText();
-
-
 
         ContactModel contactModel = modifyAppointmentContactComboBox.getValue();
 
