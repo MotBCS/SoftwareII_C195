@@ -298,14 +298,14 @@ public class AppointmentQuery {
 
     /** - Clashing Appointments -------------------------------------------------------------------------------------*/
 
-    public static boolean clashingAppointments(int customerId, LocalDateTime appStart, LocalDateTime appEnd){
+    public static boolean clashingAppointments(int appointmentCustomerId, LocalDateTime appStart, LocalDateTime appEnd){
         ObservableList<AppointmentModel> clashingAppsList = AppointmentQuery.obtainAllAppointments();
         LocalDateTime ldtAppStart; //Check app start
         LocalDateTime ldtAppEnd; //Check app end
         for (AppointmentModel appointmentModel : clashingAppsList){
             ldtAppStart = appointmentModel.getAppStart();
             ldtAppEnd = appointmentModel.getAppEnd();
-            if (customerId != appointmentModel.getAppCustomerId()){
+            if (appointmentCustomerId != appointmentModel.getAppCustomerId()){
                 continue;
             }
             else if (ldtAppStart.isEqual(appStart) || ldtAppEnd.isEqual(appEnd)){
@@ -329,6 +329,44 @@ public class AppointmentQuery {
                 alert.showAndWait();
                 return true;
             }
+        }
+        return false;
+    }
+
+    public static boolean clashingButNotAgainstSelectedApp(int appointmentCustomerId, int appId, LocalDateTime appStart, LocalDateTime appEnd){
+        try {
+            JavaDatabaseConnection.openConnection();
+            String SQL = "SELECT Customer_ID, Start, End, Appointment_ID FROM appointments WHERE Appointment_ID != ? AND ((? >= Start AND ? <= End) OR (? <= Start AND ? >= End) OR (? <= Start AND ? >= Start) OR (? <= End AND ? >= End))";
+            PreparedStatement preparedStatement = JavaDatabaseConnection.connection.prepareStatement(SQL);
+            preparedStatement.setInt(1, appId);
+            preparedStatement.setTimestamp(2, Timestamp.valueOf(appStart));
+            preparedStatement.setTimestamp(3, Timestamp.valueOf(appStart));
+            preparedStatement.setTimestamp(4, Timestamp.valueOf(appEnd));
+            preparedStatement.setTimestamp(5, Timestamp.valueOf(appEnd));
+            preparedStatement.setTimestamp(6, Timestamp.valueOf(appStart));
+            preparedStatement.setTimestamp(7, Timestamp.valueOf(appEnd));
+            preparedStatement.setTimestamp(8, Timestamp.valueOf(appStart));
+            preparedStatement.setTimestamp(9, Timestamp.valueOf(appEnd));
+            preparedStatement.execute();
+            ResultSet resultSet = preparedStatement.getResultSet();
+            while (resultSet.next()){
+                Integer customerId_check = resultSet.getInt("Customer_ID");
+                Integer appId_check = resultSet.getInt("Appointment_ID");
+                if ((customerId_check != appointmentCustomerId) && (appId_check == appId)){
+                    return false;
+                }
+                else if ((customerId_check != appointmentCustomerId) && (appId_check != appId)){
+                    return false;
+                }
+                else {
+                    return true;
+                }
+            }
+
+        } catch (SQLException exception) {
+            System.out.println("Unable to get clashing apps (Error check here)");
+        }finally {
+            JavaDatabaseConnection.closeConnection();
         }
         return false;
     }
