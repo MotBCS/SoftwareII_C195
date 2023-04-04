@@ -5,6 +5,7 @@ import Models.AppointmentModel;
 import Models.UserModel;
 import Queries.AppointmentQuery;
 import Queries.UserQuery;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -187,41 +188,33 @@ public class LoginController implements Initializable {
      * received an alert to inform them
      * */
     private void futureAppointments() throws SQLException {
-        /** Looks in the appointment query to get all appointments from the 'obtainAllAppointments' method */
-        for (AppointmentModel appointmentModel : AppointmentQuery.obtainAllAppointments()){
+        ObservableList<AppointmentModel> getAppointmentByUserId = AppointmentQuery.appByUserID(userId);
+        for (AppointmentModel appointmentModel: getAppointmentByUserId){
             /** Using a variable called 'appST' to store the getAppStart time */
-            appST = (appointmentModel.getAppStart());
-            /** If before add 15 minutes, if after subtract 15 minutes */
-            if ((appST.isBefore(plus15)) && (appST.isAfter(minus15))){
-                appId = appointmentModel.getAppId();
-                appTime = appST;
-                checkAppTime = true;
+            LocalDateTime appST = appointmentModel.getAppStart();
+            if ((appST.isAfter(timeNow) || appST.isEqual(timeNowAdd15)) && (appST.isBefore(timeNowAdd15) || appST.isEqual(timeNow))){
+                /**
+                          * If the user has an upcoming appointment in the next 15 minutes
+                          * they will receive an alert informing them. The alert contains:
+                          * - Appointment ID
+                          * - Appointment Date
+                          * - Appointment Time
+                 * */
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setHeaderText("Upcoming Appointment");
+                alert.setContentText("Hello " + loginUsernameTextField.getText() + ", you have an upcoming appointment in 15 minutes.\nAppointment ID: " + appointmentModel.getAppId() + "\nAppointment Date and Time: " + appointmentModel.getAppStart());
+                alert.showAndWait();
             }
-        }
-
-        /**
-         * If the user has an upcoming appointment in the next 15 minutes
-         * they will receive an alert informing them. The alert contains:
-         * - Appointment ID
-         * - Appointment Date
-         * - Appointment Time
-         * */
-
-        if (checkAppTime != false){
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setHeaderText("Upcoming Appointment");
-            alert.setContentText("You have a appointment in 15 minutes,\n Appointment ID: " + appId + ", starts at: " + appTime.format(DateTimeFormatter.ofPattern("yyyy-dd-MM hh:mm")));
-            alert.showAndWait();
-        }
-        /**
-         * If the login user does not have any upcoming appointments in the
-         * next 15 minutes, they will receive an alert informing them.
-         * */
-        else {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setHeaderText("No Upcoming Appointments");
-            alert.setContentText("You have no upcoming appointments at the moment");
-            alert.showAndWait();
+            else {
+                /**
+                          * If the login user does not have any upcoming appointments in the
+                          * next 15 minutes, they will receive an alert informing them.
+                 * */
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setHeaderText("No Upcoming Appointments");
+                alert.setContentText("You have no upcoming appointments at the moment");
+                alert.showAndWait();
+            }
         }
     }
 
