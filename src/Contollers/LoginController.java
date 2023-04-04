@@ -77,6 +77,10 @@ public class LoginController implements Initializable {
     private boolean checkAppTime;
     private int appId;
 
+    LocalDateTime timeNow = LocalDateTime.now();
+    ZonedDateTime LocalDateTimeCon = timeNow.atZone(ZoneId.systemDefault());
+    LocalDateTime timeNowAdd15 = LocalDateTime.now().plusMinutes(15);
+
     /** ----------------------------------------------------------------------------------------------------------------- */
 
     /**
