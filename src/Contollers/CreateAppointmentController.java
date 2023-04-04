@@ -102,6 +102,7 @@ public class CreateAppointmentController implements Initializable {
             alert.setHeaderText("Unable to create new appointment");
             alert.setContentText("Empty contact combo box");
             alert.showAndWait();
+            return;
         }
 
         int appContact = contactModel.getContactId();
@@ -189,25 +190,28 @@ public class CreateAppointmentController implements Initializable {
             alert.setHeaderText("Unable to create new appointment");
             alert.setContentText("Empty appointment title");
             alert.showAndWait();
+            return;
         }
         else if(appDes.isEmpty()){
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setHeaderText("Unable to create new appointment");
             alert.setContentText("Empty appointment Description");
             alert.showAndWait();
+            return;
         }
         else if (appType.isEmpty()){
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setHeaderText("Unable to create new appointment");
             alert.setContentText("Empty appointment type");
             alert.showAndWait();
-            alert.showAndWait();
+            return;
         }
         else if (appLocation.isEmpty()){
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setHeaderText("Unable to create new appointment");
             alert.setContentText("Empty appointment location");
             alert.showAndWait();
+            return;
         }
         else if (Helper.TimeConversion.operationCompanyTime(appStart, appEnd)){
             return;

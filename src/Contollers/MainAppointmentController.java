@@ -98,6 +98,7 @@ public class MainAppointmentController implements Initializable {
             alert.setHeaderText("No Appointment Selected");
             alert.setContentText("Select an existing appointment from the table to modify");
             alert.showAndWait();
+            return;
         }
     }
 
@@ -108,6 +109,7 @@ public class MainAppointmentController implements Initializable {
             alert.setHeaderText("No Appointment Selected");
             alert.setContentText("Select an existing appointment from the table to delete");
             alert.showAndWait();
+            return;
         }
         else {
             Alert alert = new Alert(Alert.AlertType.WARNING);
@@ -116,16 +118,17 @@ public class MainAppointmentController implements Initializable {
             alert.showAndWait();
             Optional<ButtonType> choice = alert.showAndWait();
             if (choice.get() == ButtonType.OK){
-                Alert alert2 = new Alert(Alert.AlertType.CONFIRMATION);
+                Alert alert2 = new Alert(Alert.AlertType.INFORMATION);
                 alert2.setHeaderText("Appointment has been successfully deleted");
-                alert2.setContentText("Appointment" + appointmentTable.getSelectionModel().getSelectedItem().getAppId() + " has been deleted");
+                alert2.setContentText("Appointment ID: " + appointmentTable.getSelectionModel().getSelectedItem().getAppId() + "\nAppointment Type: " + appointmentTable.getSelectionModel().getSelectedItem().getAppType() + " has been successfully deleted");
                 AppointmentQuery.deleteExistingAppointment(appointmentTable.getSelectionModel().getSelectedItem().getAppId());
                 allAppList = AppointmentQuery.obtainAllAppointments();
                 appointmentTable.setItems(allAppList);
                 appointmentTable.refresh();
+                alert2.showAndWait();
             }
             else if (choice.get() == ButtonType.CANCEL){
-                alert.close();
+                return;
             }
         }
     }

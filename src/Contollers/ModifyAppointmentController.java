@@ -68,6 +68,7 @@ public class ModifyAppointmentController implements Initializable {
     }
 
     public void saveAddAppointment(ActionEvent actionEvent) throws IOException{
+
         int appId = Integer.parseInt(modifyAppointmentIDTextField.getText());
         String appTitle = modifyAppointmentTitleTextField.getText();
         String appDescription = modifyAppointmentDescriptionTextField.getText();
@@ -170,8 +171,13 @@ public class ModifyAppointmentController implements Initializable {
         else if (Helper.TimeConversion.operationCompanyTime(appStartDateTime, appEndDateTime)){
             return;
         }
-        else if (AppointmentQuery.clashingAppointments(customerId, appStartDateTime, appEndDateTime)){
+        else if (AppointmentQuery.clashing(modifyAppointmentCustomerIDComboBox.getSelectionModel().getSelectedItem().getCustomerId(), appStartDateTime, appEndDateTime)){
             return;
+        }
+        else if (AppointmentQuery.clashingCheckWithAppId(modifyAppointmentCustomerIDComboBox.getSelectionModel().getSelectedItem().getCustomerId(), appStartDateTime, appEndDateTime, appId)){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setHeaderText("Clashing Appointments");
+            alert.setContentText("Check appointment time");
         }
         else {
             AppointmentQuery.modifyExistingAppointment(appId, appTitle, appDescription, appContact, appType, appStartDateTime, appEndDateTime, customerId, userId,appLocation);

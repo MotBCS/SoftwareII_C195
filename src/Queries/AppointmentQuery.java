@@ -332,4 +332,39 @@ public class AppointmentQuery {
         }
         return false;
     }
+
+    public static boolean clashing(int customerId, LocalDateTime appStart, LocalDateTime appEnd){
+        try {
+            String SQL = "SELECT Start, End FROM appointments WHERE Customer_ID = ?";
+            PreparedStatement preparedStatement = JavaDatabaseConnection.connection.prepareStatement(SQL);
+            preparedStatement.setInt(1, customerId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()){
+                LocalDateTime checkStart = resultSet.getTimestamp("Start").toLocalDateTime();
+                LocalDateTime checkEnd = resultSet.getTimestamp("End").toLocalDateTime();
+                if (checkStart.isBefore(appEnd) && appStart.isBefore(checkEnd)) return true;
+            }
+        } catch (SQLException exception) {
+            System.out.println("Unable to get clashing appointments");
+        }
+        return false;
+    }
+
+    public static boolean clashingCheckWithAppId(int customerId, LocalDateTime appStart, LocalDateTime appEnd, int appId){
+        try {
+            String SQL = "SELECT Appointment_ID, Start, End FROM appointments WHERE customer_ID = ?";
+            PreparedStatement preparedStatement = JavaDatabaseConnection.connection.prepareStatement(SQL);
+            preparedStatement.setInt(1, customerId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()){
+                if (resultSet.getInt("Appointment_ID") == appId) continue;
+                LocalDateTime checkStart = resultSet.getTimestamp("Start").toLocalDateTime();
+                LocalDateTime checkEnd = resultSet.getTimestamp("End").toLocalDateTime();
+                if (checkStart.isBefore(appEnd) && appStart.isBefore(checkEnd)) return true;
+            }
+        } catch (SQLException exception) {
+            System.out.println("Unable to check clashing by app ID");
+        }
+        return false;
+    }
 }
