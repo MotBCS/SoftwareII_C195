@@ -265,7 +265,10 @@ public class CreateAppointmentController implements Initializable {
             return;
         }
         int appByUserId = createAppointmentUserIDComboBox.getValue().getUserId();
-
+        /** --------------------------------------------------------------------------- */
+        /**
+         * if appointment title text field is empty, user receives an error
+         * */
         if (appTitle.isEmpty()){
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setHeaderText("Unable to create new appointment");
@@ -273,6 +276,10 @@ public class CreateAppointmentController implements Initializable {
             alert.showAndWait();
             return;
         }
+        /** --------------------------------------------------------------------------- */
+        /**
+         * if appointment description text field is empty, user receives an error
+         * */
         else if(appDes.isEmpty()){
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setHeaderText("Unable to create new appointment");
@@ -280,6 +287,10 @@ public class CreateAppointmentController implements Initializable {
             alert.showAndWait();
             return;
         }
+        /** --------------------------------------------------------------------------- */
+        /**
+         * if appointment type text field is empty, user receives an error
+         * */
         else if (appType.isEmpty()){
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setHeaderText("Unable to create new appointment");
@@ -287,6 +298,10 @@ public class CreateAppointmentController implements Initializable {
             alert.showAndWait();
             return;
         }
+        /** --------------------------------------------------------------------------- */
+        /**
+         * if appointment location text field is empty, user receives an error
+         * */
         else if (appLocation.isEmpty()){
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setHeaderText("Unable to create new appointment");
@@ -294,12 +309,29 @@ public class CreateAppointmentController implements Initializable {
             alert.showAndWait();
             return;
         }
+        /** --------------------------------------------------------------------------- */
+        /**
+         * Checks that the new appointment is scheduled between (Operation Hours 8AM - 10PM EST (22 Military Time))
+         * Uses the 'TimeConversion' Class in the 'Helper' package
+         * */
         else if (Helper.TimeConversion.operationCompanyTime(appStart, appEnd)){
             return;
         }
+        /** --------------------------------------------------------------------------- */
+        /**
+         * Checks that the new appointment does not class with any already existing appointment.
+         *
+         * (NEED TO FIX: Only receives alert when clashing appointment is schedule with the same customer Id, as the already existing appointment) ----
+         * */
         else if (AppointmentQuery.clashingAppointments(appByCustomerId, appStart, appEnd)){
             return;
         }
+        /** --------------------------------------------------------------------------- */
+        /**
+         * If the new appointment contains no empty values and is within business operation
+         * days and hours, then the new appointment will be created and the values will be
+         * inserted into the database and then loaded into the table.
+         * */
         else {
             AppointmentQuery.createNewAppointment(appTitle, appDes, appContact, appType, appStart, appEnd, appByCustomerId, appByUserId, appLocation);
             Parent root = FXMLLoader.load(getClass().getResource("/Views/AppointmentMenuScreen.fxml"));
