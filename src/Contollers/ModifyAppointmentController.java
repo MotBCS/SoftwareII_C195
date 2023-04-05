@@ -364,9 +364,18 @@ public class ModifyAppointmentController implements Initializable {
     /** ----------------------------------------------------------------------------------------------------------------- */
 
     public void sendAppData(AppointmentModel appointmentModel) throws SQLException {
+        /**
+         * Populates Appointment Start Time Combo Box
+         * */
         ModifyAppointmentStartTimeComboBox.setItems(Helper.TimeConversion.appTimeComboBoxPopulation());
+        /**
+         * Populates Appointment End Time Combo Box
+         * */
         ModifyAppointmentEndTimeComboBox.setItems(Helper.TimeConversion.appTimeComboBoxPopulation());
 
+        /**
+         * Get value fields
+         * */
         modifyAppointmentIDTextField.setText(Integer.toString(appointmentModel.getAppId()));
         modifyAppointmentTitleTextField.setText(appointmentModel.getAppTitle());
         modifyAppointmentDescriptionTextField.setText(appointmentModel.getAppDescription());
@@ -377,12 +386,21 @@ public class ModifyAppointmentController implements Initializable {
         ModifyAppointmentStartTimeComboBox.setValue(appointmentModel.getAppStart().toLocalTime());
         ModifyAppointmentEndTimeComboBox.setValue(appointmentModel.getAppEnd().toLocalTime());
 
+        /**
+         * Get Appointment Contact
+         * */
         ContactModel contactModel = ContactQuery.contactById(appointmentModel.getAppContact());
         modifyAppointmentContactComboBox.setValue(contactModel);
 
+        /**
+         * Get Appointment Customer Id
+         * */
         CustomerModel customerModel = CustomerQuery.customerById(appointmentModel.getAppCustomerId());
         modifyAppointmentCustomerIDComboBox.setValue(customerModel);
 
+        /**
+         * Get Appointment user Id
+         * */
         UserModel userModel = UserQuery.obtainUsernameById(appointmentModel.getAppUserId());
         modifyAppointmentUserIDComboBox.setValue(userModel);
     }
@@ -391,12 +409,19 @@ public class ModifyAppointmentController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        /**
+         * Populates Contact Combo Box
+         * */
         ObservableList<ContactModel>allContacts = ContactQuery.obtainAllContacts();
         modifyAppointmentContactComboBox.setItems(allContacts);
-
+        /**
+         * Populates Customer Combo Box
+         * */
         ObservableList<CustomerModel> allCustomers = CustomerQuery.obtainAllCustomers();
         modifyAppointmentCustomerIDComboBox.setItems(allCustomers);
-
+        /**
+         * Populates User Combo Box
+         * */
         ObservableList<UserModel> allUsers = UserQuery.obtainAllUsers();
         modifyAppointmentUserIDComboBox.setItems(allUsers);
 
