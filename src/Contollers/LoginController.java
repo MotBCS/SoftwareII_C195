@@ -118,6 +118,7 @@ public class LoginController implements Initializable {
         /** If a user is found it will return a result that is greater than or equal to one
          * if no user is found it will return a 0 and the user will receive a 'No user found' alert*/
         if (userId >=1){
+            futureAppointments();
             System.out.println("In-Session User: " + loginUsernameTextField.getText()); // Prints to console the current in session user (Used for reference)
             Parent root = FXMLLoader.load(getClass().getResource("/Views/HomeMenuScreen.fxml"));
             Stage stage = (Stage) loginBtn.getScene().getWindow();
@@ -134,7 +135,7 @@ public class LoginController implements Initializable {
             /**
              * Checks if the logged in user has any upcoming appointments scheduled
              * */
-            futureAppointments();
+            //futureAppointments();
         }
         /**
          * If the username or password text fields are left empty or blank and the user attempts to login
@@ -211,7 +212,7 @@ public class LoginController implements Initializable {
                  * */
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setHeaderText("Upcoming Appointment");
-                alert.setContentText("Hello " + loginUsernameTextField.getText() + ", you have an upcoming appointment in 15 minutes.\nAppointment ID: " + appointmentModel.getAppId() + "\nAppointment Date and Time: " + appointmentModel.getAppStart());
+                alert.setContentText("Hello " + loginUsernameTextField.getText() + ", \nYou have an upcoming appointment in 15 minutes.\nAppointment ID: " + appointmentModel.getAppId() + "\nAppointment Date and Time: " + appointmentModel.getAppStart().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")) + " Local Time");
                 alert.showAndWait();
                 System.out.println("Upcoming appointment found!");
                 upcomingApps = true;
@@ -230,7 +231,6 @@ public class LoginController implements Initializable {
         }
     }
 
-    /** ----------------------------------------------------------------------------------------------------------------- */
     /** ----------------------------------------------------------------------------------------------------------------- */
 
     /**
