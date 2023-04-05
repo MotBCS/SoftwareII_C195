@@ -21,8 +21,23 @@ import java.sql.SQLException;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
+/** ----------------------------------------------------------------------------------------------------------------- */
+
+/**
+ * The 'mainCustomerController' class allows the user to view
+ * all customers, as well as navigate to the modify and create customer
+ * screen through buttons. Users can also delete customers from
+ * this screen as long as the customer does not have any
+ * associated appointments. If they do the user will be asked if they
+ * are sure they want to delete the selected customer along with their associated appointments
+ *
+ * @author Mya Thomas
+ *
+ * */
 public class MainCustomerController implements Initializable {
-    public TableView<CustomerModel>customerTable;
+
+    /** Customer Table and Table Columns */
+    public TableView<CustomerModel>customerTable; //Customer Table view (Use for reference)
     public TableColumn<CustomerModel, Integer>customerIDColumn;
     public TableColumn<CustomerModel, String>customerTitleColumn;
     public TableColumn<CustomerModel, String>customerAddressColumn;
@@ -30,15 +45,22 @@ public class MainCustomerController implements Initializable {
     public TableColumn<CustomerModel, String>customerPhoneNoColumn;
     public TableColumn<CustomerModel, Integer>customerDivisionColumn;
     public TableColumn<CustomerModel, Integer>customerCountryColumn;
+
+    /** Buttons */
     public Button deleteCustomerBtn;
     public Button modifyCustomerBtn;
     public Button addNewCustomerBtn;
     public Button backBtn;
 
     private CustomerModel obtainCustomer;
-
     ObservableList<CustomerModel> allCustomersList = CustomerQuery.obtainAllCustomers();
+    /** ----------------------------------------------------------------------------------------------------------------- */
 
+    /**
+     * @param actionEvent When the user clicks the 'back' button they are brought back
+     *                    to the main menu where they can navigate to other screens
+     *                    in the application. Such as the report or appointments screen.
+     * */
     public void toMainMenu(ActionEvent actionEvent) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("/Views/HomeMenuScreen.fxml"));
         Stage stage = (Stage) backBtn.getScene().getWindow();
@@ -48,6 +70,11 @@ public class MainCustomerController implements Initializable {
         stage.show();
     }
 
+    /** ----------------------------------------------------------------------------------------------------------------- */
+
+    /**
+     * @param actionEvent
+     * */
     public void addNewCustomer(ActionEvent actionEvent) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("/Views/AddNewCustomer.fxml"));
         Stage stage = (Stage) addNewCustomerBtn.getScene().getWindow();
@@ -56,6 +83,8 @@ public class MainCustomerController implements Initializable {
         stage.centerOnScreen();
         stage.show();
     }
+
+    /** ----------------------------------------------------------------------------------------------------------------- */
 
     public void modifyExistingCustomer(ActionEvent actionEvent) throws IOException, SQLException {
         if (customerTable.getSelectionModel().getSelectedItem() != null){
@@ -77,6 +106,8 @@ public class MainCustomerController implements Initializable {
             alert.showAndWait();
         }
     }
+
+    /** ----------------------------------------------------------------------------------------------------------------- */
 
     public void deleteCustomer(ActionEvent actionEvent) throws IOException {
         int associatedAppointment = 0;
@@ -137,6 +168,8 @@ public class MainCustomerController implements Initializable {
             }
         }
         }
+
+    /** ----------------------------------------------------------------------------------------------------------------- */
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
