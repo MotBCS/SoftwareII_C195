@@ -23,8 +23,17 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 
 /** ----------------------------------------------------------------------------------------------------------------- */
-
+/**
+ * This class will be used as the main appointment screen controller,
+ * The user can view all appointments, or view appointments by current month or week.
+ *
+ * Users will also be able to access the 'Create Appointment', 'Delete' and 'Modify' buttons
+ * Where they can add new appointments or select an existing appointment to modify from the
+ * table.
+ * */
 public class MainAppointmentController implements Initializable {
+
+    /** Buttons */
     @FXML
     public Button deleteAppointmentBtn;
     @FXML
@@ -33,6 +42,8 @@ public class MainAppointmentController implements Initializable {
     public Button addNewAppointmentBtn;
     @FXML
     public Button backBtn;
+
+    /** Appointment Table and Columns */
     @FXML
     public TableView<AppointmentModel>appointmentTable;
     @FXML
@@ -55,6 +66,8 @@ public class MainAppointmentController implements Initializable {
     public TableColumn<AppointmentModel, String>descriptionColumn;
     @FXML
     public TableColumn<AppointmentModel, Integer>userIDColumn;
+
+    /** Radio Button */
     @FXML
     public RadioButton viewAllAppointmentsRadioBtn;
     @FXML
@@ -66,6 +79,10 @@ public class MainAppointmentController implements Initializable {
 
     /** ----------------------------------------------------------------------------------------------------------------- */
 
+    /**
+     * @param actionEvent When the 'Back' button is clicked the user will be brought back to
+     *                    the main navigation screen.
+     * */
     public void toMainMenu(ActionEvent actionEvent) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("/Views/HomeMenuScreen.fxml"));
         Stage stage = (Stage) backBtn.getScene().getWindow();
@@ -77,6 +94,12 @@ public class MainAppointmentController implements Initializable {
 
     /** ----------------------------------------------------------------------------------------------------------------- */
 
+    /**
+     * @param actionEvent addNewAppointment method will take user to another screen
+     *                    when the 'Create Appointment' button is clicked the user
+     *                    will be able to create a new appointment and save it to the
+     *                    appointment table.
+     * */
     public void onActionAddNewAppointment(ActionEvent actionEvent) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("/Views/AddNewAppointment.fxml"));
         Stage stage = (Stage) addNewAppointmentBtn.getScene().getWindow();
@@ -88,11 +111,24 @@ public class MainAppointmentController implements Initializable {
 
     /** ----------------------------------------------------------------------------------------------------------------- */
 
+    /**
+     * @param actionEvent The toModifyAppointment method will take the user to another screen
+     *                    when the 'modify' button is clicked the user will be able to modify
+     *                    the existing appointment and make desired changes.
+     * */
     public void toModifyAppointment(ActionEvent actionEvent) throws IOException, SQLException {
+        /**
+         * If the selection is not null, the user will be taken to the modify
+         * screen where they will be able to make changes to the selected appointment
+         * */
         if (appointmentTable.getSelectionModel().getSelectedItem() != null){
             FXMLLoader fxmlLoader = new FXMLLoader();
             fxmlLoader.setLocation(getClass().getResource("/Views/ModifyExistingAppointmentScreen.fxml"));
             fxmlLoader.load();
+            /**
+             * Using the 'sendAppData' method, located in the modifyAppointment Controller
+             * send Appointment data.
+             * */
             ModifyAppointmentController modifyAppointmentController = fxmlLoader.getController();
             modifyAppointmentController.sendAppData(appointmentTable.getSelectionModel().getSelectedItem());
             Stage stage = (Stage) modifyAppointmentBtn.getScene().getWindow();
@@ -101,6 +137,10 @@ public class MainAppointmentController implements Initializable {
             stage.centerOnScreen();
             stage.show();
         }
+        /**
+         * If no appointment is selected user will receive an alert to inform
+         * them that they need to select an appointment to modify
+         * */
         else {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setHeaderText("No Appointment Selected");

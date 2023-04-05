@@ -280,7 +280,10 @@ public class LoginController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         /**
-         *  Lambda #1
+         * LAMBDA EXPRESSION #1
+         * Location : (LoginController)
+         * Lines : (290 - 293)
+         *
          * Get users systems time zone and replace label text with location
          * */
         UserLocation userTimeZoneLocation = () -> {
