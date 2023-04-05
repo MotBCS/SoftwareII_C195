@@ -99,8 +99,8 @@ public class LoginController implements Initializable {
      *                    user in the database.
      * */
     public void loginUser(ActionEvent actionEvent) throws IOException, SQLException{
-        String username = loginUsernameTextField.getText();
-        String password = loginPasswordTextField.getText();
+        String username = loginUsernameTextField.getText().toLowerCase(Locale.ROOT);
+        String password = loginPasswordTextField.getText().toLowerCase(Locale.ROOT);
         /**
          * Uses the 'checkUserLogin' method to get the userId from the database,
          * based on whether the user enters 'test' which has a user Id of 1,
@@ -188,6 +188,7 @@ public class LoginController implements Initializable {
      * received an alert to inform them
      * */
     private void futureAppointments() throws SQLException {
+        boolean upcomingApps = false;
         ObservableList<AppointmentModel> getAppointmentByUserId = AppointmentQuery.appByUserID(userId);
         for (AppointmentModel appointmentModel: getAppointmentByUserId){
             /** Using a variable called 'appST' to store the getAppStart time */
@@ -204,17 +205,20 @@ public class LoginController implements Initializable {
                 alert.setHeaderText("Upcoming Appointment");
                 alert.setContentText("Hello " + loginUsernameTextField.getText() + ", you have an upcoming appointment in 15 minutes.\nAppointment ID: " + appointmentModel.getAppId() + "\nAppointment Date and Time: " + appointmentModel.getAppStart());
                 alert.showAndWait();
+                System.out.println("Upcoming appointment found!");
+                upcomingApps = true;
             }
-            else {
-                /**
-                          * If the login user does not have any upcoming appointments in the
-                          * next 15 minutes, they will receive an alert informing them.
-                 * */
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setHeaderText("No Upcoming Appointments");
-                alert.setContentText("You have no upcoming appointments at the moment");
-                alert.showAndWait();
-            }
+        }
+        if (!upcomingApps){
+            /**
+             * If the login user does not have any upcoming appointments in the
+             * next 15 minutes, they will receive an alert informing them.
+             * */
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setHeaderText("No Upcoming Appointments");
+            alert.setContentText("You have no upcoming appointments at the moment");
+            alert.showAndWait();
+            System.out.println("No upcoming appointments");
         }
     }
 
