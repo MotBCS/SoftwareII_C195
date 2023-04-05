@@ -21,11 +21,11 @@ import java.time.format.DateTimeFormatter;
 public class TimeConversion {
 
     /**
-     *
+     * EST start time for company operation hours 8AM
      * */
     public static LocalTime Company_ltStart(){
-        LocalTime operationHours_Open = LocalTime.of(8,0);
-        ZoneId EST = ZoneId.of("America/New_York");
+        LocalTime operationHours_Open = LocalTime.of(8,0); //Company Start Time
+        ZoneId EST = ZoneId.of("America/New_York");//Eastern Standard Time
         ZoneId userLZ = ZoneId.systemDefault();
         LocalDateTime companyEST = LocalDateTime.of(LocalDate.now(), operationHours_Open);
         LocalDateTime companyLocal = companyEST.atZone(EST).withZoneSameInstant(userLZ).toLocalDateTime();
@@ -34,11 +34,11 @@ public class TimeConversion {
     }
     /** ----------------------------------------------------------------------------------------------------------------- */
     /**
-     *
+     * EST end time for company operation hours 10PM (22:00 Military Time)
      * */
     public static LocalTime Company_ltEnd(){
-        LocalTime operationHours_Close = LocalTime.of(22,0);
-        ZoneId EST = ZoneId.of("America/New_York");
+        LocalTime operationHours_Close = LocalTime.of(22,0); //Company End Time
+        ZoneId EST = ZoneId.of("America/New_York");//Eastern Standard Time
         ZoneId userLZ = ZoneId.systemDefault();
         LocalDateTime companyEndDateTime = LocalDateTime.of(LocalDate.now(), operationHours_Close);
         LocalDateTime companyLocalDateTime = companyEndDateTime.atZone(EST).withZoneSameInstant(userLZ).toLocalDateTime();
@@ -59,7 +59,7 @@ public class TimeConversion {
          * Variable 'companyZone_EST' stores the zone Id of the company (Eastern Standard Time)
          * for later use
          * */
-        ZoneId companyZone_EST = ZoneId.of("America/New_York");
+        ZoneId companyZone_EST = ZoneId.of("America/New_York");//Eastern Standard Time
 
 
         /**
@@ -80,9 +80,9 @@ public class TimeConversion {
             LocalTime end = Helper.TimeConversion.Company_ltEnd();
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setHeaderText("Time Conflict");
-            alert.setContentText("Conflict start or end time (Business Hours: 8AM to 10PM) \n Appointment must be between " + Company_ltStart().format(DateTimeFormatter.ofPattern("HH:mm")) + " to " + Company_ltEnd().format(DateTimeFormatter.ofPattern("HH:mm")) + " Local User Time");
+            alert.setContentText("Conflict start or end time (Business Hours: 8AM to 10PM EST) \n Appointment must be between " + Company_ltStart().format(DateTimeFormatter.ofPattern("HH:mm")) + " to " + Company_ltEnd().format(DateTimeFormatter.ofPattern("HH:mm")) + " Local User Time");
             alert.showAndWait();
-            System.out.println("Print " + start + " " + end);
+            System.out.println("Schedule appointment between " + start + " and " + end + " local time");
             return true;
         }
         else {
