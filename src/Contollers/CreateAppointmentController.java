@@ -65,7 +65,7 @@ public class CreateAppointmentController implements Initializable {
     public TextField createAppointmentDescriptionTextField;
     @FXML
     public DatePicker createAppointmentDatePicker_Start;
-    private final int addDays_ToEndDatePicker = 0;
+    private final int AddToDatePicker = 0;
 
     /** ----------------------------------------------------------------------------------------------------------------- */
 
@@ -331,6 +331,8 @@ public class CreateAppointmentController implements Initializable {
          * If the new appointment contains no empty values and is within business operation
          * days and hours, then the new appointment will be created and the values will be
          * inserted into the database and then loaded into the table.
+         *
+         * Returns user back to main appointment after appointment is created
          * */
         else {
             AppointmentQuery.createNewAppointment(appTitle, appDes, appContact, appType, appStart, appEnd, appByCustomerId, appByUserId, appLocation);
@@ -347,22 +349,43 @@ public class CreateAppointmentController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        createAppointmentIDTextField.setId(createAppointmentIDTextField.getId());
-        createAppointmentStartTimeComboBox.setItems(Helper.TimeConversion.appTimeComboBoxPopulation());
-        createAppointmentEndTimeComboBox.setItems(Helper.TimeConversion.appTimeComboBoxPopulation());
-
-        ObservableList<ContactModel>allContacts = ContactQuery.obtainAllContacts();
-        createAppointmentContactComboBox.setItems(allContacts);
-
-        ObservableList<UserModel>allUsers = UserQuery.obtainAllUsers();
-        createAppointmentUserIDComboBox.setItems(allUsers);
-
-        ObservableList<CustomerModel>allCustomers = CustomerQuery.obtainAllCustomers();
-        createAppointmentCustomerIDComboBox.setItems(allCustomers);
 
         /**
-         * Lambda Expression #2
+         *
+         * LAMBDA EXPRESSION #2
+         * Location : (CreateAppointmentController)
+         * Lines : (384 - 385)
+         *
+         * Takes the value from appointment start date picker and sets it to the
+         * appointment end date picker.
+         *
          * */
-        createAppointmentDatePicker_Start.valueProperty().addListener((DatePicker, DatePickerOriginal, DatePickerNewValue) -> createAppointmentDatePicker_End.setValue(DatePickerNewValue.plusDays(addDays_ToEndDatePicker)));
+        createAppointmentDatePicker_Start.valueProperty().addListener((DatePicker, DatePickerOriginal, DatePickerNewValue) ->
+                createAppointmentDatePicker_End.setValue(DatePickerNewValue.plusDays(AddToDatePicker)));
+
+        createAppointmentIDTextField.setId(createAppointmentIDTextField.getId());
+        /**
+         * Populates Appointment Start Time Combo Box
+         * */
+        createAppointmentStartTimeComboBox.setItems(Helper.TimeConversion.appTimeComboBoxPopulation());
+        /**
+         * Populates Appointment End Time Combo Box
+         * */
+        createAppointmentEndTimeComboBox.setItems(Helper.TimeConversion.appTimeComboBoxPopulation());
+        /**
+         * Populates Contact Combo Box
+         * */
+        ObservableList<ContactModel>allContacts = ContactQuery.obtainAllContacts();
+        createAppointmentContactComboBox.setItems(allContacts); // Set Items to combo box
+        /**
+         * Populates User Combo Box
+         * */
+        ObservableList<UserModel>allUsers = UserQuery.obtainAllUsers();
+        createAppointmentUserIDComboBox.setItems(allUsers); // Set Items to combo box
+        /**
+         * Populates Customer Combo Box
+         * */
+        ObservableList<CustomerModel>allCustomers = CustomerQuery.obtainAllCustomers();
+        createAppointmentCustomerIDComboBox.setItems(allCustomers); // Set Items to combo box
     }
 }
