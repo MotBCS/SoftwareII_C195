@@ -10,9 +10,19 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+/** ----------------------------------------------------------------------------------------------------------------- */
 
+/**
+ * This class contains the methods to help with time conversion,
+ * populating the start and end combo boxes and the business operation
+ * methods to help ensure appointments are scheduled between operation
+ * hours 8AM to 10PM
+ * */
 public class TimeConversion {
 
+    /**
+     *
+     * */
     public static LocalTime Company_ltStart(){
         LocalTime operationHours_Open = LocalTime.of(8,0);
         ZoneId EST = ZoneId.of("America/New_York");
@@ -22,7 +32,10 @@ public class TimeConversion {
         LocalTime companyStartLocal = companyLocal.toLocalTime();
         return companyStartLocal;
     }
-
+    /** ----------------------------------------------------------------------------------------------------------------- */
+    /**
+     *
+     * */
     public static LocalTime Company_ltEnd(){
         LocalTime operationHours_Close = LocalTime.of(22,0);
         ZoneId EST = ZoneId.of("America/New_York");
@@ -32,16 +45,36 @@ public class TimeConversion {
         LocalTime companyEndLocal = companyLocalDateTime.toLocalTime();
         return companyEndLocal;
     }
-
+    /** ----------------------------------------------------------------------------------------------------------------- */
+    /**
+     * Business operation hours
+     * */
     public static boolean operationCompanyTime(LocalDateTime appStart, LocalDateTime appEnd){
+        /**
+         * Variable 'userLocalZone' store the zone Id of the user for later use
+         * */
         ZoneId userLocalZone = ZoneId.systemDefault();
+
+        /**
+         * Variable 'companyZone_EST' stores the zone Id of the company (Eastern Standard Time)
+         * for later use
+         * */
         ZoneId companyZone_EST = ZoneId.of("America/New_York");
 
+
+        /**
+         * Converts business hours in EST to Users time zone
+         * */
         LocalDateTime startEST = appStart.atZone(userLocalZone).withZoneSameInstant(companyZone_EST).toLocalDateTime();
         LocalDateTime endEST = appEnd.atZone(userLocalZone).withZoneSameInstant(companyZone_EST).toLocalDateTime();
         LocalDateTime companyStart_EST = startEST.withHour(7).withMinute(59);
         LocalDateTime companyEnd_EST = endEST.withHour(22).withMinute(1);
 
+        /**
+         * If appointment starts before company business hours
+         * or ends after company business hours, user will receive an
+         * alert to inform them.
+         * */
         if (startEST.isBefore(companyStart_EST) || endEST.isAfter(companyEnd_EST)){
             LocalTime start = Helper.TimeConversion.Company_ltStart();
             LocalTime end = Helper.TimeConversion.Company_ltEnd();
@@ -49,21 +82,38 @@ public class TimeConversion {
             alert.setHeaderText("Time Conflict");
             alert.setContentText("Conflict start or end time (Business Hours: 8AM to 10PM) \n Appointment must be between " + Company_ltStart().format(DateTimeFormatter.ofPattern("HH:mm")) + " to " + Company_ltEnd().format(DateTimeFormatter.ofPattern("HH:mm")) + " Local User Time");
             alert.showAndWait();
+            System.out.println("Print " + start + " " + end);
             return true;
         }
         else {
             return false;
         }
     }
-
+    /** ----------------------------------------------------------------------------------------------------------------- */
+    /**
+     * Used to populate the start and end time combo boxes for creating
+     * and modifying appointments
+     * */
     public static ObservableList<LocalTime>appTimeComboBoxPopulation(){
+        /**
+         * Creates an empty list to store the appointment times,
+         * used to populate start and end timer combo boxes
+         * */
         ObservableList<LocalTime>appTimeList = FXCollections.observableArrayList();
-        LocalTime start = LocalTime.of(6, 0);
-        LocalTime end = LocalTime.of(22, 0);
+        /**
+         * Start Time combo box starts at 6:00 AM and 15 minutes is added until
+         * the end time is reached at 10:00 PM
+         * */
+        LocalTime AppointmentStartTime = LocalTime.of(6, 0); //Start
+        LocalTime AppointmentEndTime = LocalTime.of(22, 0); //End
 
-        while (start.isBefore(end.plusSeconds(2))){
-            appTimeList.add(start);
-            start = start.plusMinutes(15);
+        while (AppointmentStartTime.isBefore(AppointmentEndTime.plusSeconds(2))){
+            appTimeList.add(AppointmentStartTime);
+
+            /**
+             * Increments appointment time by 15 minutes
+             * */
+            AppointmentStartTime = AppointmentStartTime.plusMinutes(15);
         }
         return appTimeList;
     }
