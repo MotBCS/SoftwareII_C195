@@ -99,6 +99,12 @@ public class LoginController implements Initializable {
      *                    user in the database.
      * */
     public void loginUser(ActionEvent actionEvent) throws IOException, SQLException{
+        /**
+         * Gets username from 'loginUsernameTextField' and stores it in the username variable
+         * Gets password from 'loginPasswordTextField' and stores it in the password variable
+         * If the username or password is enter in uppercase it will be converted to lowercase,
+         * to ensure it matches the values in the database.
+         * */
         String username = loginUsernameTextField.getText().toLowerCase(Locale.ROOT);
         String password = loginPasswordTextField.getText().toLowerCase(Locale.ROOT);
         /**
