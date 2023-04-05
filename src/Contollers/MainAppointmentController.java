@@ -159,11 +159,24 @@ public class MainAppointmentController implements Initializable {
                  * */
                 alert2.setContentText("Appointment ID: " + appointmentTable.getSelectionModel().getSelectedItem().getAppId() + "\nAppointment Type: " + appointmentTable.getSelectionModel().getSelectedItem().getAppType() + " has been successfully deleted");
                 AppointmentQuery.deleteExistingAppointment(appointmentTable.getSelectionModel().getSelectedItem().getAppId());
+                /**
+                 * The 'allAppList' variable stores all appointment
+                 * retrieved from the database
+                 * */
                 allAppList = AppointmentQuery.obtainAllAppointments();
+                /**
+                 * Set retrieved Items to appointment table and refresh
+                 * */
                 appointmentTable.setItems(allAppList);
                 appointmentTable.refresh();
                 alert2.showAndWait();
             }
+            /**
+             * If the user decides not to delete the selected appointment
+             * and clicks the 'cancel' button the alert will close
+             * and the selected appointment will still existing in the
+             * table.
+             * */
             else if (choice.get() == ButtonType.CANCEL){
                 alert.close();
             }
