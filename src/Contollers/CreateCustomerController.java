@@ -23,10 +23,25 @@ import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.ResourceBundle;
 
+/** ----------------------------------------------------------------------------------------------------------------- */
+
+/**
+ * The 'CreateCustomerController' class allows the user to create a new customer,
+ * that can be used to schedule appointments.
+ *
+ * When the user selects a country, it will filter the state/province combo box by selected country
+ *
+ * US - Filters States
+ * UK - Filter Provinces
+ * CANADA - Filter Provinces
+ *
+ * */
 public class CreateCustomerController implements Initializable {
+
+    /** Buttons, Text-Fields, Combo Boxes */
     public TextField addCustomerPhoneNoText;
-    public ComboBox<CountryModel>addCustomerCountryComboBox;
-    public ComboBox<StateProvinceModel>addCustomerStateProvinceComboBox;
+    public ComboBox<CountryModel>addCustomerCountryComboBox; //filtered by country combo box
+    public ComboBox<StateProvinceModel>addCustomerStateProvinceComboBox; //filters state province combo box
     public TextField addCustomerIDText;
     public TextField addCustomerNameText;
     public TextField addCustomerAddressText;
@@ -34,6 +49,13 @@ public class CreateCustomerController implements Initializable {
     public Button addCustomerCancelBtn;
     public Button saveBtn;
 
+    /** ----------------------------------------------------------------------------------------------------------------- */
+
+    /**
+     * @param actionEvent When the 'cancel' button is clicked the user will be
+     *                    brought back to the main customer screen. Where they
+     *                    can view all customers in a table
+     * */
     public void toCustomerMenu(ActionEvent actionEvent) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("/Views/CustomerMenuScreen.fxml"));
         Stage stage = (Stage) addCustomerCancelBtn.getScene().getWindow();
@@ -43,9 +65,22 @@ public class CreateCustomerController implements Initializable {
         stage.show();
     }
 
+    /** ----------------------------------------------------------------------------------------------------------------- */
+
+    /**
+     * @param actionEvent When the user clicks the save button, the program
+     *                    will check that there are not any empty value
+     *                    fields, If all fields contain a value the
+     *                    program will save and the new customer will
+     *                    be added to the customer table.
+     * */
     public void saveAddCustomer(ActionEvent actionEvent) {
         try {
             JavaDatabaseConnection.openConnection();
+            /**
+             * If customer name text field is empty, user will receive an error
+             * informing them of the empty value field.
+             * */
             if (addCustomerNameText.getText().isEmpty()){
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setHeaderText("Unable to create new customer");
@@ -53,6 +88,11 @@ public class CreateCustomerController implements Initializable {
                 alert.showAndWait();
                 return;
             }
+            /** ------------------------------------------------------------------- */
+            /**
+             * If phone number text field is empty, user will receive an error
+             * informing them of the empty value field.
+             * */
             else if (addCustomerPhoneNoText.getText().isEmpty()){
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setHeaderText("Unable to create new customer");
@@ -60,6 +100,12 @@ public class CreateCustomerController implements Initializable {
                 alert.showAndWait();
                 return;
             }
+
+            /** ------------------------------------------------------------------- */
+            /**
+             * If address text field is empty, user will receive an error
+             * informing them of the empty value field.
+             * */
             else if (addCustomerAddressText.getText().isEmpty()){
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setHeaderText("Unable to create new customer");
@@ -67,6 +113,12 @@ public class CreateCustomerController implements Initializable {
                 alert.showAndWait();
                 return;
             }
+
+            /** ------------------------------------------------------------------- */
+            /**
+             * If postal code text field is empty, user will receive an error
+             * informing them of the empty value field.
+             * */
             else if (addCustomerPostalCodeText.getText().isEmpty()){
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setHeaderText("Unable to create new customer");
@@ -74,6 +126,12 @@ public class CreateCustomerController implements Initializable {
                 alert.showAndWait();
                 return;
             }
+
+            /** ------------------------------------------------------------------- */
+            /**
+             * If state/province combo box is null, user will receive an error
+             * informing them of the empty value field.
+             * */
             else if (addCustomerStateProvinceComboBox.getValue() == null){
                 CountryModel countryModel = addCustomerCountryComboBox.getValue();
                 if (countryModel == null){
@@ -84,13 +142,23 @@ public class CreateCustomerController implements Initializable {
                     return;
                 }
             }
+
+            /** ------------------------------------------------------------------- */
+
             else {
-                String customer_Name = addCustomerNameText.getText();
-                String customer_Address = addCustomerAddressText.getText();
-                String customer_PostalCode = addCustomerPostalCodeText.getText();
-                String customer_PhoneNumber = addCustomerPhoneNoText.getText();
-                StateProvinceModel stateProvinceModel = addCustomerStateProvinceComboBox.getValue();
+                /**
+                 * If all value fields contain a value, it will get all the users
+                 * input and execute the create customer query, saving the users
+                 * input and populating the customer table with the newly created
+                 * customer.
+                 * */
+                String customer_Name = addCustomerNameText.getText(); //Customer Name
+                String customer_Address = addCustomerAddressText.getText(); //Customer Address
+                String customer_PostalCode = addCustomerPostalCodeText.getText(); //Customer Postal Code
+                String customer_PhoneNumber = addCustomerPhoneNoText.getText(); // Customer phone number
+                StateProvinceModel stateProvinceModel = addCustomerStateProvinceComboBox.getValue(); // Customer division
                 int customer_StateProvinceId = stateProvinceModel.getStateProvinceId();
+                /** Get 'createNewCustomer' method from customer query */
                 CustomerQuery.createNewCustomer(
                         customer_Name,
                         customer_Address,
@@ -99,6 +167,13 @@ public class CreateCustomerController implements Initializable {
                         customer_StateProvinceId
                 );
             }
+
+            /** ------------------------------------------------------------------- */
+
+            /**
+             * After valid customer is saved, the user will be brought back to the main
+             * customer menu.
+             * */
             Parent root = FXMLLoader.load(getClass().getResource("/Views/CustomerMenuScreen.fxml"));
             Stage stage = (Stage) saveBtn.getScene().getWindow();
             Scene scene = new Scene(root,1019.0,720.0);
@@ -110,6 +185,17 @@ public class CreateCustomerController implements Initializable {
         }
     }
 
+    /** ----------------------------------------------------------------------------------------------------------------- */
+
+    /**
+     * @param actionEvent When the user selects a country in the country combo box,
+     *                    it will user the country Id to filter the state/province
+     *                    combo box.
+     *
+     *                    - US -> Displays US states only
+     *                    - UK -> Displays UK provinces only
+     *                    - CANADA -> Display canadian provinces only
+     * */
     public void filterByCountry(ActionEvent actionEvent) {
         CountryModel countryModel = addCustomerCountryComboBox.getValue();
         try {
@@ -119,9 +205,14 @@ public class CreateCustomerController implements Initializable {
         }
     }
 
+    /** ----------------------------------------------------------------------------------------------------------------- */
+
+    /**
+     * Populates the country combo box on start up.
+     * */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        addCustomerCountryComboBox.setItems(CountryQuery.obtainAllCountries());
+        addCustomerCountryComboBox.setItems(CountryQuery.obtainAllCountries()); //Set Items to combo box
 
     }
 }
