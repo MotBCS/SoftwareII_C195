@@ -73,7 +73,8 @@ public class MainCustomerController implements Initializable {
     /** ----------------------------------------------------------------------------------------------------------------- */
 
     /**
-     * @param actionEvent
+     * @param actionEvent When the user clicks the create new customer button, they will be taken
+     *                    to another screen where they can create a new customer
      * */
     public void addNewCustomer(ActionEvent actionEvent) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("/Views/AddNewCustomer.fxml"));
@@ -86,7 +87,16 @@ public class MainCustomerController implements Initializable {
 
     /** ----------------------------------------------------------------------------------------------------------------- */
 
+    /**
+     * @param actionEvent When the user selects the 'modify' button they will be brought ta
+     *                    a screen where the user will be able to edit an existing customer
+     *                    from the table.
+     * */
     public void modifyExistingCustomer(ActionEvent actionEvent) throws IOException, SQLException {
+        /**
+         * User must select a customer from the table then click the modify button to edit selected
+         * customer
+         * */
         if (customerTable.getSelectionModel().getSelectedItem() != null){
             FXMLLoader fxmlLoader = new FXMLLoader();
             fxmlLoader.setLocation(getClass().getResource("/Views/ModifyExistingCustomerScreen.fxml"));
@@ -100,6 +110,11 @@ public class MainCustomerController implements Initializable {
             stage.show();
         }
         else {
+            /**
+             * If the selection is null, the user will receive an alert
+             * to inform them. User must select a customer from the
+             * table to modify first, before button is clicked
+             * */
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setHeaderText("No customer Selected");
             alert.setContentText("Select an existing customer to modify");
@@ -109,11 +124,34 @@ public class MainCustomerController implements Initializable {
 
     /** ----------------------------------------------------------------------------------------------------------------- */
 
+    /**
+     * @param actionEvent When the 'delete' button is clicked the user will
+     *                    be able to delete a customer from the table.
+     *                    If the selected customer has any associated
+     *                    appointments the user will receive a warning
+     *                    informing them of the selected customers
+     *                    appointments, if the user selects 'OK' on the
+     *                    warning they will be able to delete the customer,
+     *                    along with the associated appointments.
+     *                    If the user clicks 'cancel' on the warning,
+     *                    the selected customer will not be removed from the table.
+     * */
     public void deleteCustomer(ActionEvent actionEvent) throws IOException {
+        /**
+         * Set 'associatedAppointment' variable to 0;
+         * Once an associated appointment has been found,
+         * the variable will no longer be equal to 0.
+         *
+         * If the variable is greater than 0, user will
+         * receive an warning informing them that the
+         * selected customer has an appointment linked
+         * to by customer id.
+         * */
         int associatedAppointment = 0;
         ObservableList<AppointmentModel>allCustomerAppointments = AppointmentQuery.obtainAllAppointments();
         CustomerModel customerModel = customerTable.getSelectionModel().getSelectedItem();
         if (customerModel == null){
+            /** (Alert) No customer selected from table */
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setHeaderText("No Customer Selected");
             alert.setContentText("Select an existing customer to delete from the table");
@@ -128,6 +166,9 @@ public class MainCustomerController implements Initializable {
             }
         }
         if (associatedAppointment > 0){
+            /**
+             * Associated Appointment found
+             * */
             Alert alert2 = new Alert(Alert.AlertType.WARNING);
             alert2.setHeaderText("Selected Customer has associated appointments");
             alert2.setContentText("Selected customer has " + associatedAppointment + ", associated appointments\n\n" +
@@ -163,26 +204,36 @@ public class MainCustomerController implements Initializable {
                 customerTable.setItems(allCustomersList);
                 customerTable.refresh();
             }
+            /**
+             * If user clicks the 'cancel' button they are brought
+             * back to the main customer screen
+             * */
             else if (choice.get() == ButtonType.CANCEL){
                 return;
             }
         }
-        }
+    }
 
     /** ----------------------------------------------------------------------------------------------------------------- */
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
-        customerIDColumn.setCellValueFactory(new PropertyValueFactory<>("customerId"));
-        customerTitleColumn.setCellValueFactory(new PropertyValueFactory<>("customer_Name"));
-        customerAddressColumn.setCellValueFactory(new PropertyValueFactory<>("customer_Address"));
-        customerPostalCodeColumn.setCellValueFactory(new PropertyValueFactory<>("customer_PostalCode"));
-        customerPhoneNoColumn.setCellValueFactory(new PropertyValueFactory<>("customer_PhoneNumber"));
-        customerDivisionColumn.setCellValueFactory(new PropertyValueFactory<>("customer_StateProvinceName"));
-        customerCountryColumn.setCellValueFactory(new PropertyValueFactory<>("customer_CountryName"));
+        /**
+         * Customer Table
+         * */
+        customerIDColumn.setCellValueFactory(new PropertyValueFactory<>("customerId")); //Customer Id
+        customerTitleColumn.setCellValueFactory(new PropertyValueFactory<>("customer_Name")); //Customer Name
+        customerAddressColumn.setCellValueFactory(new PropertyValueFactory<>("customer_Address")); //Customer Address
+        customerPostalCodeColumn.setCellValueFactory(new PropertyValueFactory<>("customer_PostalCode")); //Customer Postal Code
+        customerPhoneNoColumn.setCellValueFactory(new PropertyValueFactory<>("customer_PhoneNumber")); //Customer Phone Number
+        customerDivisionColumn.setCellValueFactory(new PropertyValueFactory<>("customer_StateProvinceName")); //Customer Division
+        customerCountryColumn.setCellValueFactory(new PropertyValueFactory<>("customer_CountryName")); //Customer Country
 
-        customerTable.setItems(CustomerQuery.obtainAllCustomers());
+        /**
+         * Set Items to customer table
+         * */
+        customerTable.setItems(CustomerQuery.obtainAllCustomers()); //Set Items to table
 
     }
 }
