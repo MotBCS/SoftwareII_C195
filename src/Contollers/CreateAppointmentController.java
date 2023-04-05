@@ -345,19 +345,6 @@ public class CreateAppointmentController implements Initializable {
             return;
         }
 
-        ObservableList<AppointmentModel> allApps = AppointmentQuery.obtainAppByCustomerId(createAppointmentCustomerIDComboBox.getSelectionModel().getSelectedItem().getCustomerId());
-        for (AppointmentModel appointmentModel : allApps){
-            LocalDateTime appointmentStart = appointmentModel.getAppStart();
-            LocalDateTime appointmentEnd = appointmentModel.getAppEnd();
-
-            Timestamp appointmentTimeStamp_Start = Timestamp.valueOf(appointmentStart);
-            Timestamp appointmentTimeStamp_End = Timestamp.valueOf(appointmentEnd);
-
-            LocalDate appointmentDateStart = createAppointmentDatePicker_Start.getValue();
-            LocalDate appointmentDateEnd = createAppointmentDatePicker_End.getValue();
-
-            if (appointmentTimeStamp_Start.after())
-        }
         /** --------------------------------------------------------------------------- */
         /**
          * If the new appointment contains no empty values and is within business operation
