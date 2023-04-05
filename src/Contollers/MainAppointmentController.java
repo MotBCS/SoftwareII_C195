@@ -132,16 +132,15 @@ public class MainAppointmentController implements Initializable {
             alert.showAndWait();
             return;
         }
-        else {
+        else if (obtainApp != null){
             /**
              * If the selection is not null, the user will receive an
              * warning that will allow them to confirm the deletion of the
              * selected appointment
              * */
-            Alert alert = new Alert(Alert.AlertType.WARNING);
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.setHeaderText("Delete Selected Appointment?");
             alert.setContentText("Delete selected appointment " + obtainApp.getAppId() + ", from appointment table?");
-            alert.showAndWait();
 
             /**
              * If the user confirms the deletion of the selected appointment,
@@ -165,9 +164,9 @@ public class MainAppointmentController implements Initializable {
                 appointmentTable.refresh();
                 alert2.showAndWait();
             }
-//            else if (choice.get() == ButtonType.CANCEL){
-//                return;
-//            }
+            else if (choice.get() == ButtonType.CANCEL){
+                alert.close();
+            }
         }
     }
 
