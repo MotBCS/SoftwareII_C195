@@ -27,10 +27,26 @@ import java.net.URL;
 import java.sql.Timestamp;
 import java.util.ResourceBundle;
 
-
+/** ----------------------------------------------------------------------------------------------------------------- */
+/**
+ *
+ * The 'ReportController' class is used as a controller for the ReportScreen.fxml.
+ * Allows users to view tables containing all appointments that can be filtered by
+ * selecting a contact from the combo box at the top right of the screen. There also
+ * two more additional tables that the user can use to view appointment total by
+ * month and type as well as see how many customers per state/province.
+ *
+ * */
 public class ReportController implements Initializable {
+
+    /** Buttons */
     @FXML
     public Button backBtn;
+
+    /**
+     * View Appointment By Month and Type
+     * Table and Columns
+     * */
     @FXML
     public TableView<REPORT_MonthType_TotalAppointment>monthTypeTable;
     @FXML
@@ -39,14 +55,22 @@ public class ReportController implements Initializable {
     public TableColumn<REPORT_MonthType_TotalAppointment, String>typeColumn;
     @FXML
     public TableColumn<REPORT_MonthType_TotalAppointment, Integer>appointmentTotalColumn;
+
+    /**
+     * View Customer Total By State/Provinces
+     * Table and Columns
+     * */
     @FXML
     public TableView<REPORT_StateProvince_TotalCustomer>stateProvinceTable;
     @FXML
     public TableColumn<REPORT_StateProvince_TotalCustomer, String>stateProvinceColumn;
     @FXML
     public TableColumn<REPORT_StateProvince_TotalCustomer, Integer>customerTotalColumn;
-    @FXML
-    public ComboBox<ContactModel>reportContactComboBox;
+
+    /**
+     * View Appointments By Selected Contact
+     *Table and Columns
+     * */
     @FXML
     public TableView<AppointmentModel>appointmentTable;
     @FXML
@@ -70,20 +94,47 @@ public class ReportController implements Initializable {
     @FXML
     public TableColumn<AppointmentModel, Integer>userIDColumn;
 
+    /**
+     * Contact Combo Box (Used to filter appointment table by selected appointment)
+     * */
+    @FXML
+    public ComboBox<ContactModel>reportContactComboBox;
+
+    /** ----------------------------------------------------------------------------------------------------------------- */
+
+    /**
+     * @param actionEvent 'filterContactReportTable' allows the user to
+     *                    filter the appointment table located in the report menu,
+     *                    by selected contact
+     * */
     public void filterContactReportTable(ActionEvent actionEvent) {
         ContactModel contactModel = reportContactComboBox.getSelectionModel().getSelectedItem();
+        /**
+         * Checks the contact Id, to determine who to filter the appointment table by
+         * */
         if (contactModel.getContactId() == 1){
             appointmentTable.setItems(ContactQuery.contactReportByContactID1());
         }else if (contactModel.getContactId() == 2){
             appointmentTable.setItems(ContactQuery.contactReportByContactID2());
         }else if (contactModel.getContactId() == 3){
             appointmentTable.setItems(ContactQuery.contactReportByContactID3());
-        }else {
+        }
+        /**
+         * By default, the appointment table will display all appointments if there
+         * isn't an contact selected in the combo box
+         * */
+        else {
             ObservableList<AppointmentModel> viewAll = ContactQuery.contactReport();
             appointmentTable.setItems(viewAll);
         }
     }
 
+    /** ----------------------------------------------------------------------------------------------------------------- */
+
+    /**
+     * @param actionEvent When the 'back' button is clicked the user will be taken back
+     *                    to the main appointment screen.
+     * */
     public void toMainMenu(ActionEvent actionEvent) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("/Views/HomeMenuScreen.fxml"));
         Stage stage = (Stage) backBtn.getScene().getWindow();
@@ -93,10 +144,21 @@ public class ReportController implements Initializable {
         stage.show();
     }
 
+    /** ----------------------------------------------------------------------------------------------------------------- */
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        /**
+         * Sets combo box prompt text, while there isn't a
+         * contact selected.
+         * */
         reportContactComboBox.setPromptText("Select Contact");
 
+        /**
+         * Creates an empty observable list to store all the contacts
+         * obtained from the contact query, used to populate the
+         * report screen contact combo box
+         * */
         ObservableList<ContactModel>populateContactComboBox = FXCollections.observableArrayList();
         populateContactComboBox.clear();
         populateContactComboBox = ContactQuery.obtainAllContacts();
@@ -104,6 +166,9 @@ public class ReportController implements Initializable {
 
 
         /** Contact Report Table */
+        /**
+         * Binding columns to tables
+         * */
         appIDColumn.setCellValueFactory(new PropertyValueFactory<>("appId"));
         titleColumn.setCellValueFactory(new PropertyValueFactory<>("appTitle"));
         AppointmentTypeColumn.setCellValueFactory(new PropertyValueFactory<>("appType"));
@@ -115,6 +180,9 @@ public class ReportController implements Initializable {
         descriptionColumn.setCellValueFactory(new PropertyValueFactory<>("appDescription"));
         userIDColumn.setCellValueFactory(new PropertyValueFactory<>("appUserId"));
 
+        /**
+         * Setting items to appointment table
+         * */
         appointmentTable.setItems(AppointmentQuery.obtainAllAppointments());
 
         /**
@@ -125,7 +193,7 @@ public class ReportController implements Initializable {
         monthColumn.setCellValueFactory(new PropertyValueFactory<>("appMonth"));
         typeColumn.setCellValueFactory(new PropertyValueFactory<>("appType"));
         appointmentTotalColumn.setCellValueFactory(new PropertyValueFactory<>("totalPerMonth"));
-        /** Set values to table */
+        /** Set items to table */
         monthTypeTable.setItems(viewAllMonthType);
 
         /**
@@ -135,7 +203,7 @@ public class ReportController implements Initializable {
         /** Binding State/Province columns to table*/
         stateProvinceColumn.setCellValueFactory(new PropertyValueFactory<>("stateProvince"));
         customerTotalColumn.setCellValueFactory(new PropertyValueFactory<>("customerTotal"));
-        /** Set values to table */
+        /** Set items to table */
         stateProvinceTable.setItems(viewAllStateProvince);
     }
 }

@@ -192,6 +192,7 @@ public class LoginController implements Initializable {
     /** ----------------------------------------------------------------------------------------------------------------- */
 
     /**
+     * (Schedule appointment in LOCAL TIME)
      * Used to check if the logged in user has any upcoming appointments,
      * if there are any associated appointments the user will
      * received an alert to inform them
