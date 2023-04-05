@@ -22,6 +22,8 @@ import java.sql.Timestamp;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
+/** ----------------------------------------------------------------------------------------------------------------- */
+
 public class MainAppointmentController implements Initializable {
     @FXML
     public Button deleteAppointmentBtn;
@@ -62,6 +64,8 @@ public class MainAppointmentController implements Initializable {
 
     ObservableList<AppointmentModel> allAppList = FXCollections.observableArrayList();
 
+    /** ----------------------------------------------------------------------------------------------------------------- */
+
     public void toMainMenu(ActionEvent actionEvent) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("/Views/HomeMenuScreen.fxml"));
         Stage stage = (Stage) backBtn.getScene().getWindow();
@@ -71,6 +75,8 @@ public class MainAppointmentController implements Initializable {
         stage.show();
     }
 
+    /** ----------------------------------------------------------------------------------------------------------------- */
+
     public void onActionAddNewAppointment(ActionEvent actionEvent) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("/Views/AddNewAppointment.fxml"));
         Stage stage = (Stage) addNewAppointmentBtn.getScene().getWindow();
@@ -79,6 +85,8 @@ public class MainAppointmentController implements Initializable {
         stage.centerOnScreen();
         stage.show();
     }
+
+    /** ----------------------------------------------------------------------------------------------------------------- */
 
     public void toModifyAppointment(ActionEvent actionEvent) throws IOException, SQLException {
         if (appointmentTable.getSelectionModel().getSelectedItem() != null){
@@ -102,8 +110,21 @@ public class MainAppointmentController implements Initializable {
         }
     }
 
+    /** ----------------------------------------------------------------------------------------------------------------- */
+
+    /**
+     * @param actionEvent The deleteAppointment method allows the user to delete
+     *                    a selected appointment from the table.
+     * */
     public void deleteAppointment(ActionEvent actionEvent) {
+        /**
+         * The variable 'obtainApp' is used to store the selected appointment
+         * */
         AppointmentModel obtainApp = appointmentTable.getSelectionModel().getSelectedItem();
+        /**
+         * If there is no appointment selected and the user clicks the delete button
+         * they will receive an error to inform them that the selection is empty.
+         * */
         if (obtainApp == null){
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setHeaderText("No Appointment Selected");
@@ -112,14 +133,31 @@ public class MainAppointmentController implements Initializable {
             return;
         }
         else {
+            /**
+             * If the selection is not null, the user will receive an
+             * warning that will allow them to confirm the deletion of the
+             * selected appointment
+             * */
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setHeaderText("Delete Selected Appointment?");
             alert.setContentText("Delete selected appointment " + obtainApp.getAppId() + ", from appointment table?");
             alert.showAndWait();
+
+            /**
+             * If the user confirms the deletion of the selected appointment,
+             * they will receive an alert confirming the deletion of the
+             * selected appointment.
+             * */
             Optional<ButtonType> choice = alert.showAndWait();
             if (choice.get() == ButtonType.OK){
                 Alert alert2 = new Alert(Alert.AlertType.INFORMATION);
                 alert2.setHeaderText("Appointment has been successfully deleted");
+
+                /**
+                 *          Alert Will Displays:
+                 *          - Appointment ID
+                 *          - Appointment Type
+                 * */
                 alert2.setContentText("Appointment ID: " + appointmentTable.getSelectionModel().getSelectedItem().getAppId() + "\nAppointment Type: " + appointmentTable.getSelectionModel().getSelectedItem().getAppType() + " has been successfully deleted");
                 AppointmentQuery.deleteExistingAppointment(appointmentTable.getSelectionModel().getSelectedItem().getAppId());
                 allAppList = AppointmentQuery.obtainAllAppointments();
@@ -127,19 +165,42 @@ public class MainAppointmentController implements Initializable {
                 appointmentTable.refresh();
                 alert2.showAndWait();
             }
-            else if (choice.get() == ButtonType.CANCEL){
-                return;
-            }
+//            else if (choice.get() == ButtonType.CANCEL){
+//                return;
+//            }
         }
     }
 
+    /** ----------------------------------------------------------------------------------------------------------------- */
+
+    /**
+     * @param actionEvent The 'View All' radio  button is selected by default,
+     *                    allows user to view all appointments currently scheduled.
+     * */
     public void onActionViewAllRadioBtn(ActionEvent actionEvent) {
+        /** Set Items to Appointment Table */
         appointmentTable.setItems(AppointmentQuery.obtainAllAppointments());
         System.out.println("All Radio Btn pressed");
     }
 
+    /** ----------------------------------------------------------------------------------------------------------------- */
+
+    /**
+     * @param actionEvent When the 'View by Week' radio button is selected
+     *                    the table will be populated with appointments
+     *                    from the current week
+     * */
     public void onActionViewByWeekRadioBtn(ActionEvent actionEvent) {
+        /** Set Items to Appointment Table */
         appointmentTable.setItems(AppointmentQuery.appByCurrentWeek());
+
+        /**
+         * Alert informs the user that the  week radio button
+         * has been selected
+         * (This was mainly used to help make sure the
+         * radio button where working when there are no
+         * appointments scheduled in the table)
+         * */
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setHeaderText("View By Current Week");
         alert.setContentText("Viewing appointments scheduled this week");
@@ -147,8 +208,24 @@ public class MainAppointmentController implements Initializable {
         System.out.println("Week Radio Btn pressed");
     }
 
+    /** ----------------------------------------------------------------------------------------------------------------- */
+
+    /**
+     * @param actionEvent When the 'View By Month' radio button is selected
+     *                    the table will be populated with appointments
+     *                    from the current month.
+     * */
     public void onActionViewByMonthRadioBtn(ActionEvent actionEvent) {
+        /** Set Items to Appointment Table */
         appointmentTable.setItems(AppointmentQuery.appByCurrentMonth());
+
+        /**
+         * Alert informs the user that the  month radio button
+         * has been selected
+         * (This was mainly used to help make sure the
+         * radio button where working when there are no
+         * appointments scheduled in the table)
+         * */
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setHeaderText("View By Current Month");
         alert.setContentText("Viewing appointments scheduled this month");
@@ -156,10 +233,20 @@ public class MainAppointmentController implements Initializable {
         System.out.println("Month Radio Btn pressed");
     }
 
+    /** ----------------------------------------------------------------------------------------------------------------- */
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        /**
+         * When the application is loaded the 'View All' radio
+         * button will be selected by default
+         * displaying all appointments in the database
+         * */
         viewAllAppointmentsRadioBtn.isSelected();
 
+        /**
+         * Binding Columns to Appointment Table
+         * */
         appIDColumn.setCellValueFactory(new PropertyValueFactory<>("appId"));
         titleColumn.setCellValueFactory(new PropertyValueFactory<>("appTitle"));
         typeColumn.setCellValueFactory(new PropertyValueFactory<>("appType"));
@@ -171,6 +258,10 @@ public class MainAppointmentController implements Initializable {
         descriptionColumn.setCellValueFactory(new PropertyValueFactory<>("appDescription"));
         userIDColumn.setCellValueFactory(new PropertyValueFactory<>("appUserId"));
 
+        /**
+         * Set Items to Appointment Table
+         * Gets appointment data from 'AppointmentQuery' using the 'obtainAllAppointments' method
+         * */
         appointmentTable.setItems(AppointmentQuery.obtainAllAppointments());
 
     }

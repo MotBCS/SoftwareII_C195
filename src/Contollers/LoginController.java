@@ -46,6 +46,14 @@ import java.util.TimeZone;
  * the application.
  * */
 
+/**
+ *
+ * LAMBDA EXPRESSION #1
+ * Location : (LoginController)
+ * Lines : (290 - 293)
+ *
+ * */
+
 public class LoginController implements Initializable {
 
     /**
@@ -71,16 +79,9 @@ public class LoginController implements Initializable {
     public Button loginBtn; //Login button, allows user to access application after username and password validation
 
     public static int userId; //User Id, will be used to get userId of logged in user to check future appointments
-    private final LocalDateTime plus15 = LocalDateTime.now().plusMinutes(15); //Used for checking for future appointments
-    private final LocalDateTime minus15 = LocalDateTime.now().minusMinutes(15); //Used for checking for future appointments
-    private LocalDateTime appST; //Appointment variable to store Start Time
-    private LocalDateTime appTime;
-    private boolean checkAppTime;
-    private int appId;
 
-    LocalDateTime timeNow = LocalDateTime.now();
-    ZonedDateTime LocalDateTimeCon = timeNow.atZone(ZoneId.systemDefault());
-    LocalDateTime timeNowAdd15 = LocalDateTime.now().plusMinutes(15);
+    LocalDateTime timeNow = LocalDateTime.now(); //Used for checking for future appointments
+    LocalDateTime timeNowAdd15 = LocalDateTime.now().plusMinutes(15); //Used for checking for future appointments
 
     /** ----------------------------------------------------------------------------------------------------------------- */
 
