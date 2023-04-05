@@ -5,6 +5,7 @@ import Models.AppointmentModel;
 import Models.UserModel;
 import Queries.AppointmentQuery;
 import Queries.UserQuery;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -229,6 +230,7 @@ public class LoginController implements Initializable {
         }
     }
 
+    /** ----------------------------------------------------------------------------------------------------------------- */
     /** ----------------------------------------------------------------------------------------------------------------- */
 
     /**

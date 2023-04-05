@@ -1,5 +1,6 @@
 package Contollers;
 
+import Models.AppointmentModel;
 import Models.ContactModel;
 import Models.CustomerModel;
 import Models.UserModel;
@@ -65,6 +66,7 @@ public class CreateAppointmentController implements Initializable {
     public TextField createAppointmentDescriptionTextField;
     @FXML
     public DatePicker createAppointmentDatePicker_Start;
+
     private final int AddToDatePicker = 0;
 
     /** ----------------------------------------------------------------------------------------------------------------- */
@@ -327,15 +329,6 @@ public class CreateAppointmentController implements Initializable {
             return;
         }
 
-        /** --------------------------------------------------------------------------- */
-        /**
-         * Checks that appointment does not clash with any already existing appointments (Checks appointment ID)
-         * */
-        else if (AppointmentQuery.clashingCheckWithAppId(createAppointmentCustomerIDComboBox.getSelectionModel().getSelectedItem().getCustomerId(), appStart, appEnd, appByCustomerId)){
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setHeaderText("Clashing Appointments");
-            alert.setContentText("Check appointment time");
-        }
         /** --------------------------------------------------------------------------- */
         /**
          * If the new appointment contains no empty values and is within business operation

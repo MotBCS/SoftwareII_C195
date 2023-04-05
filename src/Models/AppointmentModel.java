@@ -66,6 +66,16 @@ public class AppointmentModel {
         this.appointmentContactName = appointmentContactName;
     }
 
+    public AppointmentModel(
+            int appId,
+            LocalDateTime appStart
+    ){
+        this.appId = appId;
+        this.appStart = appStart;
+    }
+
+
+
     public int getAppId() {
         return appId;
     }

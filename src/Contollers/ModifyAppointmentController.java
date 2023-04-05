@@ -341,6 +341,8 @@ public class ModifyAppointmentController implements Initializable {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setHeaderText("Clashing Appointments");
             alert.setContentText("Check appointment time");
+            alert.showAndWait();
+            return;
         }
         /** --------------------------------------------------------------------------- */
         /**

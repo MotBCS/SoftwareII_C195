@@ -296,6 +296,27 @@ public class AppointmentQuery {
         return appByContactIdList;
     }
 
+    /** - GET APPOINTMENT (BY -> Customer Id )-------------------------------------------------------------------------------------*/
+
+    public static ObservableList<AppointmentModel>obtainAppByCustomerId(int customerId){
+        ObservableList<AppointmentModel> appByCustomerIdList = FXCollections.observableArrayList();
+        JavaDatabaseConnection.openConnection();
+        try {
+            String SQL = "SELECT Start, End FROM appointments WHERE Customer_ID = ?;";
+            PreparedStatement preparedStatement = JavaDatabaseConnection.connection.prepareStatement(SQL);
+            preparedStatement.setInt(1, customerId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()){
+                resultSet.getTimestamp("Start").toLocalDateTime();
+                resultSet.getTimestamp("End").toLocalDateTime();
+            }
+            return appByCustomerIdList;
+        } catch (SQLException exception) {
+            System.out.println("Unable to get appointments by customer Id (SQL Error)");
+        }
+        return null;
+    }
+
     /** - Clashing Appointments -------------------------------------------------------------------------------------*/
 
     public static boolean clashingAppointments(int customerId, LocalDateTime appStart, LocalDateTime appEnd){
