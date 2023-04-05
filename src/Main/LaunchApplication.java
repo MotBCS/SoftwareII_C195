@@ -19,6 +19,13 @@ import java.util.ResourceBundle;
  *
  * */
 
+/**
+ * This class is used to launch the
+ * application. When the application is launched
+ * the user will be brought to the main login screen,
+ * where they must enter a valid username and
+ * password to access the rest of the application
+ * */
 public class LaunchApplication extends Application {
     @Override
     public void start(Stage stage) throws Exception {
@@ -40,8 +47,10 @@ public class LaunchApplication extends Application {
             System.out.println(resourceBundle.getString("Login"));
         }
 
-        /** Reference From CI Software Team Resource Repo
+        /**
+         * Reference From CI Software Team Resource Repo
          * Referenced to help better understand UTC time conversion
+         * Also, used to check the current time of the SQL database.
          * */
         Timestamp timeStamp = Timestamp.valueOf(LocalDateTime.now());
         LocalDateTime localDateTime = timeStamp.toLocalDateTime();

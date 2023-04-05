@@ -104,8 +104,8 @@ public class TimeConversion {
          * Start Time combo box starts at 6:00 AM and 15 minutes is added until
          * the end time is reached at 10:00 PM
          * */
-        LocalTime AppointmentStartTime = LocalTime.of(6, 0); //Start
-        LocalTime AppointmentEndTime = LocalTime.of(22, 0); //End
+        LocalTime AppointmentStartTime = LocalTime.of(8, 0); //Combo Box Start
+        LocalTime AppointmentEndTime = LocalTime.of(22, 0); //Combo Box End
 
         while (AppointmentStartTime.isBefore(AppointmentEndTime.plusSeconds(2))){
             appTimeList.add(AppointmentStartTime);
@@ -117,4 +117,10 @@ public class TimeConversion {
         }
         return appTimeList;
     }
+
+    /**
+     *
+     * Note:
+     *  ////
+     * */
 }
