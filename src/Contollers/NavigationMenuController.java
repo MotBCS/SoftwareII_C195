@@ -16,6 +16,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -43,6 +44,12 @@ public class NavigationMenuController implements Initializable {
 
     public static UserModel inSessionUser;
     public Label inSessionUserLabel;
+
+//    public static void sendInSessionUser(String username) {
+//        UserModel userModel = new UserModel(inSessionUser.getUsername());
+//        inSessionUser = userModel;
+//        System.out.println("In session user: " + userModel);
+//    }
 
     /** ----------------------------------------------------------------------------------------------------------------- */
 

@@ -128,6 +128,7 @@ public class LoginController implements Initializable {
             stage.setScene(scene);
             stage.centerOnScreen();
             stage.show();
+
             /**
              *  If the users login is successful their login attempt will be record in a external
              * text file. That contains the username, the login time and date and whether the attempt
@@ -215,7 +216,7 @@ public class LoginController implements Initializable {
                  * */
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setHeaderText("Upcoming Appointment");
-                alert.setContentText("Hello " + loginUsernameTextField.getText() + ", \nYou have an upcoming appointment in 15 minutes.\nAppointment ID: " + appointmentModel.getAppId() + "\nAppointment Date and Time: " + appointmentModel.getAppStart().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")) + " Local Time");
+                alert.setContentText("Hello " + loginUsernameTextField.getText().toUpperCase(Locale.ROOT) + ", \nYou have an upcoming appointment in 15 minutes.\nAppointment ID: " + appointmentModel.getAppId() + "\nAppointment Date and Time: " + appointmentModel.getAppStart().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")) + " Local Time");
                 alert.showAndWait();
                 System.out.println("Upcoming appointment found!");
                 upcomingApps = true;
@@ -228,7 +229,7 @@ public class LoginController implements Initializable {
              * */
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setHeaderText("No Upcoming Appointments");
-            alert.setContentText("You have no upcoming appointments at the moment");
+            alert.setContentText("Hello " + loginUsernameTextField.getText().toUpperCase(Locale.ROOT) +", You have no upcoming appointments at the moment");
             alert.showAndWait();
             System.out.println("No upcoming appointments");
         }
