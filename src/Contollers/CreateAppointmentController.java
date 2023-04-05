@@ -256,6 +256,16 @@ public class CreateAppointmentController implements Initializable {
         }
 
         /** --------------------------------------------------------------------------- */
+
+        if (startDate.isBefore(LocalDate.now()) || endDate.isBefore(LocalDate.now())){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setHeaderText("Unable to create new appointment");
+            alert.setContentText("Appointment can not be scheduled in the past");
+            alert.showAndWait();
+            return;
+        }
+
+        /** --------------------------------------------------------------------------- */
         /**
          * If the user Id combo box is null, user will receive an error
          * */
