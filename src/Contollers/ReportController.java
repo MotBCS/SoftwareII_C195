@@ -36,6 +36,8 @@ import java.util.ResourceBundle;
  * two more additional tables that the user can use to view appointment total by
  * month and type as well as see how many customers per state/province.
  *
+ *
+ * @author Mya Thomas
  * */
 public class ReportController implements Initializable {
 
@@ -48,7 +50,7 @@ public class ReportController implements Initializable {
      * Table and Columns
      * */
     @FXML
-    public TableView<REPORT_MonthType_TotalAppointment>monthTypeTable;
+    public TableView<REPORT_MonthType_TotalAppointment>monthTypeTable; //Table View (For fast reference)
     @FXML
     public TableColumn<REPORT_MonthType_TotalAppointment, String>monthColumn;
     @FXML
@@ -61,7 +63,7 @@ public class ReportController implements Initializable {
      * Table and Columns
      * */
     @FXML
-    public TableView<REPORT_StateProvince_TotalCustomer>stateProvinceTable;
+    public TableView<REPORT_StateProvince_TotalCustomer>stateProvinceTable; //Table View (For fast reference)
     @FXML
     public TableColumn<REPORT_StateProvince_TotalCustomer, String>stateProvinceColumn;
     @FXML
@@ -72,7 +74,7 @@ public class ReportController implements Initializable {
      *Table and Columns
      * */
     @FXML
-    public TableView<AppointmentModel>appointmentTable;
+    public TableView<AppointmentModel>appointmentTable; //Table View (For fast reference)
     @FXML
     public TableColumn<AppointmentModel, Integer>appIDColumn;
     @FXML
@@ -113,11 +115,11 @@ public class ReportController implements Initializable {
          * Checks the contact Id, to determine who to filter the appointment table by
          * */
         if (contactModel.getContactId() == 1){
-            appointmentTable.setItems(ContactQuery.contactReportByContactID1());
+            appointmentTable.setItems(ContactQuery.contactReportByContactID1()); //Set Items to table
         }else if (contactModel.getContactId() == 2){
-            appointmentTable.setItems(ContactQuery.contactReportByContactID2());
+            appointmentTable.setItems(ContactQuery.contactReportByContactID2()); //Set Items to table
         }else if (contactModel.getContactId() == 3){
-            appointmentTable.setItems(ContactQuery.contactReportByContactID3());
+            appointmentTable.setItems(ContactQuery.contactReportByContactID3()); //Set Items to table
         }
         /**
          * By default, the appointment table will display all appointments if there
@@ -125,7 +127,7 @@ public class ReportController implements Initializable {
          * */
         else {
             ObservableList<AppointmentModel> viewAll = ContactQuery.contactReport();
-            appointmentTable.setItems(viewAll);
+            appointmentTable.setItems(viewAll); //Set Items to table
         }
     }
 
@@ -152,7 +154,7 @@ public class ReportController implements Initializable {
          * Sets combo box prompt text, while there isn't a
          * contact selected.
          * */
-        reportContactComboBox.setPromptText("Select Contact");
+        reportContactComboBox.setPromptText("Select Contact"); //Combo Box default prompt text
 
         /**
          * Creates an empty observable list to store all the contacts
@@ -162,7 +164,7 @@ public class ReportController implements Initializable {
         ObservableList<ContactModel>populateContactComboBox = FXCollections.observableArrayList();
         populateContactComboBox.clear();
         populateContactComboBox = ContactQuery.obtainAllContacts();
-        reportContactComboBox.setItems(populateContactComboBox);
+        reportContactComboBox.setItems(populateContactComboBox); //Set items to combo box
 
 
         /** Contact Report Table */
@@ -183,7 +185,7 @@ public class ReportController implements Initializable {
         /**
          * Setting items to appointment table
          * */
-        appointmentTable.setItems(AppointmentQuery.obtainAllAppointments());
+        appointmentTable.setItems(AppointmentQuery.obtainAllAppointments()); //Set Items to table
 
         /**
          * Combine Month and Type Tables into one
@@ -194,7 +196,7 @@ public class ReportController implements Initializable {
         typeColumn.setCellValueFactory(new PropertyValueFactory<>("appType"));
         appointmentTotalColumn.setCellValueFactory(new PropertyValueFactory<>("totalPerMonth"));
         /** Set items to table */
-        monthTypeTable.setItems(viewAllMonthType);
+        monthTypeTable.setItems(viewAllMonthType); //Set Items to table
 
         /**
          * State/Province Table
@@ -204,6 +206,6 @@ public class ReportController implements Initializable {
         stateProvinceColumn.setCellValueFactory(new PropertyValueFactory<>("stateProvince"));
         customerTotalColumn.setCellValueFactory(new PropertyValueFactory<>("customerTotal"));
         /** Set items to table */
-        stateProvinceTable.setItems(viewAllStateProvince);
+        stateProvinceTable.setItems(viewAllStateProvince); //Set Items to table
     }
 }

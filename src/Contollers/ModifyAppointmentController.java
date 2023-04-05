@@ -34,6 +34,7 @@ import java.util.ResourceBundle;
  * Allows user to modify a existing appointment then save it to
  * the appointment table
  *
+ * @author Mya Thomas
  * */
 public class ModifyAppointmentController implements Initializable {
 

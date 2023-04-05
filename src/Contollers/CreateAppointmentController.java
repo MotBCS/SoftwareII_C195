@@ -34,6 +34,7 @@ import java.util.ResourceBundle;
  * Allows user to create a new appointment then save it to
  * the appointment table.
  *
+ * @author Mya Thomas
  * */
 public class CreateAppointmentController implements Initializable {
 

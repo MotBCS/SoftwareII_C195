@@ -45,6 +45,8 @@ import java.util.TimeZone;
  *
  * At the bottom of the login screen the user can also view their system time zone or click the 'quit' button to close
  * the application.
+ *
+ * @author Mya Thomas
  * */
 
 /**

@@ -29,6 +29,8 @@ import java.util.ResourceBundle;
  * Users will also be able to access the 'Create Appointment', 'Delete' and 'Modify' buttons
  * Where they can add new appointments or select an existing appointment to modify from the
  * table.
+ *
+ * @author Mya Thomas
  * */
 public class MainAppointmentController implements Initializable {
 
