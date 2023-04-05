@@ -21,6 +21,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -257,6 +258,10 @@ public class CreateAppointmentController implements Initializable {
 
         /** --------------------------------------------------------------------------- */
 
+        /**
+         * If the user attempts to schedule an appointment on a past date, they will
+         * receive an error, informing them.
+         * */
         if (startDate.isBefore(LocalDate.now()) || endDate.isBefore(LocalDate.now())){
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setHeaderText("Unable to create new appointment");
@@ -340,6 +345,19 @@ public class CreateAppointmentController implements Initializable {
             return;
         }
 
+        ObservableList<AppointmentModel> allApps = AppointmentQuery.obtainAppByCustomerId(createAppointmentCustomerIDComboBox.getSelectionModel().getSelectedItem().getCustomerId());
+        for (AppointmentModel appointmentModel : allApps){
+            LocalDateTime appointmentStart = appointmentModel.getAppStart();
+            LocalDateTime appointmentEnd = appointmentModel.getAppEnd();
+
+            Timestamp appointmentTimeStamp_Start = Timestamp.valueOf(appointmentStart);
+            Timestamp appointmentTimeStamp_End = Timestamp.valueOf(appointmentEnd);
+
+            LocalDate appointmentDateStart = createAppointmentDatePicker_Start.getValue();
+            LocalDate appointmentDateEnd = createAppointmentDatePicker_End.getValue();
+
+            if (appointmentTimeStamp_Start.after())
+        }
         /** --------------------------------------------------------------------------- */
         /**
          * If the new appointment contains no empty values and is within business operation
