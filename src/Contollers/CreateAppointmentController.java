@@ -8,6 +8,7 @@ import Queries.AppointmentQuery;
 import Queries.ContactQuery;
 import Queries.CustomerQuery;
 import Queries.UserQuery;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -70,6 +71,10 @@ public class CreateAppointmentController implements Initializable {
     public DatePicker createAppointmentDatePicker_Start;
 
     private final int AddToDatePicker = 0;
+    private int customerId;
+    private LocalDateTime localDateTimeStart;
+    private LocalDateTime localDateTimeEnd;
+
 
     /** ----------------------------------------------------------------------------------------------------------------- */
 
@@ -335,6 +340,8 @@ public class CreateAppointmentController implements Initializable {
         else if (Helper.TimeConversion.operationCompanyTime(appStart, appEnd)){
             return;
         }
+
+
         /** --------------------------------------------------------------------------- */
         /**
          * Checks that the new appointment does not class with any already existing appointment.
@@ -348,7 +355,8 @@ public class CreateAppointmentController implements Initializable {
         /** --------------------------------------------------------------------------- */
         /**
          * NOTES:
-         *
+         *  No matter the customer Id, clashing alert should trigger
+         *  when ever an appointment overlaps an existing appointment
          * */
         /** --------------------------------------------------------------------------- */
         /**
@@ -369,6 +377,27 @@ public class CreateAppointmentController implements Initializable {
         }
     }
 
+    private boolean checkClashing(LocalDateTime appStart, LocalDateTime appEnd, int customerId, int appId){
+        ObservableList<AppointmentModel> allApps = AppointmentQuery.obtainAllAppointments();
+        for (AppointmentModel app : allApps){
+            if (app.getAppCustomerId() != customerId){
+                continue;
+            }
+            if (app.getAppId() == appId){
+                continue;
+            }
+            if ((app.getAppStart().isAfter(appStart) || app.getAppStart().isEqual(appStart)) && app.getAppStart().isBefore(appEnd)){
+                return true;
+            }
+            if (app.getAppEnd().isAfter(appStart) && (app.getAppEnd().isBefore(appEnd) || app.getAppEnd().isEqual(appEnd))){
+                return true;
+            }
+            if ((app.getAppStart().isBefore(appStart) || app.getAppStart().isEqual(appStart)) && app.getAppEnd().isAfter(appEnd) || app.getAppEnd().isEqual(appEnd)){
+                return true;
+            }
+        }
+        return false;
+    }
     /** ----------------------------------------------------------------------------------------------------------------- */
 
     @Override

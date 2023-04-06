@@ -15,7 +15,7 @@ Date: April 5, 2023
 -----------------------------------------------------
 
 IDE: IntelliJ IDEA Community Edition 2021.1.3
-JDK: 11.0.11
+JDK: Java SE 11.0.11
 JavaFX: javafx-sdk-17.0.1
 MySQL Driver Version: mysql-connector-java-8.0.25
 
