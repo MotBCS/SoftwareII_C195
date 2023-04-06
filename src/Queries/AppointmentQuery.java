@@ -319,72 +319,21 @@ public class AppointmentQuery {
 
     /** - Clashing Appointments -------------------------------------------------------------------------------------*/
 
-    public static boolean clashingAppointments(int customerId, LocalDateTime appStart, LocalDateTime appEnd){
-        ObservableList<AppointmentModel> clashingAppsList = AppointmentQuery.obtainAllAppointments();
-        LocalDateTime ldtAppStart; //Check app start
-        LocalDateTime ldtAppEnd; //Check app end
-        for (AppointmentModel appointmentModel : clashingAppsList){
-            ldtAppStart = appointmentModel.getAppStart();
-            ldtAppEnd = appointmentModel.getAppEnd();
-            if (customerId != appointmentModel.getAppCustomerId()){
-                continue;
-            }
-            else if (ldtAppStart.isEqual(appStart) || ldtAppEnd.isEqual(appEnd)){
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setHeaderText("Clashing Time Conflict");
-                alert.setContentText("Appointment has same start and/or end as an already existing appointment");
-                alert.showAndWait();
-                return true;
-            }
-            else if (appStart.isAfter(ldtAppStart) && appStart.isBefore(appEnd)){
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setHeaderText("Clashing Time Conflict");
-                alert.setContentText("Appointment starts during already existing appointment");
-                alert.showAndWait();
-                return true;
-            }
-            else if (appEnd.isAfter(ldtAppStart) && appEnd.isBefore(ldtAppEnd)){
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setHeaderText("Clashing Time Conflict");
-                alert.setContentText("Appointment ends during already existing appointment");
-                alert.showAndWait();
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public static boolean clashing(int customerId, LocalDateTime appStart, LocalDateTime appEnd){
+    public static boolean clashingAppointmentsByCustomerId(int customerId, LocalDateTime newStart, LocalDateTime newEnd) {
         try {
-            String SQL = "SELECT Start, End FROM appointments WHERE Customer_ID = ?";
+            String SQL = "select start, end from appointments where customer_id = ?";
             PreparedStatement preparedStatement = JavaDatabaseConnection.connection.prepareStatement(SQL);
             preparedStatement.setInt(1, customerId);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            while (resultSet.next()){
-                LocalDateTime checkStart = resultSet.getTimestamp("Start").toLocalDateTime();
-                LocalDateTime checkEnd = resultSet.getTimestamp("End").toLocalDateTime();
-                if (checkStart.isBefore(appEnd) && appStart.isBefore(checkEnd)) return true;
-            }
-        } catch (SQLException exception) {
-            System.out.println("Unable to get clashing appointments");
-        }
-        return false;
-    }
 
-    public static boolean clashingCheckWithAppId(int customerId, LocalDateTime appStart, LocalDateTime appEnd, int appId){
-        try {
-            String SQL = "SELECT Appointment_ID, Start, End FROM appointments WHERE customer_ID = ?";
-            PreparedStatement preparedStatement = JavaDatabaseConnection.connection.prepareStatement(SQL);
-            preparedStatement.setInt(1, customerId);
             ResultSet resultSet = preparedStatement.executeQuery();
-            while (resultSet.next()){
-                if (resultSet.getInt("Appointment_ID") == appId) continue;
-                LocalDateTime checkStart = resultSet.getTimestamp("Start").toLocalDateTime();
-                LocalDateTime checkEnd = resultSet.getTimestamp("End").toLocalDateTime();
-                if (checkStart.isBefore(appEnd) && appStart.isBefore(checkEnd)) return true;
+            while (resultSet.next()) {
+                LocalDateTime start = resultSet.getTimestamp("start").toLocalDateTime();
+                LocalDateTime end = resultSet.getTimestamp("end").toLocalDateTime();
+
+                if (start.isBefore(newEnd) && newStart.isBefore(end)) return true;
             }
-        } catch (SQLException exception) {
-            System.out.println("Unable to check clashing by app ID");
+        } catch (SQLException e) {
+            System.out.println("Unable to obtain clashing appointments (SQL Error)");
         }
         return false;
     }

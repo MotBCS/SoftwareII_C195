@@ -331,20 +331,9 @@ public class ModifyAppointmentController implements Initializable {
          *
          * (NEED TO FIX: Only receives alert when clashing appointment is schedule with the same customer Id, as the already existing appointment) ----
          * */
-        else if (AppointmentQuery.clashingAppointments(customerId, appStartDateTime, appEndDateTime)){
-            return;
-        }
-        /** --------------------------------------------------------------------------- */
-        /**
-         * Checks that appointment does not clash with any already existing appointments (Checks appointment ID)
-         * */
-        else if (AppointmentQuery.clashingCheckWithAppId(modifyAppointmentCustomerIDComboBox.getSelectionModel().getSelectedItem().getCustomerId(), appStartDateTime, appEndDateTime, appId)){
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setHeaderText("Clashing Appointments");
-            alert.setContentText("Check appointment time");
-            alert.showAndWait();
-            return;
-        }
+//        else if (AppointmentQuery.clashingAppointments(customerId, appStartDateTime, appEndDateTime)){
+//            return;
+//        }
         /** --------------------------------------------------------------------------- */
         /**
          * If the new appointment contains no empty values and is within business operation

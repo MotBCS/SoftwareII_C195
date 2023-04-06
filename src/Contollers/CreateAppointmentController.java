@@ -8,7 +8,6 @@ import Queries.AppointmentQuery;
 import Queries.ContactQuery;
 import Queries.CustomerQuery;
 import Queries.UserQuery;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -22,7 +21,6 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -267,7 +265,7 @@ public class CreateAppointmentController implements Initializable {
          * If the user attempts to schedule an appointment on a past date, they will
          * receive an error, informing them.
          * */
-        if (startDate.isBefore(LocalDate.now()) || endDate.isBefore(LocalDate.now())){
+        else if (startDate.isBefore(LocalDate.now()) || endDate.isBefore(LocalDate.now())){
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setHeaderText("Unable to create new appointment");
             alert.setContentText("Appointment can not be scheduled in the past");
@@ -348,16 +346,14 @@ public class CreateAppointmentController implements Initializable {
          *
          * (NEED TO FIX: Only receives alert when clashing appointment is schedule with the same customer Id, as the already existing appointment) ----
          * */
-        else if (AppointmentQuery.clashingAppointments(appByCustomerId, appStart, appEnd)){
+        else if (AppointmentQuery.clashingAppointmentsByCustomerId(createAppointmentCustomerIDComboBox.getSelectionModel().getSelectedItem().getCustomerId(), appStart, appEnd)){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setHeaderText("Clashing Appointment");
+            alert.setContentText("This appointment, clashes with another appointment scheduled by " + createAppointmentCustomerIDComboBox.getSelectionModel().getSelectedItem().getCustomer_Name() + "\nPlease change customer or change appointment time.");
+            alert.showAndWait();
             return;
         }
 
-        /** --------------------------------------------------------------------------- */
-        /**
-         * NOTES:
-         *  No matter the customer Id, clashing alert should trigger
-         *  when ever an appointment overlaps an existing appointment
-         * */
         /** --------------------------------------------------------------------------- */
         /**
          * If the new appointment contains no empty values and is within business operation
@@ -375,28 +371,6 @@ public class CreateAppointmentController implements Initializable {
             stage.centerOnScreen();
             stage.show();
         }
-    }
-
-    private boolean checkClashing(LocalDateTime appStart, LocalDateTime appEnd, int customerId, int appId){
-        ObservableList<AppointmentModel> allApps = AppointmentQuery.obtainAllAppointments();
-        for (AppointmentModel app : allApps){
-            if (app.getAppCustomerId() != customerId){
-                continue;
-            }
-            if (app.getAppId() == appId){
-                continue;
-            }
-            if ((app.getAppStart().isAfter(appStart) || app.getAppStart().isEqual(appStart)) && app.getAppStart().isBefore(appEnd)){
-                return true;
-            }
-            if (app.getAppEnd().isAfter(appStart) && (app.getAppEnd().isBefore(appEnd) || app.getAppEnd().isEqual(appEnd))){
-                return true;
-            }
-            if ((app.getAppStart().isBefore(appStart) || app.getAppStart().isEqual(appStart)) && app.getAppEnd().isAfter(appEnd) || app.getAppEnd().isEqual(appEnd)){
-                return true;
-            }
-        }
-        return false;
     }
     /** ----------------------------------------------------------------------------------------------------------------- */
 
