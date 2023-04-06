@@ -347,6 +347,11 @@ public class CreateAppointmentController implements Initializable {
 
         /** --------------------------------------------------------------------------- */
         /**
+         * NOTES:
+         *
+         * */
+        /** --------------------------------------------------------------------------- */
+        /**
          * If the new appointment contains no empty values and is within business operation
          * days and hours, then the new appointment will be created and the values will be
          * inserted into the database and then loaded into the table.
