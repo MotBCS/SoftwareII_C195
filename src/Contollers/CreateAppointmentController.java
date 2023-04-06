@@ -348,12 +348,11 @@ public class CreateAppointmentController implements Initializable {
          * */
         else if (AppointmentQuery.clashingAppointmentsByCustomerId(createAppointmentCustomerIDComboBox.getSelectionModel().getSelectedItem().getCustomerId(), appStart, appEnd)){
             Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setHeaderText("Clashing Appointment");
-            alert.setContentText("This appointment, clashes with another appointment scheduled by " + createAppointmentCustomerIDComboBox.getSelectionModel().getSelectedItem().getCustomer_Name() + "\n\nPlease change either:\n- Appointment Customer\n- Appointment Time\n\nTo successfully save this appointment.");
+            alert.setHeaderText("Clashing Appointment(s)!");
+            alert.setContentText("This appointment, clashes with another appointment scheduled by " + createAppointmentCustomerIDComboBox.getSelectionModel().getSelectedItem().getCustomer_Name() + "\n\nPlease change either:\n- Appointment Customer\n- Appointment Date\n- Appointment Time\n\nTo successfully save this appointment.");
             alert.showAndWait();
             return;
         }
-
         /** --------------------------------------------------------------------------- */
         /**
          * If the new appointment contains no empty values and is within business operation
