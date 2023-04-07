@@ -25,6 +25,17 @@ import java.util.ResourceBundle;
  * the user will be brought to the main login screen,
  * where they must enter a valid username and
  * password to access the rest of the application
+ *
+ * LAMBDA EXPRESSION LOCATIONS:
+ *
+ *  * LAMBDA EXPRESSION #1
+ *  * Location : (LoginController)
+ *  * Lines : (290 - 293)
+ *
+ *  * LAMBDA EXPRESSION #2
+ *  * Location : (CreateAppointmentController)
+ *  * Lines : (384 - 385)
+ *
  * */
 public class LaunchApplication extends Application {
     @Override

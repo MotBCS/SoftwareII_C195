@@ -35,6 +35,11 @@ import java.util.ResourceBundle;
  * the appointment table.
  *
  * @author Mya Thomas
+ *
+ * * LAMBDA EXPRESSION #2
+ * * Location : (CreateAppointmentController)
+ * * Lines : (384 - 385)
+ *
  * */
 public class CreateAppointmentController implements Initializable {
 
@@ -344,7 +349,7 @@ public class CreateAppointmentController implements Initializable {
         /**
          * Checks that the new appointment does not class with any already existing appointment.
          *
-         * (NEED TO FIX: Only receives alert when clashing appointment is schedule with the same customer Id, as the already existing appointment) ----
+         * (Only receives alert when clashing appointment is schedule with the same customer Id, as the already existing appointment) ----
          * */
         else if (AppointmentQuery.clashingAppointmentsByCustomerId(createAppointmentCustomerIDComboBox.getSelectionModel().getSelectedItem().getCustomerId(), appStart, appEnd)){
             Alert alert = new Alert(Alert.AlertType.ERROR);
