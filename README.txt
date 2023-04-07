@@ -21,20 +21,96 @@ MySQL Driver Version: mysql-connector-java-8.0.25
 
 ------------------------------------------------------
 
+
+
 How to use the application:
 -------------------------------------------------------
-When the application is launched the user will be taken to the login-in screen, where they must enter either "test" in both the username and password field or "admin" in both fields.
-Once the user is logged in they will be brought to a main navigation menu where they can either view appointments, customers or reports.
-If there are any scheduled appointments coming up in the next 15 minutes the user will receive an alert informing them of this future appointment.
+Login Screen:
+    When the application is launched, user will be brought to the login screen.
+    Please use the following to login.
 
-If the appointment navigation button is clicked, the user will be able to create, modify and delete selected appointments. The user can also view appointments by current month or week, by
-selecting the corresponding radio button.
+    Username: "test" OR "TEST"
+    Password: "test" OR "TEST"
 
-If the customer navigation button is clicked, the user can view all, create, modify and delete customers. The user will receive an alert if they try to delete a customer with associated appointments,
-If they select "OK" they will be able to delete the customers as well as all the associated appointments.
+    Or
 
-Report Section:
--------------------------------------------------------
+    Username: "admin" OR "ADMIN"
+    Password: "admin" OR "ADMIN"
+
+-------------------------------------------------------------------------------------------------------------
+Main Menu Screen:
+    The main menu screen allows the user to navigate to the three main application screens.
+    The user can navigate to:
+        - Appointments
+        - Customers
+        - Reports
+    The user can also click the logout button to return to the login screen where they can
+    quit or change to a different user.
+
+-------------------------------------------------------------------------------------------------------------
+Main Appointment Screen:
+    The main appointment screen will allow users to view, create, modify and delete appointments.
+    The appointment table is set to view all appointments by default, but the user can also view
+    appointments by the current month or week.
+
+    CREATING AN APPOINTMENT
+    -----------------------
+    User can click the 'Create Appointment' to add a new appointment to the table. When the navigation
+    button is clicked the user will be redirected to a new screen that will contain empty text field
+    where the user can fill in information about the appointment such as title, type, location,
+    description, start and end date, contact, user, start and end time. When the user clicks save
+    the application will check for empty text/value fields, clashing appointments, and time/date
+    conflicts.
+
+    OVERLAPPING APPOINTMENT TRIGGER
+    -------------------------------
+    (Triggered by appointments overlapping with SAME customer ID)
+
+    The overlapping appointment alert is triggered when a customer has created an appointment and saves it
+    to the table, then creates another appointment on the same day, that clashes with their previously
+    scheduled appointment. Since a customer can not attend two different meetings at once, the trigger looks
+    at the customer ID to check for overlapping appointments.
+
+    MODIFYING AN APPOINTMENT
+    -------------------------
+    User can modify existing appointments by first selecting an appointment in the table by clicking it,
+    then pressing the 'modify' button. The user will be brought to a new screen where they can edit the
+    selected appointment. The user will receive an alert if the modified appointment clashes with another
+    appointment, or if there is a time or date conflict.
+
+    DELETING AN APPOINTMENT
+    -----------------------
+    User can also delete appointments from the table, by first selecting an existing appointment then clicking
+    the 'delete' button.
+
+-------------------------------------------------------------------------------------------------------------
+Customer Screen:
+    The main customer screen can allow the user to view, create, modify and delete customers.
+
+    CREATING A CUSTOMER
+    -------------------
+    When the user clicks the 'Create Customer' button, they will be redirected to a new screen
+    where they are able to create a new customer. The user can enter a name, address, postal,
+    phone number, state/province (division), and country.
+    When selecting a country and division for a new customer, the country combo box will filter
+    the state/province (division) combo box by country.
+
+    MODIFYING A CUSTOMER
+    --------------------
+    To modify a customer, the user must first select a customer in the table then click the modify button.
+    The user will be brought to a new screen where they can edit the selected customers information.
+
+    DELETING A CUSTOMER
+    --------------------
+    User can also delete a customer from the table, by selecting the customer then clicking the delete
+    button. If the selected customer has any associated appointments, the user will receive a warning
+    to inform them about the associated appointments, if the user selects the 'OK' button on the warning
+    the customer and their associated appointments will be deleted. If the user selects 'cancel' on the
+    warning dialog box, the alert will close and the customer will still exist in the table.
+
+-------------------------------------------------------------------------------------------------------------
+Report Screen:
+
 If the report navigation button is clicked, the user will be able to view associated appointment by contact Id. The user can also view the total number of customers per state or province, and view appointment total
 by month and type.
 For the additional report of my choice, I decided to create an report that displays the total customers per each state/province that are currently register
