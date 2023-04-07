@@ -9,6 +9,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**
+ * This class contain all the Queries associated
+ * with state/province (Division).
+ * */
 public class StateProvinceQuery {
 
     /** - GET STATE/PROVINCE  -------------------------------------------------------------------------------------*/

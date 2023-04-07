@@ -11,6 +11,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**
+ * This class contain all the Queries associated
+ * with reports.
+ * */
 public class ReportQuery {
 
     /** - REPORT (TOTAL APPOINTMENTS BY MONTH AND TYPE) -------------------------------------------------------------------------------------*/

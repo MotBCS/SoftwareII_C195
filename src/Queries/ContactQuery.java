@@ -11,6 +11,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 
+/**
+ * This class contain all the Queries associated
+ * with contacts.
+ * */
 public class ContactQuery {
 
     /** - GET ALL CONTACTS  -------------------------------------------------------------------------------------*/

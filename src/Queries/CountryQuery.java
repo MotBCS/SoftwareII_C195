@@ -9,6 +9,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**
+ * This class contain all the Queries associated
+ * with countries.
+ * */
 public class CountryQuery {
     public static ObservableList<CountryModel>obtainAllCountries(){
         ObservableList<CountryModel> allCountriesList = FXCollections.observableArrayList();
