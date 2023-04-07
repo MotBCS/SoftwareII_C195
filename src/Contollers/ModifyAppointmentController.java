@@ -8,7 +8,6 @@ import Queries.AppointmentQuery;
 import Queries.ContactQuery;
 import Queries.CustomerQuery;
 import Queries.UserQuery;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -22,7 +21,6 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -388,7 +386,7 @@ public class ModifyAppointmentController implements Initializable {
         /**
          * Checks that the new appointment does not clash with any already existing appointment.
          **/
-        else if (AppointmentQuery.overlapCheck(appByCustomerId, appStart, appEnd)) {
+        else if (AppointmentQuery.clashingModifiedAppointment(appByCustomerId, appStart, appEnd)) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setHeaderText("Clashing Appointment(s)!");
             alert.setContentText("This appointment, clashes with another appointment scheduled by " + modifyAppointmentCustomerIDComboBox.getSelectionModel().getSelectedItem().getCustomer_Name() + "\n\nPlease change either:\n- Appointment Customer\n- Appointment Date\n- Appointment Time\n\nTo successfully save this appointment.");
