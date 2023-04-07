@@ -7,19 +7,19 @@ Purpose Of The Application:
     appointments.
 -----------------------------------------------------
 
-Author: Mya Thomas
-Email: mth1759@wgu.edu
-Application Version: Software II - Advanced Java Concepts QAM2
-Date: April 5, 2023
+Student Information:
+    Author: Mya Thomas
+    Email: mth1759@wgu.edu
+    Application Version: Software II - Advanced Java Concepts QAM2
+    Date: March 30, 2023
 
 -----------------------------------------------------
 
-IDE: IntelliJ IDEA Community Edition 2021.1.3
-JDK: Java SE 11.0.11
-JavaFX: javafx-sdk-17.0.1
-MySQL Driver Version: mysql-connector-java-8.0.25
+    IDE: IntelliJ IDEA Community Edition 2021.1.3
+    JDK: Java SE 11.0.11
+    JavaFX: javafx-sdk-17.0.1
+    MySQL Driver Version: mysql-connector-java-8.0.25
 
-------------------------------------------------------
 
 
 
@@ -110,8 +110,11 @@ Customer Screen:
 
 -------------------------------------------------------------------------------------------------------------
 Report Screen:
+    The report screen allows the user to view appointments by selected contact, total appointments by month
+    and type. As well as total number of customers per state/province (division)
 
-If the report navigation button is clicked, the user will be able to view associated appointment by contact Id. The user can also view the total number of customers per state or province, and view appointment total
-by month and type.
-For the additional report of my choice, I decided to create an report that displays the total customers per each state/province that are currently register
-within the application.
+    ADDITIONAL REPORT
+    -----------------
+    For the additional report of my choice, I decided to create a report table that displays the total customers
+    per each state/province that are currently register within the application. The will display all registered
+    customers divisions regardless of the country.
