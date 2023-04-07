@@ -21,6 +21,9 @@ public class CustomerQuery {
         ObservableList<CustomerModel> allCustomerList = FXCollections.observableArrayList();
         try {
             JavaDatabaseConnection.openConnection();
+            /**
+             * SQL used to obtain all customers from database
+             * */
             String SQL = "SELECT * FROM customers INNER JOIN first_level_divisions ON customers.Division_ID = first_level_divisions.Division_ID INNER JOIN countries ON countries.Country_ID = first_level_divisions.COUNTRY_ID ORDER BY Customer_ID ASC;";
             PreparedStatement preparedStatement = JavaDatabaseConnection.connection.prepareStatement(SQL);
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -50,6 +53,8 @@ public class CustomerQuery {
             }
         } catch (SQLException exception) {
             System.out.println("Unable to obtain all customers (SQL Error)");
+        }finally {
+            JavaDatabaseConnection.closeConnection();
         }
         return allCustomerList;
     }
@@ -59,6 +64,10 @@ public class CustomerQuery {
     public static void createNewCustomer(String customer_Name, String customer_Address, String customer_PostalCode, String customer_PhoneNumber, int customer_StateProvinceId) throws SQLException{
         try {
             JavaDatabaseConnection.openConnection();
+            /**
+             * SQL creates new customer from
+             * values entered by user
+             * */
             String SQL = "INSERT INTO customers (Customer_Name, Address, Postal_Code, Phone, Division_ID) VALUES (?, ?, ?, ?, ?)";
             PreparedStatement preparedStatement = JavaDatabaseConnection.connection.prepareStatement(SQL);
             preparedStatement.setString(1, customer_Name);
@@ -80,6 +89,9 @@ public class CustomerQuery {
     public static void modifyExistingCustomer(String customer_Name, String customer_Address, String customer_PostalCode, String customer_PhoneNumber, int customer_StateProvinceId, int customerId, int customer_Country_Id) throws SQLException{
         try {
             JavaDatabaseConnection.openConnection();
+            /**
+             * Updates existing customer with new values entered by user
+             * */
             String SQL = "UPDATE customers SET Customer_Name=?, Address=?, Postal_Code=?, Phone=?, Division_ID=? WHERE Customer_ID=?;";
             PreparedStatement preparedStatement = JavaDatabaseConnection.connection.prepareStatement(SQL);
             preparedStatement.setString(1, customer_Name);
@@ -102,6 +114,9 @@ public class CustomerQuery {
     public static void deleteExistingCustomer(int customerId){
         try {
             JavaDatabaseConnection.openConnection();
+            /**
+             * Delete selected customer by customer Id
+             * */
             String SQL = "DELETE FROM customers WHERE Customer_ID = ?";
             PreparedStatement preparedStatement = JavaDatabaseConnection.connection.prepareStatement(SQL);
             preparedStatement.setInt(1, customerId);
@@ -116,6 +131,10 @@ public class CustomerQuery {
     /** - GET CUSTOMER BY ID -------------------------------------------------------------------------------------*/
 
     public static CustomerModel customerById(int customerId) throws SQLException{
+        /**
+         * Select all from the customers table where the customer Id
+         * equals user input
+         * */
         String SQL = "SELECT * FROM customers WHERE Customer_ID = ?";
         PreparedStatement preparedStatement = JavaDatabaseConnection.connection.prepareStatement(SQL);
         preparedStatement.setInt(1, customerId);

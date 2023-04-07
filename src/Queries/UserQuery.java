@@ -15,9 +15,14 @@ import java.sql.SQLException;
  * */
 public class UserQuery {
 
+    /** Check User Credentials -------------------------------------------------------------------------------------------------------------- */
     public static int checkUserLogin(String username, String password){
         try {
             JavaDatabaseConnection.openConnection();
+            /**
+             * SQL: Select all from user table where username equals
+             * users input and password equals user password input
+             * */
             String SQL = "SELECT * FROM users WHERE User_Name= '" + username + "' AND Password= '"+ password +"';";
             PreparedStatement preparedStatement = JavaDatabaseConnection.connection.prepareStatement(SQL);
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -37,10 +42,15 @@ public class UserQuery {
         return 0;
     }
 
+    /** Obtain All Users  -------------------------------------------------------------------------------------------------------------- */
+
     public static ObservableList<UserModel>obtainAllUsers(){
         ObservableList<UserModel> allUsersList = FXCollections.observableArrayList();
         try {
             JavaDatabaseConnection.openConnection();
+            /**
+             * SQL: Select all from users table
+             * */
             String SQL = "SELECT * FROM users";
             PreparedStatement preparedStatement = JavaDatabaseConnection.connection.prepareStatement(SQL);
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -58,10 +68,16 @@ public class UserQuery {
         return allUsersList;
     }
 
+    /** Obtain Users By Id  -------------------------------------------------------------------------------------------------------------- */
+
     public static int obtainUserById(String username) throws SQLException{
         int userId = 0;
         try {
             JavaDatabaseConnection.openConnection();
+            /**
+             * SQL: Select user Id and username from users table where the username
+             * equals user input
+             * */
             String SQL = "SELECT User_ID, User_Name FROM users WHERE User_Name = '" + username +"'";
             PreparedStatement preparedStatement = JavaDatabaseConnection.connection.prepareStatement(SQL);
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -80,6 +96,10 @@ public class UserQuery {
     public static UserModel obtainUsernameById(int userId){
         try {
             JavaDatabaseConnection.openConnection();
+            /**
+             * Select user Id and username from users table where user Id equals
+             * user input
+             * */
             String SQL = "SELECT User_ID, User_Name FROM users WHERE User_ID = ?";
             PreparedStatement preparedStatement = JavaDatabaseConnection.connection.prepareStatement(SQL);
             preparedStatement.setInt(1, userId);

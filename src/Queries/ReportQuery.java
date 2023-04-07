@@ -23,6 +23,11 @@ public class ReportQuery {
         ObservableList<REPORT_MonthType_TotalAppointment> appMonthTypeList = FXCollections.observableArrayList();
         try {
             JavaDatabaseConnection.openConnection();
+            /**
+             * SQL: Select distinct name of month, type and count the total
+             * amount of appointment by month and type. Group results by
+             * appointment type
+             * */
             String SQL = "SELECT DISTINCT monthname(Start) Month, type, count(*) AS Total FROM appointments GROUP BY Type;";
             PreparedStatement preparedStatement = JavaDatabaseConnection.connection.prepareStatement(SQL);
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -52,6 +57,10 @@ public class ReportQuery {
         ObservableList<REPORT_StateProvince_TotalCustomer> customerTotalByStateProvinceList = FXCollections.observableArrayList();
         try {
             JavaDatabaseConnection.openConnection();
+            /**
+             * SQL: Select division (name), count customers by divisions,
+             * SQL tables are inner joined on the division Id column.
+             * */
             String SQL = "SELECT Division, count(DISTINCT Customer_ID) AS Total FROM customers INNER JOIN first_level_divisions ON customers.Division_ID = first_level_divisions.Division_ID GROUP BY Division;";
             PreparedStatement preparedStatement = JavaDatabaseConnection.connection.prepareStatement(SQL);
             ResultSet resultSet = preparedStatement.executeQuery();

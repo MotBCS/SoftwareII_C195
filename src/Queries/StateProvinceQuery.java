@@ -49,6 +49,10 @@ public class StateProvinceQuery {
     public static StateProvinceModel stateProvinceById(int stateProvinceId){
         try {
             JavaDatabaseConnection.openConnection();
+            /**
+             * SQL: Select division Id and division (name) from first level division
+             * table where division Id equals user input
+             * */
             String SQL = "SELECT Division_ID, Division FROM first_level_divisions WHERE Division_ID = ?";
             PreparedStatement preparedStatement = JavaDatabaseConnection.connection.prepareStatement(SQL);
             preparedStatement.setInt(1, stateProvinceId);
@@ -65,6 +69,8 @@ public class StateProvinceQuery {
             }
         } catch (SQLException exception) {
             System.out.println("Unable to get state/province name by Id (SQL Error)");
+        }finally {
+            JavaDatabaseConnection.closeConnection();
         }
         return null;
     }
@@ -75,6 +81,11 @@ public class StateProvinceQuery {
         ObservableList<StateProvinceModel> stateProvinceByCountry = FXCollections.observableArrayList();
         try {
             JavaDatabaseConnection.openConnection();
+            /**
+             *
+             * SQL: Select all from first level divisions table where country Id
+             * equals users input
+             * */
             String SQL = "SELECT * FROM first_level_divisions WHERE Country_ID = " + countryId;
             PreparedStatement preparedStatement = JavaDatabaseConnection.connection.prepareStatement(SQL);
             preparedStatement.execute();

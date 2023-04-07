@@ -90,6 +90,9 @@ public class AppointmentQuery {
     public static void modifyExistingAppointment(int appId, String appTitle, String appDescription, int appContact, String appType, LocalDateTime appStart, LocalDateTime appEnd, int appCustomerId, int appUserId, String appLocation ){
         try {
             JavaDatabaseConnection.openConnection();
+            /**
+             * Modify existing appointment with new values entered by user
+             *  */
             String SQL = "UPDATE appointments SET Title = ?," +
                     "Description = ?," +
                     "Contact_ID = ?," +
@@ -124,12 +127,17 @@ public class AppointmentQuery {
     public static void deleteExistingAppointment(int appId){
         try {
             JavaDatabaseConnection.openConnection();
+            /**
+             * Delete selected appointment
+             * */
             String SQL = "DELETE FROM appointments WHERE Appointment_ID=?;";
             PreparedStatement preparedStatement = JavaDatabaseConnection.connection.prepareStatement(SQL);
             preparedStatement.setInt(1, appId);
             preparedStatement.execute();
         } catch (SQLException exception) {
             System.out.println("Unable to delete existing appointment (SQL Error)");
+        }finally {
+            JavaDatabaseConnection.closeConnection();
         }
     }
     /** - GET APPOINTMENT BY MONTH -------------------------------------------------------------------------------------*/
@@ -137,6 +145,9 @@ public class AppointmentQuery {
         ObservableList<AppointmentModel> appMonthList = FXCollections.observableArrayList();
         try {
             JavaDatabaseConnection.openConnection();
+            /**
+             * Get all appointments current month
+             * */
             String SQL = "SELECT Appointment_ID, Customer_ID, Title, Description, Location, Type, User_ID, Contact_ID, Start, End FROM appointments WHERE MONTH(Start)=MONTH(NOW())";
             PreparedStatement preparedStatement = JavaDatabaseConnection.connection.prepareStatement(SQL);
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -169,6 +180,8 @@ public class AppointmentQuery {
             }
         } catch (SQLException exception) {
             System.out.println("Unable to obtain appointment by current month");
+        }finally {
+            JavaDatabaseConnection.closeConnection();
         }
         return appMonthList;
     }
@@ -179,6 +192,9 @@ public class AppointmentQuery {
         ObservableList<AppointmentModel> appWeekList = FXCollections.observableArrayList();
         try {
             JavaDatabaseConnection.openConnection();
+            /**
+             * Get all appointments by current week
+             * */
             String SQL = "SELECT Appointment_ID, Customer_ID, Title, Description, Location, Type, User_ID, Contact_ID, Start, End FROM appointments WHERE Start BETWEEN NOW() AND DATE_ADD(NOW(), INTERVAL 7 DAY);";
             PreparedStatement preparedStatement = JavaDatabaseConnection.connection.prepareStatement(SQL);
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -211,6 +227,8 @@ public class AppointmentQuery {
             }
         } catch (SQLException exception) {
             System.out.println("Unable to obtain appointment by current week");
+        }finally {
+            JavaDatabaseConnection.closeConnection();
         }
         return appWeekList;
     }
@@ -221,6 +239,10 @@ public class AppointmentQuery {
         ObservableList<AppointmentModel> appByUserIdList = FXCollections.observableArrayList();
         try {
             JavaDatabaseConnection.openConnection();
+            /**
+             * Selects all from appointments table where
+             * user Id equals user input
+             * */
             String SQL = "SELECT * FROM appointments WHERE User_ID = '" + userId + "'";
             PreparedStatement preparedStatement = JavaDatabaseConnection.connection.prepareStatement(SQL);
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -251,6 +273,8 @@ public class AppointmentQuery {
             }
         } catch (SQLException exception) {
             System.out.println("Unable to obtain appointment by current month");
+        }finally {
+            JavaDatabaseConnection.closeConnection();
         }
         return appByUserIdList;
     }
@@ -294,6 +318,8 @@ public class AppointmentQuery {
             }
         } catch (SQLException exception) {
             System.out.println("Unable to obtain appointment by current month");
+        }finally {
+            JavaDatabaseConnection.closeConnection();
         }
         return appByContactIdList;
     }
@@ -315,6 +341,8 @@ public class AppointmentQuery {
             return appByCustomerIdList;
         } catch (SQLException exception) {
             System.out.println("Unable to get appointments by customer Id (SQL Error)");
+        }finally {
+            JavaDatabaseConnection.closeConnection();
         }
         return null;
     }
@@ -339,6 +367,8 @@ public class AppointmentQuery {
             }
         } catch (SQLException e) {
             System.out.println("Unable to obtain clashing appointments by customer Id (SQL Error)");
+        }finally {
+            JavaDatabaseConnection.closeConnection();
         }
         return false;
     }

@@ -11,6 +11,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 
+/** ---------------------------------------------------------------------------------------------------- */
+
 /**
  * This class contain all the Queries associated
  * with contacts.
@@ -23,6 +25,9 @@ public class ContactQuery {
         ObservableList<ContactModel> allContactList = FXCollections.observableArrayList();
         try {
             JavaDatabaseConnection.openConnection();
+            /**
+             * Select contact Id and contact name from contacts table
+             * */
             String SQL = "SELECT Contact_ID, Contact_Name FROM contacts";
             PreparedStatement preparedStatement = JavaDatabaseConnection.connection.prepareStatement(SQL);
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -49,6 +54,11 @@ public class ContactQuery {
         ObservableList<AppointmentModel> contactReport = FXCollections.observableArrayList();
         try {
             JavaDatabaseConnection.openConnection();
+            /**
+             * Select appointment Id, customer Id, title, description, location,
+             * type, user Id, contact Id, start(Date and Time), End(Date and Time)
+             * from appointments table, order results by appointment Id in ascending order
+             * */
             String SQL = "SELECT Appointment_ID, Customer_ID, Title, Description, Location, Type, User_ID, Contact_ID, Start, End FROM appointments ORDER BY Appointment_ID ASC";
             PreparedStatement preparedStatement = JavaDatabaseConnection.connection.prepareStatement(SQL);
             ResultSet resultSet = preparedStatement.executeQuery();

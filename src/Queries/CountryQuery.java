@@ -9,6 +9,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/** ---------------------------------------------------------------------------------------------------- */
+
 /**
  * This class contain all the Queries associated
  * with countries.
@@ -18,6 +20,9 @@ public class CountryQuery {
         ObservableList<CountryModel> allCountriesList = FXCollections.observableArrayList();
         try {
             JavaDatabaseConnection.openConnection();
+            /**
+             * Select country Id and country (name) from countries table
+             * */
             String SQL = "SELECT Country_ID, Country FROM countries";
             PreparedStatement preparedStatement = JavaDatabaseConnection.connection.prepareStatement(SQL);
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -38,9 +43,14 @@ public class CountryQuery {
         return allCountriesList;
     }
 
+    /** ---------------------------------------------------------------------------------------------------- */
     public static CountryModel countryById(int countryId){
         try {
             JavaDatabaseConnection.openConnection();
+            /**
+             * Select country Id and country (name) from countries table where country
+             * Id equals users input
+             * */
             String SQL = "SELECT Country_ID, Country FROM countries WHERE Country_ID = ?";
             PreparedStatement preparedStatement = JavaDatabaseConnection.connection.prepareStatement(SQL);
             preparedStatement.setInt(1, countryId);
@@ -55,6 +65,8 @@ public class CountryQuery {
 
         } catch (SQLException exception) {
             System.out.println("Unable to get country by Id (SQL Error)");
+        }finally {
+            JavaDatabaseConnection.closeConnection();
         }
         return null;
     }
