@@ -116,10 +116,10 @@ public class CreateAppointmentController implements Initializable {
         Integer checkStartAppInt = checkStartAppDay.getValue();
         Integer checkEndAppInt = checkEndAppDay.getValue();
         /**
-         * Variables 'weekStart' and 'weekEnd' store the week start (Monday) and the week end (Friday)
+         * Variables 'UserWeekStart' and 'UserWeekEnd' store the week start (Monday) and the week end (Friday)
          * */
-        Integer weekStart = DayOfWeek.MONDAY.getValue(); //Week Start
-        Integer weekEnd = DayOfWeek.FRIDAY.getValue(); //Week End
+        Integer UserWeekStart = DayOfWeek.MONDAY.getValue(); //Week Start
+        Integer UserWeekEnd = DayOfWeek.FRIDAY.getValue(); //Week End
 
         /**
          * The following variable store information from the specified
@@ -139,14 +139,14 @@ public class CreateAppointmentController implements Initializable {
          * if the new appointment is scheduled on saturday or sunday, the user will receive an alert
          * informing the user.
          * */
-        if (checkStartAppInt < weekStart || checkStartAppInt > weekEnd){
+        if (checkStartAppInt < UserWeekStart || checkStartAppInt > UserWeekEnd){
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setHeaderText("Unable to create new appointment");
             alert.setContentText("Appointment outside business operation days");
             alert.showAndWait();
             return;
         }
-        else if (checkEndAppInt < weekStart || checkEndAppInt > weekEnd){
+        else if (checkEndAppInt < UserWeekStart || checkEndAppInt > UserWeekEnd){
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setHeaderText("Unable to create new appointment");
             alert.setContentText("Appointment outside business operation days");
@@ -351,7 +351,7 @@ public class CreateAppointmentController implements Initializable {
          *
          * (Only receives alert when clashing appointment is schedule with the same customer Id, as the already existing appointment) ----
          * */
-        else if (AppointmentQuery.clashingAppointmentsByCustomerId(createAppointmentCustomerIDComboBox.getSelectionModel().getSelectedItem().getCustomerId(), appStart, appEnd)){
+        else if (AppointmentQuery.clashingModifiedAppointment(appByCustomerId, appStart, appEnd)) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setHeaderText("Clashing Appointment(s)!");
             alert.setContentText("This appointment, clashes with another appointment scheduled by " + createAppointmentCustomerIDComboBox.getSelectionModel().getSelectedItem().getCustomer_Name() + "\n\nPlease change either:\n- Appointment Customer\n- Appointment Date\n- Appointment Time\n\nTo successfully save this appointment.");

@@ -212,7 +212,7 @@ public class LoginController implements Initializable {
                  * */
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setHeaderText("Upcoming Appointment");
-                alert.setContentText("Hello " + loginUsernameTextField.getText().toUpperCase(Locale.ROOT) + ", \nYou have an upcoming appointment in 15 minutes.\nAppointment ID: " + appointmentModel.getAppId() + "\nAppointment Date and Time: " + appointmentModel.getAppStart().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")) + " Local Time");
+                alert.setContentText("Hello " + loginUsernameTextField.getText().toUpperCase(Locale.ROOT) + ", \nYou have an upcoming appointment in 15 minutes.\nAppointment ID: " + appointmentModel.getAppId() + "\nAppointment Date and Time: " + appointmentModel.getAppStart().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")) + " Local Time\nAppointment Description: " + appointmentModel.getAppDescription());
                 alert.showAndWait();
                 System.out.println("Upcoming appointment found!");
                 upcomingApps = true;
