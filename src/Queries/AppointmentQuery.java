@@ -11,6 +11,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 
 public class AppointmentQuery {
 
@@ -333,8 +335,43 @@ public class AppointmentQuery {
                 if (start.isBefore(newEnd) && newStart.isBefore(end)) return true;
             }
         } catch (SQLException e) {
-            System.out.println("Unable to obtain clashing appointments (SQL Error)");
+            System.out.println("Unable to obtain clashing appointments by customer Id (SQL Error)");
         }
         return false;
     }
+
+
+
+    public static boolean overlapCheck(int customerId, LocalDateTime appointmentStart, LocalDateTime appointmentEnd) {
+        ObservableList<AppointmentModel> appointmentList = AppointmentQuery.obtainAllAppointments();
+        LocalDateTime checkApptStart;
+        LocalDateTime checkApptEnd;
+        for (AppointmentModel a : appointmentList) {
+            checkApptStart = a.getAppStart();
+            checkApptEnd = a.getAppEnd();
+            if (customerId != a.getAppCustomerId()) {
+                continue;
+            } else if (checkApptStart.isEqual(appointmentStart) || checkApptEnd.isEqual(appointmentEnd)) {
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Warning Dialog");
+                alert.setContentText("ERROR: Appointments must not start or end at same time as existing customer appointments");
+                alert.showAndWait();
+                return true;
+            } else if (appointmentStart.isAfter(checkApptStart) && (appointmentStart.isBefore(checkApptEnd))) {
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Warning Dialog");
+                alert.setContentText("ERROR: Appointment start must not be during existing customer appointments");
+                alert.showAndWait();
+                return true;
+            } else if (appointmentEnd.isAfter(checkApptStart) && appointmentEnd.isBefore(checkApptEnd)) {
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Warning Dialog");
+                alert.setContentText("ERROR: Appointment end must not be during existing customer appointments");
+                alert.showAndWait();
+                return true;
+            }
+        }
+        return false;
+    }
+
 }
