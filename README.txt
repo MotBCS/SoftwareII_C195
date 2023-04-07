@@ -64,12 +64,14 @@ Main Appointment Screen:
 
     OVERLAPPING APPOINTMENT TRIGGER
     -------------------------------
-    (Triggered by appointments overlapping with SAME customer ID)
+    (Triggered by appointments overlapping with SAME customer ID on SAME day)
 
     The overlapping appointment alert is triggered when a customer has created an appointment and saves it
     to the table, then creates another appointment on the same day, that clashes with their previously
     scheduled appointment. Since a customer can not attend two different meetings at once, the trigger looks
-    at the customer ID to check for overlapping appointments.
+    at the customer ID to check for overlapping appointments on the same day. If a customer has a appointment
+    scheduled on one day and another scheduled on a different day, the overlapping appointment alert will
+    not be triggered.
 
     MODIFYING AN APPOINTMENT
     -------------------------
