@@ -352,22 +352,22 @@ public class AppointmentQuery {
             if (customerId != a.getAppCustomerId()) {
                 continue;
             } else if (checkApptStart.isEqual(appointmentStart) || checkApptEnd.isEqual(appointmentEnd)) {
-                Alert alert = new Alert(Alert.AlertType.WARNING);
-                alert.setTitle("Warning Dialog");
-                alert.setContentText("ERROR: Appointments must not start or end at same time as existing customer appointments");
-                alert.showAndWait();
+//                Alert alert = new Alert(Alert.AlertType.WARNING);
+//                alert.setTitle("Warning Dialog");
+//                alert.setContentText("ERROR: Appointments must not start or end at same time as existing customer appointments");
+//                alert.showAndWait();
                 return true;
             } else if (appointmentStart.isAfter(checkApptStart) && (appointmentStart.isBefore(checkApptEnd))) {
-                Alert alert = new Alert(Alert.AlertType.WARNING);
-                alert.setTitle("Warning Dialog");
-                alert.setContentText("ERROR: Appointment start must not be during existing customer appointments");
-                alert.showAndWait();
+//                Alert alert = new Alert(Alert.AlertType.WARNING);
+//                alert.setTitle("Warning Dialog");
+//                alert.setContentText("ERROR: Appointment start must not be during existing customer appointments");
+//                alert.showAndWait();
                 return true;
             } else if (appointmentEnd.isAfter(checkApptStart) && appointmentEnd.isBefore(checkApptEnd)) {
-                Alert alert = new Alert(Alert.AlertType.WARNING);
-                alert.setTitle("Warning Dialog");
-                alert.setContentText("ERROR: Appointment end must not be during existing customer appointments");
-                alert.showAndWait();
+//                Alert alert = new Alert(Alert.AlertType.WARNING);
+//                alert.setTitle("Warning Dialog");
+//                alert.setContentText("ERROR: Appointment end must not be during existing customer appointments");
+//                alert.showAndWait();
                 return true;
             }
         }

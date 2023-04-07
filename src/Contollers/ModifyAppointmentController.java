@@ -389,15 +389,12 @@ public class ModifyAppointmentController implements Initializable {
          * Checks that the new appointment does not clash with any already existing appointment.
          **/
         else if (AppointmentQuery.overlapCheck(appByCustomerId, appStart, appEnd)) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setHeaderText("Clashing Appointment(s)!");
+            alert.setContentText("This appointment, clashes with another appointment scheduled by " + modifyAppointmentCustomerIDComboBox.getSelectionModel().getSelectedItem().getCustomer_Name() + "\n\nPlease change either:\n- Appointment Customer\n- Appointment Date\n- Appointment Time\n\nTo successfully save this appointment.");
+            alert.showAndWait();
             return;
         }
-//        else if (AppointmentQuery.clashingAppointmentsByCustomerId(modifyAppointmentCustomerIDComboBox.getSelectionModel().getSelectedItem().getCustomerId(), appStart, appEnd)){
-//            Alert alert = new Alert(Alert.AlertType.ERROR);
-//            alert.setHeaderText("Clashing Appointment(s)!");
-//            alert.setContentText("This appointment, clashes with another appointment scheduled by " + modifyAppointmentCustomerIDComboBox.getSelectionModel().getSelectedItem().getCustomer_Name() + "\n\nPlease change either:\n- Appointment Customer\n- Appointment Date\n- Appointment Time\n\nTo successfully save this appointment.");
-//            alert.showAndWait();
-//            return;
-//        }
 
         /** --------------------------------------------------------------------------- */
         /**
