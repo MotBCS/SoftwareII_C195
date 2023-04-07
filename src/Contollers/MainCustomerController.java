@@ -169,11 +169,11 @@ public class MainCustomerController implements Initializable {
             /**
              * Associated Appointment found
              * */
-            Alert alert2 = new Alert(Alert.AlertType.WARNING);
+            Alert alert2 = new Alert(Alert.AlertType.CONFIRMATION);
             alert2.setHeaderText("Selected Customer has associated appointments");
             alert2.setContentText("Selected customer has " + associatedAppointment + ", associated appointments\n\n" +
                     "Select 'OK' to delete customer from table along with associated appointments.\n" +
-                    "Else select cancel");
+                    "Else, select cancel");
             Optional<ButtonType> choice = alert2.showAndWait();
             if (choice.get() == ButtonType.OK){
                 for (AppointmentModel appointmentModel : allCustomerAppointments){
@@ -189,7 +189,8 @@ public class MainCustomerController implements Initializable {
                 allCustomersList = CustomerQuery.obtainAllCustomers();
                 customerTable.setItems(allCustomersList);
                 customerTable.refresh();
-            } else if (choice.get() == ButtonType.CANCEL){
+            }
+            else if (choice.get() == ButtonType.CANCEL){
                 return;
             }
             }

@@ -13,7 +13,7 @@
    <children>
       <Pane layoutX="14.0" layoutY="14.0" prefHeight="373.0" prefWidth="423.0" style="-fx-background-color: FDEEDC;">
          <children>
-            <Button fx:id="quitBtn" layoutX="322.0" layoutY="324.0" mnemonicParsing="false" onAction="#quitApplication" prefHeight="18.0" prefWidth="43.0" style="-fx-background-color: E38B29;" text="Quit" textFill="WHITE" />
+            <Button fx:id="quitBtn" layoutX="304.0" layoutY="324.0" mnemonicParsing="false" onAction="#quitApplication" prefHeight="25.0" prefWidth="61.0" style="-fx-background-color: E38B29;" text="Quit" textFill="WHITE" />
             <Label fx:id="locationLabel" layoutX="51.0" layoutY="329.0" text="Location" textFill="#e38b29" />
             <Label fx:id="passwordLabel" layoutX="51.0" layoutY="177.0" prefHeight="21.0" prefWidth="173.0" text="Password" textFill="#e38b29">
                <font>
