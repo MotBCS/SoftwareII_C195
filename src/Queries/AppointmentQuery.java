@@ -10,6 +10,10 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
+/**
+ * This class contain all the Queries associated
+ * with appointments.
+ * */
 public class AppointmentQuery {
 
 
@@ -317,6 +321,9 @@ public class AppointmentQuery {
 
     /** - Clashing Appointments -------------------------------------------------------------------------------------*/
 
+    /**
+     * Used to check clashing appointments before saving a new or modified appointment to the table
+     * */
     public static boolean clashingAppointmentsByCustomerId(int customerId, LocalDateTime newStart, LocalDateTime newEnd) {
         try {
             String SQL = "select start, end from appointments where customer_id = ?";
@@ -336,21 +343,30 @@ public class AppointmentQuery {
         return false;
     }
 
+    /**
+     * Used for appointment modify controller
+     * */
     public static boolean clashingModifiedAppointment(int customerId, LocalDateTime appointmentStart, LocalDateTime appointmentEnd) {
+        /**
+         * Get all appointments to check for clashing appointments
+         * */
         ObservableList<AppointmentModel> allApps = AppointmentQuery.obtainAllAppointments();
-        LocalDateTime clashingStart;
-        LocalDateTime clashingEnd;
+        LocalDateTime clashingStart; //Check clashing start against existing starts
+        LocalDateTime clashingEnd; //Check clashing end against existing ends
         for (AppointmentModel appointmentModel : allApps) {
             clashingStart = appointmentModel.getAppStart();
             clashingEnd = appointmentModel.getAppEnd();
+            /**
+             *
+             * */
             if (customerId != appointmentModel.getAppCustomerId()) {
                 continue;
             } else if (clashingStart.isEqual(appointmentStart) || clashingEnd.isEqual(appointmentEnd)) {
-                return true;
+                return true; // Add alert on controller screen
             } else if (appointmentStart.isAfter(clashingStart) && (appointmentStart.isBefore(clashingEnd))) {
-                return true;
+                return true; // Add alert on controller screen
             } else if (appointmentEnd.isAfter(clashingStart) && appointmentEnd.isBefore(clashingEnd)) {
-                return true;
+                return true; // Add alert on controller screen
             }
         }
         return false;

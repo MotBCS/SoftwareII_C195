@@ -113,8 +113,8 @@ Report Screen:
     The report screen allows the user to view appointments by selected contact, total appointments by month
     and type. As well as total number of customers per state/province (division)
 
-    ADDITIONAL REPORT
-    -----------------
+    ADDITIONAL REPORT (A3F)
+    -----------------------
     For the additional report of my choice, I decided to create a report table that displays the total customers
     per each state/province that are currently register within the application. The will display all registered
     customers divisions regardless of the country.
